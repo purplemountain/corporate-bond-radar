@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Providers from './Providers';
 
 export const metadata: Metadata = {
   title: 'Corporate Bond Radar Terminal',
@@ -19,7 +20,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
       <body style={{ margin: 0, padding: 0, backgroundColor: '#0b0f19', color: '#f1f5f9', fontFamily: "'Inter', sans-serif" }}>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

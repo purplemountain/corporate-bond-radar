@@ -1,5 +1,6 @@
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
+import GoogleLoginButton from './GoogleLoginButton';
 
 export default async function LoginPage() {
   const session = await auth();
@@ -19,31 +20,8 @@ export default async function LoginPage() {
           이 대시보드는 허가된 사용자만 접속할 수 있는 보안 터미널입니다. 구글 계정으로 로그인해 주세요.
         </p>
 
-        {/* Direct Form Post to /api/auth/signin/google bypassing server action host resolution */}
-        <form action="/api/auth/signin/google" method="POST">
-          <input type="hidden" name="redirectTo" value="https://corporate-bond-radar.onrender.com" />
-          <button
-            type="submit"
-            style={{
-              width: '100%',
-              padding: '0.8rem 1.2rem',
-              backgroundColor: '#4285F4',
-              color: '#ffffff',
-              border: 'none',
-              borderRadius: '12px',
-              fontWeight: 700,
-              fontSize: '0.95rem',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.75rem',
-              boxShadow: '0 4px 12px rgba(66, 133, 244, 0.3)'
-            }}
-          >
-            <i className="fa-brands fa-google"></i> Google 계정으로 로그인
-          </button>
-        </form>
+        {/* Client-side OAuth trigger bypassing Chrome Safe Browsing POST form misdetection */}
+        <GoogleLoginButton />
 
         <div style={{ marginTop: '2rem', fontSize: '0.78rem', color: '#64748b', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1rem' }}>
           Allowed Access: <strong>jaeyong.hong@gmail.com</strong>, <strong>eunsun.jung@gmail.com</strong>
