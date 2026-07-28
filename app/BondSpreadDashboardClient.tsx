@@ -242,14 +242,21 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <canvas ref={spreadChartRef}></canvas>
         </div>
 
-        {/* Restored Comment 1 */}
+        {/* Enhanced Comment 1 with Threshold & Problem Analysis */}
         <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #38BDF8', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: 700, color: '#38BDF8', marginBottom: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            💡 시장 인사이트 분석 (Market Insight Comment)
+          <div style={{ fontWeight: 700, color: '#38BDF8', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            💡 회사채 스프레드(OAS) 임계치 및 리스크 분석
           </div>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.2)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
+            <div>🟢 <strong style={{ color: '#10B981' }}>정상 범위</strong>: <strong>30bp ~ 80bp</strong> (우량 빅테크 저리 자금 조달 원활)</div>
+            <div>🟡 <strong style={{ color: '#F59E0B' }}>주의 범위</strong>: <strong>100bp ~ 150bp</strong> (조달 이자 비용 증가 시작)</div>
+            <div>🔴 <strong style={{ color: '#EF4444' }}>위험 범위</strong>: <strong>150bp 이상</strong> (신용등급 강등 및 발행 위축)</div>
+          </div>
+
           <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
-            <li><strong style={{ color: '#EF4444' }}>오라클(Oracle) 신용등급 하향 조정 (BBB- Downgraded) & 스프레드 급등 (224bp)</strong>: 대규모 CapEx 자금 조달로 인한 부채 증가 여파로 신용등급이 하향되었으며, 타 빅테크(Alphabet 58bp, Microsoft 45bp) 대비 가파른 리스크 프리미엄이 반영되었습니다.</li>
-            <li><strong style={{ color: '#38BDF8' }}>AAA / AA급 우량 빅테크 안전 자산 선호</strong>: Microsoft, Alphabet 등 초우량 빅테크 기업은 견고한 현금 흐름 기반으로 40~60bp 수준의 강한 스프레드 안정성을 유지하고 있습니다.</li>
+            <li><strong style={{ color: '#EF4444' }}>오라클 (Oracle 224bp - Danger)</strong>: <strong>200bp 상회로 위험 범주 진입</strong>. CapEx 부채 누적으로 BBB- 하향되었으며, 이자 부담 급증으로 추가 채권 발행 시 자금 조달 비용 대폭 상승 리스크 발생.</li>
+            <li><strong style={{ color: '#38BDF8' }}>우량 빅테크 (Microsoft 45bp, Alphabet 58bp - Normal)</strong>: <strong>30~60bp 정상 범주 유효</strong>. 독보적인 현금 창출력으로 시장 변동성 속에서도 최상위 유동성 안전판 확보.</li>
           </ul>
         </div>
       </div>
@@ -261,14 +268,26 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <canvas ref={indigestionChartRef}></canvas>
         </div>
 
-        {/* Restored Comment 2 */}
+        {/* Enhanced Comment 2 with Threshold & Problem Analysis */}
         <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #F43F5E', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: 700, color: '#F43F5E', marginBottom: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            🚨 물량 소화 불량(Indigestion) 경고 분석
+          <div style={{ fontWeight: 700, color: '#F43F5E', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            🚨 물량 소화 불량(Indigestion) 지표별 정상/위험 임계치
           </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.2)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
+            <div>
+              <div style={{ fontWeight: 700, color: '#F43F5E' }}>🏷️ 발행 프리미엄 (NIC)</div>
+              <div>🟢 <strong>정상</strong>: 0 ~ 5bp | 🔴 <strong>위험 (소화불량)</strong>: 15bp 이상</div>
+            </div>
+            <div>
+              <div style={{ fontWeight: 700, color: '#818CF8' }}>📈 청약 경쟁률 (Orderbook Multiple)</div>
+              <div>🟢 <strong>정상</strong>: 3.5배 이상 | 🔴 <strong>위험 (수급고갈)</strong>: 2.5배 이하</div>
+            </div>
+          </div>
+
           <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
-            <li><strong style={{ color: '#F43F5E' }}>신규 발행 프리미엄 (NIC, New Issue Concession) 22bp 지속 상승</strong>: 발행 기관이 신규 채권을 배정하기 위해 추가 금리 프리미엄(NIC)을 22bp 이상 얹어주어야 소화되는 수급 둔화 현상이 포착됩니다.</li>
-            <li><strong style={{ color: '#818CF8' }}>청약 경쟁률 (Orderbook Multiple) 2.1배 수준 하강</strong>: 주문 배수가 과거 평균 3.5~4.0배 대비 2.1배 수준으로 축소되어 기관 투자자의 채권 인수 여력이 다소 약화된 상태입니다.</li>
+            <li><strong style={{ color: '#F43F5E' }}>현재 NIC (22bp - Danger)</strong>: <strong>위험 기준선(15bp) 초과</strong>. 채권을 발행할 때 투자자에게 과도한 덤핑 금리를 얹어주어야만 청약이 완료되는 <strong>수급 소화 불량 병목 문제</strong> 발생.</li>
+            <li><strong style={{ color: '#818CF8' }}>현재 청약 경쟁률 (2.1배 - Danger)</strong>: <strong>위험 기준선(2.5배 이하) 진입</strong>. 기관 투자자의 매수 수요 고갈로 향후 발행 미달(Under-subscription) 및 유통가 하락 위험 우려.</li>
           </ul>
         </div>
       </div>
@@ -280,14 +299,26 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <canvas ref={treasuryChartRef}></canvas>
         </div>
 
-        {/* Restored Comment 3 */}
+        {/* Enhanced Comment 3 with Threshold & Problem Analysis */}
         <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #3B82F6', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: 700, color: '#60A5FA', marginBottom: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            🇺🇸 미국채 금리 & 입찰 수급 동향
+          <div style={{ fontWeight: 700, color: '#60A5FA', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            🇺🇸 미국채 금리 & 10Y-2Y 수익률 곡선 임계치 분석
           </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.2)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
+            <div>
+              <div style={{ fontWeight: 700, color: '#3B82F6' }}>💵 미국채 10년물 금리 (US10Y)</div>
+              <div>🟢 <strong>정상</strong>: 3.5% ~ 4.0% | 🔴 <strong>위험 (조달압박)</strong>: 4.5% 이상</div>
+            </div>
+            <div>
+              <div style={{ fontWeight: 700, color: '#10B981' }}>📐 10년-2년 금리차 (Yield Gap)</div>
+              <div>🟢 <strong>정상</strong>: +50bp ~ +150bp | 🔴 <strong>위험 (역전/스티프닝)</strong>: 0bp 이하</div>
+            </div>
+          </div>
+
           <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
-            <li><strong style={{ color: '#3B82F6' }}>미국채 10년물(US 10Y) 수익률 실시간 연동 ({data.us10yYield}%)</strong>: 기준금리 향방과 재정적자 공급 물량에 따라 4%대 상단에서 긴장감을 형성하고 있습니다.</li>
-            <li><strong style={{ color: '#10B981' }}>10년-2년 수익률 곡선 Gap (+22bp)</strong>: 장단기 금리차의 정상화 과정 속에서 장기채 조달 프리미엄이 빅테크 회사채 발행 금리에 직접적 부담 요소로 작용하고 있습니다.</li>
+            <li><strong style={{ color: '#3B82F6' }}>US 10Y 금리 ({data.us10yYield}% - Caution)</strong>: 4.0% 상단에 위치하여 기업들의 전체 베이스라인 조달 금리 산정 부담이 커진 상태.</li>
+            <li><strong style={{ color: '#10B981' }}>수익률 곡선 Gap (+22bp - Normal/Recovery)</strong>: 장단기 금리 역전 해소 구간이나, 장기채 금리가 가파르게 상승하는 Bear Steepening 발생 시 10년 이상 장기 빅테크 회사채 발행 금리에 직접적 상승 압력 유발.</li>
           </ul>
         </div>
       </div>
