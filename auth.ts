@@ -24,6 +24,7 @@ const googleClientId = (process.env.AUTH_GOOGLE_ID || process.env.GOOGLE_CLIENT_
 const googleClientSecret = (process.env.AUTH_GOOGLE_SECRET || process.env.GOOGLE_CLIENT_SECRET || '').trim();
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || 'super-secret-bond-radar-key-2026-auth',
   trustHost: true,
   pages: {
     signIn: '/login',
@@ -49,9 +50,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
     async redirect({ url, baseUrl }) {
-      if (url.startsWith('/')) return `${baseUrl}${url}`;
-      else if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
+      const liveBaseUrl = 'https://corporate-bond-radar.onrender.com';
+      if (url.startsWith('/')) return `${liveBaseUrl}${url}`;
+      return liveBaseUrl;
     },
     authorized({ auth, request: { nextUrl } }) {
       const path = nextUrl.pathname;
