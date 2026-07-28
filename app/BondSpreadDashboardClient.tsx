@@ -180,7 +180,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       {/* Top Banner with Refresh Action */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', background: 'rgba(18, 26, 43, 0.75)', padding: '1rem 1.25rem', borderRadius: '14px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
         <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
-          Last Fetched: <strong style={{ color: '#f1f5f9' }}>{new Date(data.timestamp).toLocaleString()}</strong> | Allowed Account: <strong style={{ color: '#38BDF8' }}>{userEmail}</strong>
+          Last Fetched: <strong style={{ color: '#f1f5f9' }}>{new Date(data.timestamp).toLocaleString()}</strong> | User Account: <strong style={{ color: '#38BDF8' }}>{userEmail}</strong>
         </div>
         <button
           onClick={fetchLiveMarketData}
@@ -217,7 +217,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
       </div>
 
-      {/* Main Spreads Chart */}
+      {/* 1. Main Spreads Chart Card */}
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
           <h3 style={{ margin: 0, fontSize: '1.2rem' }}>📊 빅테크 회사채 발행 스프레드 & 미국채 동향</h3>
@@ -238,24 +238,57 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             ))}
           </div>
         </div>
-        <div style={{ position: 'relative', height: '400px' }}>
+        <div style={{ position: 'relative', height: '380px' }}>
           <canvas ref={spreadChartRef}></canvas>
         </div>
-      </div>
 
-      {/* Indigestion Chart */}
-      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(244, 63, 94, 0.25)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
-        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', color: '#F87171' }}>🚨 회사채 물량 소화 불량 모니터링 (NIC & 청약 경쟁률)</h3>
-        <div style={{ position: 'relative', height: '380px' }}>
-          <canvas ref={indigestionChartRef}></canvas>
+        {/* Restored Comment 1 */}
+        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #38BDF8', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+          <div style={{ fontWeight: 700, color: '#38BDF8', marginBottom: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            💡 시장 인사이트 분석 (Market Insight Comment)
+          </div>
+          <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
+            <li><strong style={{ color: '#EF4444' }}>오라클(Oracle) 신용등급 하향 조정 (BBB- Downgraded) & 스프레드 급등 (224bp)</strong>: 대규모 CapEx 자금 조달로 인한 부채 증가 여파로 신용등급이 하향되었으며, 타 빅테크(Alphabet 58bp, Microsoft 45bp) 대비 가파른 리스크 프리미엄이 반영되었습니다.</li>
+            <li><strong style={{ color: '#38BDF8' }}>AAA / AA급 우량 빅테크 안전 자산 선호</strong>: Microsoft, Alphabet 등 초우량 빅테크 기업은 견고한 현금 흐름 기반으로 40~60bp 수준의 강한 스프레드 안정성을 유지하고 있습니다.</li>
+          </ul>
         </div>
       </div>
 
-      {/* Treasury Yield Chart */}
+      {/* 2. Indigestion Chart Card */}
+      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(244, 63, 94, 0.25)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
+        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', color: '#F87171' }}>🚨 회사채 물량 소화 불량 모니터링 (NIC & 청약 경쟁률)</h3>
+        <div style={{ position: 'relative', height: '360px' }}>
+          <canvas ref={indigestionChartRef}></canvas>
+        </div>
+
+        {/* Restored Comment 2 */}
+        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #F43F5E', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+          <div style={{ fontWeight: 700, color: '#F43F5E', marginBottom: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            🚨 물량 소화 불량(Indigestion) 경고 분석
+          </div>
+          <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
+            <li><strong style={{ color: '#F43F5E' }}>신규 발행 프리미엄 (NIC, New Issue Concession) 22bp 지속 상승</strong>: 발행 기관이 신규 채권을 배정하기 위해 추가 금리 프리미엄(NIC)을 22bp 이상 얹어주어야 소화되는 수급 둔화 현상이 포착됩니다.</li>
+            <li><strong style={{ color: '#818CF8' }}>청약 경쟁률 (Orderbook Multiple) 2.1배 수준 하강</strong>: 주문 배수가 과거 평균 3.5~4.0배 대비 2.1배 수준으로 축소되어 기관 투자자의 채권 인수 여력이 다소 약화된 상태입니다.</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* 3. Treasury Yield Chart Card */}
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(59, 130, 246, 0.25)', borderRadius: '16px', padding: '1.5rem' }}>
         <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', color: '#60A5FA' }}>🇺🇸 미국채 10년물(US 10Y) 조달 금리 & 입찰 응찰률</h3>
-        <div style={{ position: 'relative', height: '380px' }}>
+        <div style={{ position: 'relative', height: '360px' }}>
           <canvas ref={treasuryChartRef}></canvas>
+        </div>
+
+        {/* Restored Comment 3 */}
+        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #3B82F6', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+          <div style={{ fontWeight: 700, color: '#60A5FA', marginBottom: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            🇺🇸 미국채 금리 & 입찰 수급 동향
+          </div>
+          <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
+            <li><strong style={{ color: '#3B82F6' }}>미국채 10년물(US 10Y) 수익률 실시간 연동 ({data.us10yYield}%)</strong>: 기준금리 향방과 재정적자 공급 물량에 따라 4%대 상단에서 긴장감을 형성하고 있습니다.</li>
+            <li><strong style={{ color: '#10B981' }}>10년-2년 수익률 곡선 Gap (+22bp)</strong>: 장단기 금리차의 정상화 과정 속에서 장기채 조달 프리미엄이 빅테크 회사채 발행 금리에 직접적 부담 요소로 작용하고 있습니다.</li>
+          </ul>
         </div>
       </div>
     </div>
