@@ -1,4 +1,4 @@
-import { auth } from '@/auth';
+import { auth, signOut, isAllowedEmail } from '@/auth';
 import { redirect } from 'next/navigation';
 import BondSpreadDashboardClient from './BondSpreadDashboardClient';
 
@@ -9,6 +9,42 @@ export default async function HomePage() {
 
   if (!session?.user?.email) {
     redirect('/login');
+  }
+
+  const userEmail = session.user.email;
+  const isAuthorized = isAllowedEmail(userEmail);
+
+  if (!isAuthorized) {
+    return (
+      <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#0b0f19', padding: '1rem' }}>
+        <div style={{ background: 'rgba(18, 26, 43, 0.85)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '20px', padding: '2.5rem', maxWidth: '440px', width: '100%', textAlign: 'center', boxShadow: '0 20px 50px rgba(0, 0, 0, 0.5)' }}>
+          <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🚫</div>
+          <h1 style={{ fontFamily: "'Outfit', sans-serif", fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.5rem', color: '#F87171' }}>
+            접근 권한이 없는 계정입니다
+          </h1>
+          <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+            로그인하신 계정 (<strong style={{ color: '#f1f5f9' }}>{userEmail}</strong>)은 이 보완 터미널의 접근 허가 목록에 등록되어 있지 않습니다.
+          </p>
+          <form action="/api/auth/signout" method="POST">
+            <button
+              type="submit"
+              style={{
+                width: '100%',
+                padding: '0.75rem 1.2rem',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                color: '#ffffff',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '12px',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              다른 계정으로 로그인
+            </button>
+          </form>
+        </div>
+      </main>
+    );
   }
 
   return (
@@ -34,17 +70,17 @@ export default async function HomePage() {
               type="submit"
               style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#f1f5f9', padding: '0.4rem 0.8rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem' }}
             >
-              Sign out ({session.user.email})
+              Sign out ({userEmail})
             </button>
           </form>
         </div>
       </header>
 
       {/* Dynamic Real-time Client Dashboard Component */}
-      <BondSpreadDashboardClient userEmail={session.user.email} />
+      <BondSpreadDashboardClient userEmail={userEmail} />
 
       <footer style={{ marginTop: '3rem', textAlign: 'center', fontSize: '0.8rem', color: '#64748b', paddingTop: '1rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
-        Authorized Access Only for {session.user.email} | Live Render Terminal
+        Authorized Access Only for {userEmail} | Live Render Terminal
       </footer>
     </main>
   );

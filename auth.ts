@@ -6,7 +6,7 @@ if (process.env.NODE_ENV === 'production' || !process.env.AUTH_URL) {
   process.env.NEXTAUTH_URL = 'https://corporate-bond-radar.onrender.com';
 }
 
-function normalizeEmail(email?: string | null) {
+export function normalizeEmail(email?: string | null) {
   return (email || '').trim().toLowerCase();
 }
 
@@ -14,7 +14,7 @@ export function isAllowedEmail(email?: string | null) {
   if (!email) return false;
   const target = normalizeEmail(email);
   
-  // Clean dots for gmail matching if applicable
+  // Clean dots for gmail matching
   const targetUser = target.split('@')[0].replace(/\./g, '');
   const targetDomain = target.split('@')[1] || '';
 
@@ -30,7 +30,6 @@ export function isAllowedEmail(email?: string | null) {
     const normAllowed = normalizeEmail(allowedStr);
     if (target === normAllowed) return true;
     
-    // Check clean user matching for gmail
     const allowedUser = normAllowed.split('@')[0].replace(/\./g, '');
     const allowedDomain = normAllowed.split('@')[1] || '';
 
@@ -57,11 +56,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ account, profile }) {
-      if (account?.provider === 'google') {
-        const email = normalizeEmail(profile?.email as string | undefined);
-        return isAllowedEmail(email);
-      }
+    async signIn() {
+      // Always allow Google OAuth sign-in to proceed, authorization will be checked in Session/Page
       return true;
     },
     async jwt({ token, profile }) {
@@ -86,8 +82,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     authorized({ auth, request: { nextUrl } }) {
       const path = nextUrl.pathname;
       if (path.startsWith('/login') || path.startsWith('/api/auth')) return true;
-      const userEmail = auth?.user?.email;
-      return Boolean(userEmail && isAllowedEmail(userEmail));
+      return Boolean(auth?.user);
     },
   },
 });
