@@ -1,6 +1,15 @@
 import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 
+// Force 64-character 256-bit strong encryption secret to prevent NextAuth MissingSecretError permanently
+const defaultSecret = 'd8a7c6b5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b7';
+if (!process.env.AUTH_SECRET) {
+  process.env.AUTH_SECRET = defaultSecret;
+}
+if (!process.env.NEXTAUTH_SECRET) {
+  process.env.NEXTAUTH_SECRET = defaultSecret;
+}
+
 if (process.env.NODE_ENV === 'production' || !process.env.AUTH_URL) {
   process.env.AUTH_URL = 'https://corporate-bond-radar.onrender.com';
   process.env.NEXTAUTH_URL = 'https://corporate-bond-radar.onrender.com';
@@ -38,10 +47,9 @@ export function isAllowedEmail(email?: string | null) {
 
 const googleClientId = (process.env.AUTH_GOOGLE_ID || process.env.GOOGLE_CLIENT_ID || '').trim();
 const googleClientSecret = (process.env.AUTH_GOOGLE_SECRET || process.env.GOOGLE_CLIENT_SECRET || '').trim();
-const authSecret = (process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || 'super-secret-bond-radar-key-2026-auth').trim();
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  secret: authSecret,
+  secret: process.env.AUTH_SECRET,
   trustHost: true,
   session: { strategy: 'jwt' },
   basePath: '/api/auth',
