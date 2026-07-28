@@ -9,6 +9,10 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 18.17.0
+      - key: AUTH_URL
+        value: https://corporate-bond-radar.onrender.com
+      - key: NEXTAUTH_URL
+        value: https://corporate-bond-radar.onrender.com
       - key: ALLOWED_EMAILS
         value: jaeyong.hong@gmail.com,eunsun.jung@gmail.com
       - key: AUTH_SECRET
