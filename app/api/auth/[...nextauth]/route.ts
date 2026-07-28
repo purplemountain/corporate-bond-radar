@@ -1,3 +1,9 @@
-import { handlers } from '@/auth';
+import { NextResponse } from 'next/server';
 
-export const { GET, POST } = handlers;
+export async function GET() {
+  return NextResponse.redirect('https://corporate-bond-radar.onrender.com/api/auth/google');
+}
+
+export async function POST() {
+  return NextResponse.redirect('https://corporate-bond-radar.onrender.com/api/auth/google');
+}

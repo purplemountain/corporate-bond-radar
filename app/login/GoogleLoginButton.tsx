@@ -1,12 +1,14 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
-
 export default function GoogleLoginButton() {
+  const handleLogin = () => {
+    window.location.href = '/api/auth/google';
+  };
+
   return (
     <button
       type="button"
-      onClick={() => signIn('google', { callbackUrl: '/' })}
+      onClick={handleLogin}
       style={{
         width: '100%',
         padding: '0.8rem 1.2rem',
