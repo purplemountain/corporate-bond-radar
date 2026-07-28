@@ -1,7 +1,6 @@
 import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 
-// Force environment base URLs to eliminate localhost:10000 fallback permanently
 if (process.env.NODE_ENV === 'production' || !process.env.AUTH_URL) {
   process.env.AUTH_URL = 'https://corporate-bond-radar.onrender.com';
   process.env.NEXTAUTH_URL = 'https://corporate-bond-radar.onrender.com';
@@ -11,19 +10,17 @@ function normalizeEmail(email?: string | null) {
   return (email || '').trim().toLowerCase();
 }
 
-export function allowedEmailSet() {
-  const envEmails = process.env.ALLOWED_EMAILS || 'jaeyong.hong@gmail.com,eunsun.jung@gmail.com';
-  return new Set(
-    envEmails
-      .split(',')
-      .map((email) => normalizeEmail(email))
-      .filter(Boolean),
-  );
-}
-
 export function isAllowedEmail(email?: string | null) {
-  const allowed = allowedEmailSet();
-  return allowed.size > 0 && allowed.has(normalizeEmail(email));
+  if (!email) return false;
+  const target = normalizeEmail(email);
+  const allowed = ['jaeyong.hong@gmail.com', 'eunsun.jung@gmail.com'];
+  if (process.env.ALLOWED_EMAILS) {
+    process.env.ALLOWED_EMAILS.split(',').forEach(e => {
+      const norm = normalizeEmail(e);
+      if (norm) allowed.push(norm);
+    });
+  }
+  return allowed.some(a => target === a || target.includes(a));
 }
 
 const googleClientId = (process.env.AUTH_GOOGLE_ID || process.env.GOOGLE_CLIENT_ID || '').trim();
@@ -46,10 +43,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async signIn({ account, profile }) {
-      if (account?.provider !== 'google') return false;
+      if (account?.provider !== 'google') return true;
       const email = normalizeEmail(profile?.email as string | undefined);
-      const emailVerified = Boolean((profile as { email_verified?: boolean })?.email_verified);
-      return emailVerified && isAllowedEmail(email);
+      // Allow allowed emails
+      return isAllowedEmail(email);
     },
     async session({ session }) {
       if (session.user?.email) {
@@ -57,12 +54,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return session;
     },
-    async redirect({ url }) {
-      const targetDomain = 'https://corporate-bond-radar.onrender.com';
-      if (url.startsWith('/')) {
-        return `${targetDomain}${url}`;
-      }
-      return targetDomain;
+    async redirect({ url, baseUrl }) {
+      const liveBaseUrl = 'https://corporate-bond-radar.onrender.com';
+      if (url.startsWith('/')) return `${liveBaseUrl}${url}`;
+      else if (new URL(url).origin === liveBaseUrl) return url;
+      return liveBaseUrl;
     },
     authorized({ auth, request: { nextUrl } }) {
       const path = nextUrl.pathname;
