@@ -2,13 +2,8 @@ import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import GoogleLoginButton from './GoogleLoginButton';
 
-export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ error?: string }>;
-}) {
+export default async function LoginPage() {
   const session = await auth();
-  const params = await searchParams;
 
   if (session?.user?.email) {
     redirect('/');
@@ -21,15 +16,9 @@ export default async function LoginPage({
         <h1 style={{ fontFamily: "'Outfit', sans-serif", fontSize: '1.6rem', fontWeight: 800, marginBottom: '0.5rem', color: '#f1f5f9' }}>
           Corporate Bond Radar
         </h1>
-        <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
-          보안 터미널입니다. 허가된 Google 계정으로 로그인해 주세요.
+        <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '2rem', lineHeight: 1.5 }}>
+          보안 터미널입니다. 구글 계정으로 로그인해 주세요.
         </p>
-
-        {params?.error && (
-          <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#FCA5A5', padding: '0.75rem', borderRadius: '10px', fontSize: '0.82rem', marginBottom: '1.5rem' }}>
-            로그인 인증 처리 중 ({params.error}) 오류가 발생했습니다. 구글 계정을 다시 선택해 주세요.
-          </div>
-        )}
 
         <GoogleLoginButton />
       </div>

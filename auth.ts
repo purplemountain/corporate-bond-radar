@@ -45,38 +45,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   session: { strategy: 'jwt' },
   basePath: '/api/auth',
-  pages: {
-    signIn: '/login',
-    error: '/login',
-  },
   providers: [
     Google({
       clientId: googleClientId,
       clientSecret: googleClientSecret,
-      authorization: {
-        params: {
-          prompt: 'select_account',
-        },
-      },
     }),
   ],
   callbacks: {
-    async signIn() {
-      return true;
-    },
-    async jwt({ token, profile }) {
-      if (profile?.email) {
-        token.email = normalizeEmail(profile.email as string);
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (token?.email) {
-        if (!session.user) session.user = { email: token.email, id: token.sub || '' };
-        else session.user.email = token.email as string;
-      }
-      return session;
-    },
     async redirect() {
       return 'https://corporate-bond-radar.onrender.com';
     },
