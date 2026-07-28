@@ -26,8 +26,8 @@ export default async function LoginPage({
         </p>
 
         {params?.error && (
-          <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#FCA5A5', padding: '0.75rem', borderRadius: '10px', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
-            로그인 실패: 승인된 구글 계정으로 다시 시도해 주세요.
+          <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#FCA5A5', padding: '0.75rem', borderRadius: '10px', fontSize: '0.82rem', marginBottom: '1.5rem' }}>
+            로그인 인증 처리 중 ({params.error}) 오류가 발생했습니다. 구글 계정을 다시 선택해 주세요.
           </div>
         )}
 

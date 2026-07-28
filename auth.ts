@@ -14,7 +14,6 @@ export function isAllowedEmail(email?: string | null) {
   if (!email) return false;
   const target = normalizeEmail(email);
   
-  // Clean dots for gmail matching
   const targetUser = target.split('@')[0].replace(/\./g, '');
   const targetDomain = target.split('@')[1] || '';
 
@@ -44,6 +43,7 @@ const authSecret = (process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || 's
 export const { handlers, auth, signIn, signOut } = NextAuth({
   secret: authSecret,
   trustHost: true,
+  session: { strategy: 'jwt' },
   basePath: '/api/auth',
   pages: {
     signIn: '/login',
@@ -53,11 +53,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Google({
       clientId: googleClientId,
       clientSecret: googleClientSecret,
+      authorization: {
+        params: {
+          prompt: 'select_account',
+        },
+      },
     }),
   ],
   callbacks: {
     async signIn() {
-      // Always allow Google OAuth sign-in to proceed, authorization will be checked in Session/Page
       return true;
     },
     async jwt({ token, profile }) {
@@ -73,16 +77,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return session;
     },
-    async redirect({ url }) {
-      const liveBaseUrl = 'https://corporate-bond-radar.onrender.com';
-      if (url.startsWith('/')) return `${liveBaseUrl}${url}`;
-      else if (url.includes('corporate-bond-radar.onrender.com')) return url;
-      return liveBaseUrl;
-    },
-    authorized({ auth, request: { nextUrl } }) {
-      const path = nextUrl.pathname;
-      if (path.startsWith('/login') || path.startsWith('/api/auth')) return true;
-      return Boolean(auth?.user);
+    async redirect() {
+      return 'https://corporate-bond-radar.onrender.com';
     },
   },
 });
