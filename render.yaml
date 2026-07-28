@@ -9,6 +9,8 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 18.17.0
+      - key: AUTH_TRUST_HOST
+        value: "true"
       - key: AUTH_URL
         value: https://corporate-bond-radar.onrender.com
       - key: NEXTAUTH_URL

@@ -45,6 +45,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      // Force correct protocol and domain redirect
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
     authorized({ auth, request: { nextUrl } }) {
       const path = nextUrl.pathname;
       if (path.startsWith('/login') || path.startsWith('/api/auth')) return true;
