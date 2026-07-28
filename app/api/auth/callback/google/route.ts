@@ -14,7 +14,6 @@ export async function GET(request: NextRequest) {
   const redirectUri = 'https://corporate-bond-radar.onrender.com/api/auth/callback/google';
 
   try {
-    // 1. Exchange OAuth authorization code for Google access token
     const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -28,15 +27,15 @@ export async function GET(request: NextRequest) {
     });
 
     if (!tokenRes.ok) {
-      const errText = await tokenRes.text();
-      console.error('Google token exchange error:', errText);
-      return NextResponse.redirect(new URL('/login?error=TokenExchangeFailed', 'https://corporate-bond-radar.onrender.com'));
+      const errJson = await tokenRes.json().catch(() => ({}));
+      const detail = errJson.error_description || errJson.error || 'SecretMismatch';
+      console.error('Google token exchange error:', detail);
+      return NextResponse.redirect(new URL(`/login?error=TokenExchangeFailed_${detail}`, 'https://corporate-bond-radar.onrender.com'));
     }
 
     const tokenData = await tokenRes.json();
     const accessToken = tokenData.access_token;
 
-    // 2. Fetch User Profile Email from Google UserInfo Endpoint
     const userRes = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
@@ -48,7 +47,6 @@ export async function GET(request: NextRequest) {
     const userInfo = await userRes.json();
     const email = normalizeEmail(userInfo.email);
 
-    // 3. Email Authorization Check
     const allowed = isAllowedEmail(email);
 
     if (!allowed) {
@@ -58,10 +56,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(accessDeniedUrl);
     }
 
-    // 4. Set Encrypted Session Cookie & Redirect to Homepage
     const response = NextResponse.redirect(new URL('/', 'https://corporate-bond-radar.onrender.com'));
     
-    // Cookie valid for 30 days
     response.cookies.set('bond_session_email', email, {
       httpOnly: true,
       secure: true,
@@ -72,7 +68,6 @@ export async function GET(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error('OAuth Callback Processing Error:', error);
     return NextResponse.redirect(new URL('/login?error=ServerError', 'https://corporate-bond-radar.onrender.com'));
   }
 }
