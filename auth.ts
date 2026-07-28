@@ -1,6 +1,12 @@
 import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 
+// Force environment base URLs to eliminate localhost:10000 fallback permanently
+if (process.env.NODE_ENV === 'production' || !process.env.AUTH_URL) {
+  process.env.AUTH_URL = 'https://corporate-bond-radar.onrender.com';
+  process.env.NEXTAUTH_URL = 'https://corporate-bond-radar.onrender.com';
+}
+
 function normalizeEmail(email?: string | null) {
   return (email || '').trim().toLowerCase();
 }
@@ -22,10 +28,12 @@ export function isAllowedEmail(email?: string | null) {
 
 const googleClientId = (process.env.AUTH_GOOGLE_ID || process.env.GOOGLE_CLIENT_ID || '').trim();
 const googleClientSecret = (process.env.AUTH_GOOGLE_SECRET || process.env.GOOGLE_CLIENT_SECRET || '').trim();
+const authSecret = (process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || 'super-secret-bond-radar-key-2026-auth').trim();
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || 'super-secret-bond-radar-key-2026-auth',
+  secret: authSecret,
   trustHost: true,
+  basePath: '/api/auth',
   pages: {
     signIn: '/login',
     error: '/login',
@@ -49,10 +57,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return session;
     },
-    async redirect({ url, baseUrl }) {
-      const liveBaseUrl = 'https://corporate-bond-radar.onrender.com';
-      if (url.startsWith('/')) return `${liveBaseUrl}${url}`;
-      return liveBaseUrl;
+    async redirect({ url }) {
+      const targetDomain = 'https://corporate-bond-radar.onrender.com';
+      if (url.startsWith('/')) {
+        return `${targetDomain}${url}`;
+      }
+      return targetDomain;
     },
     authorized({ auth, request: { nextUrl } }) {
       const path = nextUrl.pathname;
