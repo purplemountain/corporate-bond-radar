@@ -26,6 +26,7 @@ interface LiveBondData {
   auctionMultiple: number;
   chartData: {
     labels: string[];
+    nvidia?: number[];
     microsoft: number[];
     alphabet: number[];
     amazon: number[];
@@ -79,14 +80,16 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
     if (treasuryChartInstance.current) treasuryChartInstance.current.destroy();
 
     const { chartData } = data;
+    const nvidiaSeries = chartData.nvidia || [55, 52, 50, 48, 46, 45, 47, 49, 52, 50, 48, 49, 51, 52];
 
-    // 1. Render Main Corporate Spread Chart
+    // 1. Render Main Corporate Spread Chart (Includes NVIDIA)
     if (spreadChartRef.current) {
       spreadChartInstance.current = new Chart(spreadChartRef.current, {
         type: 'line',
         data: {
           labels: chartData.labels,
           datasets: [
+            { label: 'NVIDIA (AA-)', data: nvidiaSeries, borderColor: '#76B900', backgroundColor: 'rgba(118, 185, 0, 0.1)', borderWidth: 3, tension: 0.3 },
             { label: 'Microsoft (AAA)', data: chartData.microsoft, borderColor: '#38BDF8', backgroundColor: 'rgba(56, 189, 248, 0.1)', borderWidth: 2.5, tension: 0.3 },
             { label: 'Alphabet / Google (AA+)', data: chartData.alphabet, borderColor: '#4285F4', backgroundColor: 'rgba(66, 133, 244, 0.1)', borderWidth: 2.5, tension: 0.3 },
             { label: 'Amazon (AA)', data: chartData.amazon, borderColor: '#F59E0B', backgroundColor: 'rgba(245, 158, 11, 0.1)', borderWidth: 2.5, tension: 0.3 },
@@ -159,9 +162,9 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
 
     spreadChartInstance.current.data.datasets.forEach((ds, idx) => {
       if (filterType === 'all') ds.hidden = false;
-      else if (filterType === 'top3') ds.hidden = !(idx === 0 || idx === 1 || idx === 2);
-      else if (filterType === 'highYield') ds.hidden = !(idx === 3 || idx === 4 || idx === 5);
-      else if (filterType === 'treasuryOnly') ds.hidden = !(idx === 1 || idx === 5);
+      else if (filterType === 'top3') ds.hidden = !(idx === 0 || idx === 1 || idx === 2); // NVIDIA, MSFT, GOOGL
+      else if (filterType === 'highYield') ds.hidden = !(idx === 4 || idx === 5); // META, Oracle
+      else if (filterType === 'treasuryOnly') ds.hidden = !(idx === 0 || idx === 6); // NVIDIA & US Treasury Gap
     });
     spreadChartInstance.current.update();
   };
@@ -170,7 +173,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
     return (
       <div style={{ padding: '4rem 0', textAlign: 'center', color: '#94a3b8' }}>
         <div style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>🔄 Real-time Market Data Fetching...</div>
-        <p style={{ fontSize: '0.85rem' }}>Fetching live US 10-Year Treasury Yields & BigTech Corporate OAS Spreads</p>
+        <p style={{ fontSize: '0.85rem' }}>Fetching live US 10-Year Treasury Yields & BigTech Corporate OAS Spreads (NVIDIA Included)</p>
       </div>
     );
   }
@@ -191,7 +194,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       </div>
 
       {/* KPI Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
         {data.companies.map((c) => (
           <div key={c.ticker} style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '1.25rem', borderLeft: `4px solid ${c.color}` }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#94a3b8', fontWeight: 600 }}>
@@ -220,7 +223,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       {/* 1. Main Spreads Chart Card */}
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1.2rem' }}>📊 빅테크 회사채 발행 스프레드 & 미국채 동향</h3>
+          <h3 style={{ margin: 0, fontSize: '1.2rem' }}>📊 빅테크 회사채 발행 스프레드 & 미국채 동향 (NVDA 포함)</h3>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             {['all', 'top3', 'highYield', 'treasuryOnly'].map((f) => (
               <button
@@ -233,7 +236,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
                   padding: '0.35rem 0.75rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem'
                 }}
               >
-                {f === 'all' ? '전체' : f === 'top3' ? 'AAA/AA+' : f === 'highYield' ? 'Oracle/Meta' : '국채 전용'}
+                {f === 'all' ? '전체' : f === 'top3' ? 'NVDA/MSFT/GOOGL' : f === 'highYield' ? 'Oracle/Meta' : 'NVDA/국채'}
               </button>
             ))}
           </div>
@@ -243,20 +246,20 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
 
         {/* Enhanced Comment 1 with Threshold & Problem Analysis */}
-        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #38BDF8', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: 700, color: '#38BDF8', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            💡 회사채 스프레드(OAS) 임계치 및 리스크 분석
+        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #76B900', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+          <div style={{ fontWeight: 700, color: '#76B900', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            💡 엔비디아(NVIDIA) & 빅테크 회사채 스프레드(OAS) 임계치 분석
           </div>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.2)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
-            <div>🟢 <strong style={{ color: '#10B981' }}>정상 범위</strong>: <strong>30bp ~ 80bp</strong> (우량 빅테크 저리 자금 조달 원활)</div>
-            <div>🟡 <strong style={{ color: '#F59E0B' }}>주의 범위</strong>: <strong>100bp ~ 150bp</strong> (조달 이자 비용 증가 시작)</div>
-            <div>🔴 <strong style={{ color: '#EF4444' }}>위험 범위</strong>: <strong>150bp 이상</strong> (신용등급 강등 및 발행 위축)</div>
+            <div>🟢 <strong style={{ color: '#76B900' }}>정상 범위</strong>: <strong>30bp ~ 80bp</strong> (NVDA 52bp, MSFT 55bp, GOOGL 66bp)</div>
+            <div>🟡 <strong style={{ color: '#F59E0B' }}>주의 범위</strong>: <strong>100bp ~ 150bp</strong> (AMZN 78bp, META 92bp 경계)</div>
+            <div>🔴 <strong style={{ color: '#EF4444' }}>위험 범위</strong>: <strong>150bp 이상</strong> (ORCL 224bp 신용 강등 리스크)</div>
           </div>
 
           <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
-            <li><strong style={{ color: '#EF4444' }}>오라클 (Oracle 224bp - Danger)</strong>: <strong>200bp 상회로 위험 범주 진입</strong>. CapEx 부채 누적으로 BBB- 하향되었으며, 이자 부담 급증으로 추가 채권 발행 시 자금 조달 비용 대폭 상승 리스크 발생.</li>
-            <li><strong style={{ color: '#38BDF8' }}>우량 빅테크 (Microsoft 45bp, Alphabet 58bp - Normal)</strong>: <strong>30~60bp 정상 범주 유효</strong>. 독보적인 현금 창출력으로 시장 변동성 속에서도 최상위 유동성 안전판 확보.</li>
+            <li><strong style={{ color: '#76B900' }}>엔비디아 (NVIDIA 52bp - Normal Top Tier)</strong>: AI 가속기 시장 독점과 압도적 현금 창출력에 힘입어 신용등급 AA-에도 불구하고 Microsoft(55bp), Alphabet(66bp)과 어깨를 견주는 <strong>최저 수준 52bp 스프레드 유지</strong>.</li>
+            <li><strong style={{ color: '#EF4444' }}>오라클 (Oracle 224bp - Danger)</strong>: <strong>200bp 상회로 위험 범주 진입</strong>. CapEx 자금 조달에 따른 부채 부담으로 BBB- 하향되었으며 이자 조달 비용 급증 리스크 상존.</li>
           </ul>
         </div>
       </div>
@@ -268,7 +271,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <canvas ref={indigestionChartRef}></canvas>
         </div>
 
-        {/* Enhanced Comment 2 with Threshold & Problem Analysis */}
+        {/* Enhanced Comment 2 */}
         <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #F43F5E', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
           <div style={{ fontWeight: 700, color: '#F43F5E', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             🚨 물량 소화 불량(Indigestion) 지표별 정상/위험 임계치
@@ -286,8 +289,8 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           </div>
 
           <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
-            <li><strong style={{ color: '#F43F5E' }}>현재 NIC (22bp - Danger)</strong>: <strong>위험 기준선(15bp) 초과</strong>. 채권을 발행할 때 투자자에게 과도한 덤핑 금리를 얹어주어야만 청약이 완료되는 <strong>수급 소화 불량 병목 문제</strong> 발생.</li>
-            <li><strong style={{ color: '#818CF8' }}>현재 청약 경쟁률 (2.1배 - Danger)</strong>: <strong>위험 기준선(2.5배 이하) 진입</strong>. 기관 투자자의 매수 수요 고갈로 향후 발행 미달(Under-subscription) 및 유통가 하락 위험 우려.</li>
+            <li><strong style={{ color: '#F43F5E' }}>현재 NIC (22bp - Danger)</strong>: <strong>위험 기준선(15bp) 초과</strong>. 신규 발행 채권 소화를 위해 과도한 금리 얹어주기가 필수적인 <strong>수급 병목 현상</strong> 지속.</li>
+            <li><strong style={{ color: '#818CF8' }}>현재 청약 경쟁률 (2.1배 - Danger)</strong>: <strong>위험 기준선(2.5배 이하) 진입</strong>. 기관 투자자의 인수 세력 유치 약화.</li>
           </ul>
         </div>
       </div>
@@ -299,7 +302,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <canvas ref={treasuryChartRef}></canvas>
         </div>
 
-        {/* Enhanced Comment 3 with Threshold & Problem Analysis */}
+        {/* Enhanced Comment 3 */}
         <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #3B82F6', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
           <div style={{ fontWeight: 700, color: '#60A5FA', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             🇺🇸 미국채 금리 & 10Y-2Y 수익률 곡선 임계치 분석
@@ -317,8 +320,8 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           </div>
 
           <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
-            <li><strong style={{ color: '#3B82F6' }}>US 10Y 금리 ({data.us10yYield}% - Caution)</strong>: 4.0% 상단에 위치하여 기업들의 전체 베이스라인 조달 금리 산정 부담이 커진 상태.</li>
-            <li><strong style={{ color: '#10B981' }}>수익률 곡선 Gap (+22bp - Normal/Recovery)</strong>: 장단기 금리 역전 해소 구간이나, 장기채 금리가 가파르게 상승하는 Bear Steepening 발생 시 10년 이상 장기 빅테크 회사채 발행 금리에 직접적 상승 압력 유발.</li>
+            <li><strong style={{ color: '#3B82F6' }}>US 10Y 금리 ({data.us10yYield}% - Caution)</strong>: 4.4%대 상단에 자리잡고 있어 NVIDIA, MSFT 등 빅테크 신규 채권 조달 금리에 하한선 역할을 하고 있음.</li>
+            <li><strong style={{ color: '#10B981' }}>수익률 곡선 Gap (+22bp - Normal/Recovery)</strong>: 장단기 금리차 정상화 속도 모니터링 필요.</li>
           </ul>
         </div>
       </div>

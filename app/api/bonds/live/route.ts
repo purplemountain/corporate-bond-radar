@@ -41,6 +41,7 @@ export async function GET() {
       timestamp: formattedTimestamp,
       us10yYield: liveUS10Y,
       companies: [
+        { name: 'NVIDIA', ticker: 'NVDA', rating: 'AA-', spreadBp: 52, issueYield: Number((liveUS10Y + 0.52).toFixed(2)), color: '#76B900', range: '48 ~ 55 bp', trend: 'down' },
         { name: 'Microsoft', ticker: 'MSFT', rating: 'AAA', spreadBp: 55, issueYield: Number((liveUS10Y + 0.55).toFixed(2)), color: '#38BDF8', range: '50 ~ 56 bp', trend: 'down' },
         { name: 'Alphabet / Google', ticker: 'GOOGL', rating: 'AA+', spreadBp: 66, issueYield: Number((liveUS10Y + 0.66).toFixed(2)), color: '#4285F4', range: '61 ~ 68 bp', trend: 'down' },
         { name: 'Amazon', ticker: 'AMZN', rating: 'AA', spreadBp: 78, issueYield: Number((liveUS10Y + 0.78).toFixed(2)), color: '#F59E0B', range: '72 ~ 80 bp', trend: 'neutral' },
@@ -53,6 +54,7 @@ export async function GET() {
       auctionMultiple: 2.15,
       chartData: {
         labels,
+        nvidia: [55, 52, 50, 48, 46, 45, 47, 49, 52, 50, 48, 49, 51, 52],
         microsoft: [58, 55, 53, 50, 48, 46, 49, 51, 54, 52, 50, 51, 54, 55],
         alphabet: [68, 65, 62, 59, 57, 55, 58, 61, 64, 62, 60, 62, 65, 66],
         amazon: [81, 79, 75, 72, 68, 66, 70, 74, 78, 76, 73, 74, 76, 78],
