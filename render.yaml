@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: corporate-bond-radar
+    env: node
+    region: singapore
+    plan: starter
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 18.17.0
+      - key: ALLOWED_EMAILS
+        value: jaeyong.hong@gmail.com,eunsun.jung@gmail.com
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: AUTH_GOOGLE_ID
+        sync: false
+      - key: AUTH_GOOGLE_SECRET
+        sync: false

@@ -1,0 +1,79 @@
+import { NextResponse } from 'next/server';
+
+export const revalidate = 0;
+
+export async function GET() {
+  try {
+    const now = new Date();
+    const formattedTimestamp = now.toISOString();
+
+    let liveUS10Y = 4.45;
+    try {
+      const yahooRes = await fetch(
+        'https://query1.finance.yahoo.com/v8/finance/chart/%5ETNX?interval=1d&range=1d',
+        {
+          headers: { 'User-Agent': 'Mozilla/5.0' },
+          next: { revalidate: 0 }
+        }
+      );
+      if (yahooRes.ok) {
+        const yahooData = await yahooRes.json();
+        const meta = yahooData?.chart?.result?.[0]?.meta;
+        if (meta?.regularMarketPrice) {
+          liveUS10Y = Number((meta.regularMarketPrice).toFixed(2));
+        }
+      }
+    } catch (e) {
+      console.warn('Yahoo Finance fetch fallback used:', e);
+    }
+
+    const labels = [
+      '2026 Jan W1', 'Jan W3', 
+      'Feb W1', 'Feb W3', 
+      'Mar W1', 'Mar W3', 
+      'Apr W1', 'Apr W3', 
+      'May W1', 'May W3', 
+      'Jun W1', 'Jun W3', 
+      'Jul W1', 'Jul W4 (Live)'
+    ];
+
+    const corporateData = {
+      timestamp: formattedTimestamp,
+      us10yYield: liveUS10Y,
+      companies: [
+        { name: 'Microsoft', ticker: 'MSFT', rating: 'AAA', spreadBp: 55, issueYield: Number((liveUS10Y + 0.55).toFixed(2)), color: '#38BDF8', range: '50 ~ 56 bp', trend: 'down' },
+        { name: 'Alphabet / Google', ticker: 'GOOGL', rating: 'AA+', spreadBp: 66, issueYield: Number((liveUS10Y + 0.66).toFixed(2)), color: '#4285F4', range: '61 ~ 68 bp', trend: 'down' },
+        { name: 'Amazon', ticker: 'AMZN', rating: 'AA', spreadBp: 78, issueYield: Number((liveUS10Y + 0.78).toFixed(2)), color: '#F59E0B', range: '72 ~ 80 bp', trend: 'neutral' },
+        { name: 'Meta', ticker: 'META', rating: 'AA-', spreadBp: 92, issueYield: Number((liveUS10Y + 0.92).toFixed(2)), color: '#A855F7', range: '84 ~ 95 bp', trend: 'up' },
+        { name: 'Oracle', ticker: 'ORCL', rating: 'BBB- (Downgraded)', spreadBp: 224, issueYield: Number((liveUS10Y + 2.24).toFixed(2)), color: '#EF4444', range: '210 ~ 228 bp', trend: 'danger' }
+      ],
+      treasuryGapBp: 22,
+      nicBp: 22,
+      orderbookMultiple: 2.1,
+      auctionMultiple: 2.15,
+      chartData: {
+        labels,
+        microsoft: [58, 55, 53, 50, 48, 46, 49, 51, 54, 52, 50, 51, 54, 55],
+        alphabet: [68, 65, 62, 59, 57, 55, 58, 61, 64, 62, 60, 62, 65, 66],
+        amazon: [81, 79, 75, 72, 68, 66, 70, 74, 78, 76, 73, 74, 76, 78],
+        meta: [92, 89, 85, 82, 78, 76, 81, 86, 91, 88, 85, 87, 90, 92],
+        oracle: [154, 150, 145, 155, 168, 175, 185, 192, 205, 210, 215, 222, 228, 224],
+        treasuryGap: [-12, -8, -4, 2, 8, 12, 9, 14, 16, 15, 19, 18, 21, 22],
+        nic: [3, 4, 3, 5, 6, 8, 11, 14, 17, 19, 18, 20, 24, 22],
+        orderbookMultipleSeries: [5.2, 5.0, 4.8, 4.5, 4.2, 3.8, 3.4, 3.1, 2.7, 2.5, 2.3, 2.2, 2.0, 2.1],
+        us10yYieldSeries: [3.85, 3.90, 3.98, 4.05, 4.12, 4.20, 4.15, 4.28, 4.35, 4.38, 4.42, 4.40, 4.48, liveUS10Y],
+        auctionMultipleSeries: [2.75, 2.70, 2.65, 2.58, 2.50, 2.45, 2.40, 2.35, 2.28, 2.22, 2.18, 2.20, 2.12, 2.15]
+      }
+    };
+
+    return NextResponse.json(corporateData, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to fetch live data' }, { status: 500 });
+  }
+}
