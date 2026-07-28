@@ -1,4 +1,4 @@
-import { auth, signOut } from '@/auth';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import BondSpreadDashboardClient from './BondSpreadDashboardClient';
 
@@ -29,12 +29,7 @@ export default async function HomePage() {
           <div style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#10B981', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '0.3rem 0.75rem', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 600 }}>
             ● Live Market Data
           </div>
-          <form
-            action={async () => {
-              'use server';
-              await signOut({ redirectTo: '/login' });
-            }}
-          >
+          <form action="/api/auth/signout" method="POST">
             <button
               type="submit"
               style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#f1f5f9', padding: '0.4rem 0.8rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem' }}

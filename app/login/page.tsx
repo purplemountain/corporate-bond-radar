@@ -1,4 +1,4 @@
-import { auth, signIn } from '@/auth';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 
 export default async function LoginPage() {
@@ -19,12 +19,9 @@ export default async function LoginPage() {
           이 대시보드는 허가된 사용자만 접속할 수 있는 보안 터미널입니다. 구글 계정으로 로그인해 주세요.
         </p>
 
-        <form
-          action={async () => {
-            'use server';
-            await signIn('google', { redirectTo: '/' });
-          }}
-        >
+        {/* Direct Form Post to /api/auth/signin/google bypassing server action host resolution */}
+        <form action="/api/auth/signin/google" method="POST">
+          <input type="hidden" name="redirectTo" value="https://corporate-bond-radar.onrender.com" />
           <button
             type="submit"
             style={{
