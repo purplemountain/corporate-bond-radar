@@ -22,20 +22,16 @@ export default async function LoginPage({
           Corporate Bond Radar
         </h1>
         <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
-          이 대시보드는 허가된 사용자만 접속할 수 있는 보안 터미널입니다. 구글 계정으로 로그인해 주세요.
+          보안 터미널입니다. 허가된 Google 계정으로 로그인해 주세요.
         </p>
 
         {params?.error && (
-          <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#FCA5A5', padding: '0.6rem', borderRadius: '10px', fontSize: '0.8rem', marginBottom: '1.5rem' }}>
-            로그인 거부됨: 허용된 계정(jaeyong.hong@gmail.com, eunsun.jung@gmail.com)으로 로그인해 주세요.
+          <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#FCA5A5', padding: '0.75rem', borderRadius: '10px', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
+            로그인 실패: 승인된 구글 계정으로 다시 시도해 주세요.
           </div>
         )}
 
         <GoogleLoginButton />
-
-        <div style={{ marginTop: '2rem', fontSize: '0.78rem', color: '#64748b', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1rem' }}>
-          Allowed Access: <strong>jaeyong.hong@gmail.com</strong>, <strong>eunsun.jung@gmail.com</strong>
-        </div>
       </div>
     </div>
   );
