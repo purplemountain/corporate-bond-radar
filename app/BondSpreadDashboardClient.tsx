@@ -162,9 +162,9 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
 
     spreadChartInstance.current.data.datasets.forEach((ds, idx) => {
       if (filterType === 'all') ds.hidden = false;
-      else if (filterType === 'top3') ds.hidden = !(idx === 0 || idx === 1 || idx === 2); // NVIDIA, MSFT, GOOGL
-      else if (filterType === 'highYield') ds.hidden = !(idx === 4 || idx === 5); // META, Oracle
-      else if (filterType === 'treasuryOnly') ds.hidden = !(idx === 0 || idx === 6); // NVIDIA & US Treasury Gap
+      else if (filterType === 'top3') ds.hidden = !(idx === 0 || idx === 1 || idx === 2);
+      else if (filterType === 'highYield') ds.hidden = !(idx === 4 || idx === 5);
+      else if (filterType === 'treasuryOnly') ds.hidden = !(idx === 0 || idx === 6);
     });
     spreadChartInstance.current.update();
   };
@@ -257,10 +257,43 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             <div>🔴 <strong style={{ color: '#EF4444' }}>위험 범위</strong>: <strong>150bp 이상</strong> (ORCL 224bp 신용 강등 리스크)</div>
           </div>
 
-          <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
+          <ul style={{ margin: 0, paddingLeft: '1.2rem', marginBottom: '1rem' }}>
             <li><strong style={{ color: '#76B900' }}>엔비디아 (NVIDIA 52bp - Normal Top Tier)</strong>: AI 가속기 시장 독점과 압도적 현금 창출력에 힘입어 신용등급 AA-에도 불구하고 Microsoft(55bp), Alphabet(66bp)과 어깨를 견주는 <strong>최저 수준 52bp 스프레드 유지</strong>.</li>
             <li><strong style={{ color: '#EF4444' }}>오라클 (Oracle 224bp - Danger)</strong>: <strong>200bp 상회로 위험 범주 진입</strong>. CapEx 자금 조달에 따른 부채 부담으로 BBB- 하향되었으며 이자 조달 비용 급증 리스크 상존.</li>
           </ul>
+
+          {/* NEW: BigTech Corporate Events Calendar */}
+          <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '0.8rem', marginTop: '0.8rem' }}>
+            <div style={{ fontWeight: 700, color: '#f1f5f9', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
+              📅 빅테크 주요 기업 이벤트 & 실적 발표 캘린더 (Key Catalysts)
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.6rem', fontSize: '0.78rem' }}>
+              <div style={{ background: 'rgba(118, 185, 0, 0.1)', border: '1px solid rgba(118, 185, 0, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
+                <span style={{ color: '#76B900', fontWeight: 700 }}>🟢 NVIDIA (NVDA)</span> | <strong>8월 28일 (Q2 실적)</strong><br />
+                <span style={{ color: '#94a3b8' }}>Blackwell B200 출하 일정 & AI 데이터센터 CapEx 자금 조달 발표</span>
+              </div>
+              <div style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
+                <span style={{ color: '#38BDF8', fontWeight: 700 }}>🔵 Microsoft (MSFT)</span> | <strong>7월 30일 (Q4 실적)</strong><br />
+                <span style={{ color: '#94a3b8' }}>Azure AI 성장률 및 연간 $19B 인프라 CapEx 회사채 재원 계획</span>
+              </div>
+              <div style={{ background: 'rgba(66, 133, 244, 0.1)', border: '1px solid rgba(66, 133, 244, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
+                <span style={{ color: '#60A5FA', fontWeight: 700 }}>🔵 Alphabet (GOOGL)</span> | <strong>7월 23일 (Q2 진행)</strong><br />
+                <span style={{ color: '#94a3b8' }}>Custom TPU v5p 확장 가이드라인 & 클라우드 분기 매출 공개</span>
+              </div>
+              <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
+                <span style={{ color: '#F59E0B', fontWeight: 700 }}>🟡 Amazon (AMZN)</span> | <strong>8월 1일 (Q2 실적)</strong><br />
+                <span style={{ color: '#94a3b8' }}>AWS 서버 설비투자 및 장기 채권 만기 차환(Refinancing) 발표</span>
+              </div>
+              <div style={{ background: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
+                <span style={{ color: '#A855F7', fontWeight 700 }}>🟣 Meta (META)</span> | <strong>7월 31일 (Q2 실적)</strong><br />
+                <span style={{ color: '#94a3b8' }}>Llama 3.1 인프라 투자 $37~$40B 상향 조정 & 신규 사채 발행</span>
+              </div>
+              <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
+                <span style={{ color: '#EF4444', fontWeight 700 }}>🔴 Oracle (ORCL)</span> | <strong>9월 9일 (Q1 FY25)</strong><br />
+                <span style={{ color: '#94a3b8' }}>OCI AI 데이터센터 사채 추가 발행 & BBB- 등급 가이드라인</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -302,7 +335,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <canvas ref={treasuryChartRef}></canvas>
         </div>
 
-        {/* Enhanced Comment 3 */}
+        {/* Enhanced Comment 3 with Treasury Macro Events */}
         <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #3B82F6', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
           <div style={{ fontWeight: 700, color: '#60A5FA', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             🇺🇸 미국채 금리 & 10Y-2Y 수익률 곡선 임계치 분석
@@ -319,10 +352,35 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             </div>
           </div>
 
-          <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
+          <ul style={{ margin: 0, paddingLeft: '1.2rem', marginBottom: '1rem' }}>
             <li><strong style={{ color: '#3B82F6' }}>US 10Y 금리 ({data.us10yYield}% - Caution)</strong>: 4.4%대 상단에 자리잡고 있어 NVIDIA, MSFT 등 빅테크 신규 채권 조달 금리에 하한선 역할을 하고 있음.</li>
             <li><strong style={{ color: '#10B981' }}>수익률 곡선 Gap (+22bp - Normal/Recovery)</strong>: 장단기 금리차 정상화 속도 모니터링 필요.</li>
           </ul>
+
+          {/* NEW: Treasury & Fed Macro Events Calendar */}
+          <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '0.8rem', marginTop: '0.8rem' }}>
+            <div style={{ fontWeight: 700, color: '#f1f5f9', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
+              🏛️ 미국채 & 미 연준(Fed) 주요 매크로 이벤트 캘린더 (Treasury Catalysts)
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.6rem', fontSize: '0.78rem' }}>
+              <div style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
+                <span style={{ color: '#60A5FA', fontWeight: 700 }}>🏛️ FOMC 금리 결정 회의</span> | <strong>7월 30-31일 / 9월 17-18일</strong><br />
+                <span style={{ color: '#94a3b8' }}>파월 의장 통화정책 성명서 & 9월 피벗(Pivot, 25/50bp 금리 인하) 시그널</span>
+              </div>
+              <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
+                <span style={{ color: '#F59E0B', fontWeight 700 }}>📜 미 재무부 분기 환류계획 (QRA)</span> | <strong>7월 29일 & 7월 31일</strong><br />
+                <span style={{ color: '#94a3b8' }}>재무부 순차입 규모 및 10년물/30년물 장기 국채 발행 비중 가이드 발표</span>
+              </div>
+              <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
+                <span style={{ color: '#10B981', fontWeight 700 }}>📊 US 10년물 국채 벤치마크 입찰</span> | <strong>매월 2주차 (8월 7일 예정)</strong><br />
+                <span style={{ color: '#94a3b8' }}>$38B 규모 10년물 국채 입찰 응찰률(Auction Multiple) 및 프라이머리 딜러 인수 비율</span>
+              </div>
+              <div style={{ background: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
+                <span style={{ color: '#A855F7', fontWeight 700 }}>📈 US CPI / PCE 인플레이션 지표</span> | <strong>8월 14일 (CPI) / 8월 30일 (PCE)</strong><br />
+                <span style={{ color: '#94a3b8' }}>소비자물가지수(CPI) 및 개인소비지출(PCE) 물가 둔화세 확인 시 국채 금리 급락 유발</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
