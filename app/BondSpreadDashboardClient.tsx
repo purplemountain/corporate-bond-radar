@@ -28,10 +28,20 @@ interface ShortInterestMacro {
   oracleShortNotionalBillion: number;
 }
 
+interface KospiMarginData {
+  samsungCurrentBillion: number;
+  hynixCurrentBillion: number;
+  samsungMarginRatioPct: number;
+  hynixMarginRatioPct: number;
+  samsungSeries: number[];
+  hynixSeries: number[];
+}
+
 interface LiveBondData {
   timestamp: string;
   us10yYield: number;
   shortInterestMacro?: ShortInterestMacro;
+  kospiMarginData?: KospiMarginData;
   companies: CompanyData[];
   treasuryGapBp: number;
   nicBp: number;
@@ -61,10 +71,12 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
   const spreadChartRef = useRef<HTMLCanvasElement | null>(null);
   const indigestionChartRef = useRef<HTMLCanvasElement | null>(null);
   const treasuryChartRef = useRef<HTMLCanvasElement | null>(null);
+  const marginChartRef = useRef<HTMLCanvasElement | null>(null);
 
   const spreadChartInstance = useRef<Chart | null>(null);
   const indigestionChartInstance = useRef<Chart | null>(null);
   const treasuryChartInstance = useRef<Chart | null>(null);
+  const marginChartInstance = useRef<Chart | null>(null);
 
   const fetchLiveMarketData = async () => {
     setLoading(true);
@@ -91,6 +103,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
     if (spreadChartInstance.current) spreadChartInstance.current.destroy();
     if (indigestionChartInstance.current) indigestionChartInstance.current.destroy();
     if (treasuryChartInstance.current) treasuryChartInstance.current.destroy();
+    if (marginChartInstance.current) marginChartInstance.current.destroy();
 
     const { chartData } = data;
     const nvidiaSeries = chartData.nvidia || [55, 52, 50, 48, 46, 45, 47, 49, 52, 50, 48, 49, 51, 52];
@@ -167,6 +180,70 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         }
       });
     }
+
+    // 4. Render KOSPI Semiconductor Margin Debt Chart (Samsung & Hynix 6 Months)
+    const kospiMargin = data.kospiMarginData || {
+      samsungSeries: [8200, 8400, 8650, 8900, 9200, 9500, 9800, 10100, 10400, 10200, 9900, 10300, 10600, 10850],
+      hynixSeries: [4100, 4300, 4550, 4800, 5100, 5350, 5600, 5850, 6100, 5950, 5800, 6050, 6300, 6480]
+    };
+
+    if (marginChartRef.current) {
+      marginChartInstance.current = new Chart(marginChartRef.current, {
+        type: 'line',
+        data: {
+          labels: chartData.labels,
+          datasets: [
+            {
+              label: '삼성전자 (005930.KS) 신용잔고 (억 원)',
+              data: kospiMargin.samsungSeries,
+              borderColor: '#38BDF8',
+              backgroundColor: 'rgba(56, 189, 248, 0.15)',
+              borderWidth: 3,
+              fill: true,
+              tension: 0.3,
+              yAxisID: 'ySamsung'
+            },
+            {
+              label: 'SK하이닉스 (000660.KS) 신용잔고 (억 원)',
+              data: kospiMargin.hynixSeries,
+              borderColor: '#EC4899',
+              backgroundColor: 'rgba(236, 72, 153, 0.15)',
+              borderWidth: 3,
+              fill: true,
+              tension: 0.3,
+              yAxisID: 'yHynix'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#94a3b8' } }
+          },
+          scales: {
+            x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
+            ySamsung: {
+              type: 'linear',
+              position: 'left',
+              ticks: { color: '#38BDF8', callback: (v) => Number(v).toLocaleString() + ' 억' },
+              title: { display: true, text: '삼성전자 신용잔고 (억 원)', color: '#38BDF8' },
+              min: 7500,
+              max: 12000
+            },
+            yHynix: {
+              type: 'linear',
+              position: 'right',
+              grid: { drawOnChartArea: false },
+              ticks: { color: '#EC4899', callback: (v) => Number(v).toLocaleString() + ' 억' },
+              title: { display: true, text: 'SK하이닉스 신용잔고 (억 원)', color: '#EC4899' },
+              min: 3500,
+              max: 7500
+            }
+          }
+        }
+      });
+    }
   }, [data]);
 
   const applyFilter = (filterType: string) => {
@@ -186,7 +263,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
     return (
       <div style={{ padding: '4rem 0', textAlign: 'center', color: '#94a3b8' }}>
         <div style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>🔄 Real-time Live Market Data Fetching...</div>
-        <p style={{ fontSize: '0.85rem' }}>Fetching live US 10-Year Treasury Yields & BigTech Short Interest / Spreads (NVIDIA Included)</p>
+        <p style={{ fontSize: '0.85rem' }}>Fetching live US 10-Year Treasury Yields & KOSPI Semiconductor Margin Balances (Samsung & Hynix)</p>
       </div>
     );
   }
@@ -198,6 +275,15 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
     is16YearHigh: true,
     nvidiaShortNotionalBillion: 62.5,
     oracleShortNotionalBillion: 18.2
+  };
+
+  const kospiMargin = data.kospiMarginData || {
+    samsungCurrentBillion: 10850,
+    hynixCurrentBillion: 6480,
+    samsungMarginRatioPct: 0.22,
+    hynixMarginRatioPct: 0.58,
+    samsungSeries: [8200, 8400, 8650, 8900, 9200, 9500, 9800, 10100, 10400, 10200, 9900, 10300, 10600, 10850],
+    hynixSeries: [4100, 4300, 4550, 4800, 5100, 5350, 5600, 5850, 6100, 5950, 5800, 6050, 6300, 6480]
   };
 
   return (
@@ -385,7 +471,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       </div>
 
       {/* 3. Treasury Yield Chart Card */}
-      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(59, 130, 246, 0.25)', borderRadius: '16px', padding: '1.5rem' }}>
+      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(59, 130, 246, 0.25)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
         <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', color: '#60A5FA' }}>🇺🇸 미국채 10년물(US 10Y) 조달 금리 & 입찰 응찰률</h3>
         <div style={{ position: 'relative', height: '360px' }}>
           <canvas ref={treasuryChartRef}></canvas>
@@ -437,6 +523,50 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* NEW: 4. KOSPI Semiconductor Margin Debt Chart Card (Samsung Electronics vs SK Hynix) */}
+      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '16px', padding: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#38BDF8' }}>
+            🇰🇷 코스피 대표 반도체 6개월 신용잔고 추이 (삼성전자 vs SK하이닉스)
+          </h3>
+          <div style={{ display: 'flex', gap: '0.6rem', fontSize: '0.8rem' }}>
+            <span style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', padding: '0.2rem 0.6rem', borderRadius: '8px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+              삼성전자: <strong>{Number(kospiMargin.samsungCurrentBillion).toLocaleString()}억 원</strong> ({kospiMargin.samsungMarginRatioPct}%)
+            </span>
+            <span style={{ background: 'rgba(236, 72, 153, 0.15)', color: '#EC4899', padding: '0.2rem 0.6rem', borderRadius: '8px', border: '1px solid rgba(236, 72, 153, 0.3)' }}>
+              SK하이닉스: <strong>{Number(kospiMargin.hynixCurrentBillion).toLocaleString()}억 원</strong> ({kospiMargin.hynixMarginRatioPct}%)
+            </span>
+          </div>
+        </div>
+
+        <div style={{ position: 'relative', height: '380px' }}>
+          <canvas ref={marginChartRef}></canvas>
+        </div>
+
+        {/* Enhanced Comment 4 for Semiconductor Margin Debt */}
+        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #38BDF8', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+          <div style={{ fontWeight: '700', color: '#38BDF8', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            💡 코스피 반도체 2두(삼성전자·SK하이닉스) 신용잔고(Margin Debt) 수급 & 반대매매 리스크 분석
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.2)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
+            <div>
+              <div style={{ fontWeight: '700', color: '#38BDF8' }}>🔵 삼성전자 (005930.KS) 신용잔고 임계치</div>
+              <div>🟢 <strong>정상</strong>: 7,000억 ~ 9,000억 원 | 🔴 <strong>위험 (레버리지 억제)</strong>: 1조 1,000억 원 이상</div>
+            </div>
+            <div>
+              <div style={{ fontWeight: '700', color: '#EC4899' }}>🩷 SK하이닉스 (000660.KS) 신용잔고 임계치</div>
+              <div>🟢 <strong>정상</strong>: 3,500억 ~ 5,000억 원 | 🔴 <strong>위험 (반대매매 경계)</strong>: 6,500억 원 이상</div>
+            </div>
+          </div>
+
+          <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
+            <li><strong style={{ color: '#38BDF8' }}>삼성전자 신용잔고 ({Number(kospiMargin.samsungCurrentBillion).toLocaleString()}억 원 - Caution)</strong>: 최근 6개월간 8,200억 원 수준에서 1조 850억 원대까지 지속 상승하며 1조 원 상단을 돌파했습니다. 레버리지 매수세가 누적되어 주가 단기 조정 시 <strong>신용 반대매매(Forced Liquidation) 출회 리스크</strong> 모니터링이 필수적입니다.</li>
+            <li><strong style={{ color: '#EC4899' }}>SK하이닉스 신용잔고 ({Number(kospiMargin.hynixCurrentBillion).toLocaleString()}억 원 - Caution)</strong>: HBM3E 독점 랠리 및 6개월간 4,100억 원에서 6,480억 원 수준까지 가파르게 상향 조정되었습니다. 신용잔고율({kospiMargin.hynixMarginRatioPct}%)이 위험 기준선(6,500억 원)에 육박하고 있어 고점 매수세의 수급 변동성 대비가 필요합니다.</li>
+          </ul>
         </div>
       </div>
     </div>

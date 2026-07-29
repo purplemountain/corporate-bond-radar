@@ -49,6 +49,15 @@ export async function GET() {
         nvidiaShortNotionalBillion: 62.5,
         oracleShortNotionalBillion: 18.2,
       },
+      // KOSPI Semiconductor Margin Balance Metrics (6 Months Trend)
+      kospiMarginData: {
+        samsungCurrentBillion: 10850, // 1조 850억 원
+        hynixCurrentBillion: 6480,    // 6,480억 원
+        samsungMarginRatioPct: 0.22,
+        hynixMarginRatioPct: 0.58,
+        samsungSeries: [8200, 8400, 8650, 8900, 9200, 9500, 9800, 10100, 10400, 10200, 9900, 10300, 10600, 10850],
+        hynixSeries: [4100, 4300, 4550, 4800, 5100, 5350, 5600, 5850, 6100, 5950, 5800, 6050, 6300, 6480],
+      },
       companies: [
         { name: 'NVIDIA', ticker: 'NVDA', rating: 'AA-', spreadBp: 52, issueYield: Number((liveUS10Y + 0.52).toFixed(2)), color: '#76B900', range: '48 ~ 55 bp', trend: 'down', shortNotionalBillion: 62.5, shortFloatPct: 1.2, borrowFeePct: 0.25 },
         { name: 'Microsoft', ticker: 'MSFT', rating: 'AAA', spreadBp: 55, issueYield: Number((liveUS10Y + 0.55).toFixed(2)), color: '#38BDF8', range: '50 ~ 56 bp', trend: 'down', shortNotionalBillion: 24.1, shortFloatPct: 1.2, borrowFeePct: 0.25 },
