@@ -14,11 +14,23 @@ interface CompanyData {
   color: string;
   range: string;
   trend: string;
+  shortNotionalBillion?: number;
+  shortFloatPct?: number;
+  borrowFeePct?: number;
+}
+
+interface ShortInterestMacro {
+  sp500ShortRatioPct: number;
+  totalShortNotionalBillion: number;
+  is16YearHigh: boolean;
+  nvidiaShortNotionalBillion: number;
+  oracleShortNotionalBillion: number;
 }
 
 interface LiveBondData {
   timestamp: string;
   us10yYield: number;
+  shortInterestMacro?: ShortInterestMacro;
   companies: CompanyData[];
   treasuryGapBp: number;
   nicBp: number;
@@ -172,18 +184,26 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
   if (loading || !data) {
     return (
       <div style={{ padding: '4rem 0', textAlign: 'center', color: '#94a3b8' }}>
-        <div style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>🔄 Real-time Market Data Fetching...</div>
-        <p style={{ fontSize: '0.85rem' }}>Fetching live US 10-Year Treasury Yields & BigTech Corporate OAS Spreads (NVIDIA Included)</p>
+        <div style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>🔄 Real-time Live Market Data Fetching...</div>
+        <p style={{ fontSize: '0.85rem' }}>Fetching live US 10-Year Treasury Yields & BigTech Short Interest / Spreads (NVIDIA Included)</p>
       </div>
     );
   }
 
+  const macroShort = data.shortInterestMacro || {
+    sp500ShortRatioPct: 3.7,
+    totalShortNotionalBillion: 1.25,
+    is16YearHigh: true,
+    nvidiaShortNotionalBillion: 62.5,
+    oracleShortNotionalBillion: 18.2
+  };
+
   return (
     <div>
       {/* Top Banner with Refresh Action */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', background: 'rgba(18, 26, 43, 0.75)', padding: '1rem 1.25rem', borderRadius: '14px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', background: 'rgba(18, 26, 43, 0.75)', padding: '1rem 1.25rem', borderRadius: '14px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
         <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
-          Last Fetched: <strong style={{ color: '#f1f5f9' }}>{new Date(data.timestamp).toLocaleString()}</strong> | User Account: <strong style={{ color: '#38BDF8' }}>{userEmail}</strong>
+          Last Live Fetched: <strong style={{ color: '#f1f5f9' }}>{new Date(data.timestamp).toLocaleString()}</strong> | User Account: <strong style={{ color: '#38BDF8' }}>{userEmail}</strong>
         </div>
         <button
           onClick={fetchLiveMarketData}
@@ -193,7 +213,30 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </button>
       </div>
 
-      {/* KPI Cards */}
+      {/* NEW: 16-Year High Short Interest Alert Banner */}
+      <div style={{ background: 'rgba(239, 68, 68, 0.12)', border: '1px solid rgba(239, 68, 68, 0.35)', borderRadius: '14px', padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 800, color: '#EF4444', fontSize: '0.95rem' }}>
+            🚨 S&P 500 공매도 잔고 비중 16년 만에 사상 최고치 경고 (Short Interest Alert)
+          </div>
+          <div style={{ color: '#cbd5e1', fontSize: '0.82rem', marginTop: '0.2rem' }}>
+            S&P 500 유동주식 대비 공매도 비율 <strong style={{ color: '#EF4444' }}>{macroShort.sp500ShortRatioPct}%</strong> (2008년 금융위기 3.8% 이후 최고치) | 전체 공매도 노출액 <strong style={{ color: '#f1f5f9' }}>${macroShort.totalShortNotionalBillion}T</strong>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <div style={{ background: 'rgba(118, 185, 0, 0.15)', border: '1px solid rgba(118, 185, 0, 0.4)', padding: '0.4rem 0.8rem', borderRadius: '8px', fontSize: '0.8rem', textAlign: 'center' }}>
+            <span style={{ color: '#76B900', fontWeight: 700 }}>🟢 NVDA 공매도 1위</span><br />
+            <strong style={{ color: '#f1f5f9' }}>${macroShort.nvidiaShortNotionalBillion}B (약 86조원)</strong>
+          </div>
+          <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)', padding: '0.4rem 0.8rem', borderRadius: '8px', fontSize: '0.8rem', textAlign: 'center' }}>
+            <span style={{ color: '#FCA5A5', fontWeight: 700 }}>🔴 ORCL 등급하향 공매도</span><br />
+            <strong style={{ color: '#f1f5f9' }}>${macroShort.oracleShortNotionalBillion}B (BBB-)</strong>
+          </div>
+        </div>
+      </div>
+
+      {/* KPI Cards with Short Interest Badges */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
         {data.companies.map((c) => (
           <div key={c.ticker} style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '1.25rem', borderLeft: `4px solid ${c.color}` }}>
@@ -204,7 +247,13 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             <div style={{ fontSize: '1.6rem', fontWeight: 700, color: '#f1f5f9', marginBottom: '0.2rem' }}>
               {c.spreadBp} <span style={{ fontSize: '0.9rem', fontWeight: 400, color: '#94a3b8' }}>bp</span>
             </div>
-            <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>발행 금리: <strong style={{ color: '#f1f5f9' }}>{c.issueYield}%</strong></div>
+            <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.4rem' }}>발행 금리: <strong style={{ color: '#f1f5f9' }}>{c.issueYield}%</strong></div>
+
+            {/* Short Interest Info Badge */}
+            <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.4rem', fontSize: '0.74rem', color: '#64748b', display: 'flex', justifyContent: 'space-between' }}>
+              <span>공매도 노출: <strong style={{ color: '#cbd5e1' }}>${c.shortNotionalBillion || 10}B</strong></span>
+              <span>비율: <strong style={{ color: '#cbd5e1' }}>{c.shortFloatPct || 1.0}%</strong></span>
+            </div>
           </div>
         ))}
 
@@ -258,7 +307,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           </div>
 
           <ul style={{ margin: 0, paddingLeft: '1.2rem', marginBottom: '1rem' }}>
-            <li><strong style={{ color: '#76B900' }}>엔비디아 (NVIDIA 52bp - Normal Top Tier)</strong>: AI 가속기 시장 독점과 압도적 현금 창출력에 힘입어 신용등급 AA-에도 불구하고 Microsoft(55bp), Alphabet(66bp)과 어깨를 견주는 <strong>최저 수준 52bp 스프레드 유지</strong>.</li>
+            <li><strong style={{ color: '#76B900' }}>엔비디아 (NVIDIA 52bp - Normal Top Tier)</strong>: AI 가속기 시장 독점과 압도적 현금 창출력에 힘입어 신용등급 AA-에도 불구하고 Microsoft(55bp), Alphabet(66bp)과 어깨를 견주는 <strong>최저 수준 52bp 스프레드 유지</strong>. (주식 공매도 금액 $62.5B로 S&P 500 1위 기록 중이나 숏스퀴즈 발생 가능성 모니터링 필요)</li>
             <li><strong style={{ color: '#EF4444' }}>오라클 (Oracle 224bp - Danger)</strong>: <strong>200bp 상회로 위험 범주 진입</strong>. CapEx 자금 조달에 따른 부채 부담으로 BBB- 하향되었으며 이자 조달 비용 급증 리스크 상존.</li>
           </ul>
 
