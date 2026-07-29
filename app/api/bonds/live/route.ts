@@ -40,20 +40,21 @@ export async function GET() {
     const corporateData = {
       timestamp: formattedTimestamp,
       us10yYield: liveUS10Y,
-      // Real-time Short Interest & Macro Metrics (16-Year High S&P 500 Record)
+      // Standardized Free-Float Short Interest Metrics
       shortInterestMacro: {
-        sp500ShortRatioPct: 3.7, // 16-Year High since 2008 Financial Crisis (3.8% peak)
-        totalShortNotionalBillion: 1.25, // $1.25 Trillion
+        sp500ShortRatioPct: 3.7, // 16-Year High S&P 500 Average
+        bigtechShortFloatPct: 1.2, // Standardized BigTech Average Short Float %
+        totalShortNotionalBillion: 1.25,
         is16YearHigh: true,
-        nvidiaShortNotionalBillion: 62.5, // $62.5B (S&P 500 #1 Dollar Short Position)
-        oracleShortNotionalBillion: 18.2, // $18.2B (BBB- Downgrade Impact)
+        nvidiaShortNotionalBillion: 62.5,
+        oracleShortNotionalBillion: 18.2,
       },
       companies: [
-        { name: 'NVIDIA', ticker: 'NVDA', rating: 'AA-', spreadBp: 52, issueYield: Number((liveUS10Y + 0.52).toFixed(2)), color: '#76B900', range: '48 ~ 55 bp', trend: 'down', shortNotionalBillion: 62.5, shortFloatPct: 1.1, borrowFeePct: 0.25 },
-        { name: 'Microsoft', ticker: 'MSFT', rating: 'AAA', spreadBp: 55, issueYield: Number((liveUS10Y + 0.55).toFixed(2)), color: '#38BDF8', range: '50 ~ 56 bp', trend: 'down', shortNotionalBillion: 24.1, shortFloatPct: 0.8, borrowFeePct: 0.25 },
-        { name: 'Alphabet / Google', ticker: 'GOOGL', rating: 'AA+', spreadBp: 66, issueYield: Number((liveUS10Y + 0.66).toFixed(2)), color: '#4285F4', range: '61 ~ 68 bp', trend: 'down', shortNotionalBillion: 18.7, shortFloatPct: 0.9, borrowFeePct: 0.25 },
-        { name: 'Amazon', ticker: 'AMZN', rating: 'AA', spreadBp: 78, issueYield: Number((liveUS10Y + 0.78).toFixed(2)), color: '#F59E0B', range: '72 ~ 80 bp', trend: 'neutral', shortNotionalBillion: 19.5, shortFloatPct: 0.9, borrowFeePct: 0.25 },
-        { name: 'Meta', ticker: 'META', rating: 'AA-', spreadBp: 92, issueYield: Number((liveUS10Y + 0.92).toFixed(2)), color: '#A855F7', range: '84 ~ 95 bp', trend: 'up', shortNotionalBillion: 15.3, shortFloatPct: 1.2, borrowFeePct: 0.25 },
+        { name: 'NVIDIA', ticker: 'NVDA', rating: 'AA-', spreadBp: 52, issueYield: Number((liveUS10Y + 0.52).toFixed(2)), color: '#76B900', range: '48 ~ 55 bp', trend: 'down', shortNotionalBillion: 62.5, shortFloatPct: 1.2, borrowFeePct: 0.25 },
+        { name: 'Microsoft', ticker: 'MSFT', rating: 'AAA', spreadBp: 55, issueYield: Number((liveUS10Y + 0.55).toFixed(2)), color: '#38BDF8', range: '50 ~ 56 bp', trend: 'down', shortNotionalBillion: 24.1, shortFloatPct: 1.2, borrowFeePct: 0.25 },
+        { name: 'Alphabet / Google', ticker: 'GOOGL', rating: 'AA+', spreadBp: 66, issueYield: Number((liveUS10Y + 0.66).toFixed(2)), color: '#4285F4', range: '61 ~ 68 bp', trend: 'down', shortNotionalBillion: 18.7, shortFloatPct: 1.2, borrowFeePct: 0.25 },
+        { name: 'Amazon', ticker: 'AMZN', rating: 'AA', spreadBp: 78, issueYield: Number((liveUS10Y + 0.78).toFixed(2)), color: '#F59E0B', range: '72 ~ 80 bp', trend: 'neutral', shortNotionalBillion: 19.5, shortFloatPct: 1.2, borrowFeePct: 0.25 },
+        { name: 'Meta', ticker: 'META', rating: 'AA-', spreadBp: 92, issueYield: Number((liveUS10Y + 0.92).toFixed(2)), color: '#A855F7', range: '84 ~ 95 bp', trend: 'up', shortNotionalBillion: 15.3, shortFloatPct: 1.3, borrowFeePct: 0.25 },
         { name: 'Oracle', ticker: 'ORCL', rating: 'BBB- (Downgraded)', spreadBp: 224, issueYield: Number((liveUS10Y + 2.24).toFixed(2)), color: '#EF4444', range: '210 ~ 228 bp', trend: 'danger', shortNotionalBillion: 18.2, shortFloatPct: 1.8, borrowFeePct: 0.45 }
       ],
       treasuryGapBp: 22,
