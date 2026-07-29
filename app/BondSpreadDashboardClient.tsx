@@ -21,6 +21,7 @@ interface CompanyData {
 
 interface ShortInterestMacro {
   sp500ShortRatioPct: number;
+  bigtechShortFloatPct?: number;
   totalShortNotionalBillion: number;
   is16YearHigh: boolean;
   nvidiaShortNotionalBillion: number;
@@ -192,6 +193,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
 
   const macroShort = data.shortInterestMacro || {
     sp500ShortRatioPct: 3.7,
+    bigtechShortFloatPct: 1.2,
     totalShortNotionalBillion: 1.25,
     is16YearHigh: true,
     nvidiaShortNotionalBillion: 62.5,
@@ -213,14 +215,14 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </button>
       </div>
 
-      {/* NEW: 16-Year High Short Interest Alert Banner */}
+      {/* 16-Year High Short Interest Alert Banner with "유동주식기준(시장표준)" label */}
       <div style={{ background: 'rgba(239, 68, 68, 0.12)', border: '1px solid rgba(239, 68, 68, 0.35)', borderRadius: '14px', padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 800, color: '#EF4444', fontSize: '0.95rem' }}>
-            🚨 S&P 500 공매도 잔고 비중 16년 만에 사상 최고치 경고 (Short Interest Alert)
+            🚨 S&P 500 공매도 잔고 비중 16년 만에 사상 최고치 경고 <span style={{ fontSize: '0.78rem', background: 'rgba(239, 68, 68, 0.25)', color: '#FCA5A5', padding: '0.1rem 0.5rem', borderRadius: '10px' }}>유동주식기준(시장표준)</span>
           </div>
           <div style={{ color: '#cbd5e1', fontSize: '0.82rem', marginTop: '0.2rem' }}>
-            S&P 500 유동주식 대비 공매도 비율 <strong style={{ color: '#EF4444' }}>{macroShort.sp500ShortRatioPct}%</strong> (2008년 금융위기 3.8% 이후 최고치) | 전체 공매도 노출액 <strong style={{ color: '#f1f5f9' }}>${macroShort.totalShortNotionalBillion}T</strong>
+            S&P 500 <strong style={{ color: '#FCA5A5' }}>유동주식기준(시장표준)</strong> 공매도 비율 <strong style={{ color: '#EF4444' }}>{macroShort.sp500ShortRatioPct}%</strong> (2008년 금융위기 3.8% 이후 최고치) | 전체 공매도 노출액 <strong style={{ color: '#f1f5f9' }}>${macroShort.totalShortNotionalBillion}T</strong>
           </div>
         </div>
 
@@ -236,7 +238,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
       </div>
 
-      {/* KPI Cards with Short Interest Badges */}
+      {/* KPI Cards with Short Interest Badges featuring "유동주식기준(시장표준)" label */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
         {data.companies.map((c) => (
           <div key={c.ticker} style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '1.25rem', borderLeft: `4px solid ${c.color}` }}>
@@ -249,10 +251,15 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             </div>
             <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.4rem' }}>발행 금리: <strong style={{ color: '#f1f5f9' }}>{c.issueYield}%</strong></div>
 
-            {/* Short Interest Info Badge */}
-            <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.4rem', fontSize: '0.74rem', color: '#64748b', display: 'flex', justifyContent: 'space-between' }}>
-              <span>공매도 노출: <strong style={{ color: '#cbd5e1' }}>${c.shortNotionalBillion || 10}B</strong></span>
-              <span>비율: <strong style={{ color: '#cbd5e1' }}>{c.shortFloatPct || 1.0}%</strong></span>
+            {/* Short Interest Info Badge with Explicit "유동주식기준(시장표준)" label */}
+            <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.4rem', fontSize: '0.74rem', color: '#64748b', display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>공매도 노출: <strong style={{ color: '#cbd5e1' }}>${c.shortNotionalBillion || 10}B</strong></span>
+                <span>비율: <strong style={{ color: '#38BDF8' }}>{c.shortFloatPct || 1.2}%</strong></span>
+              </div>
+              <div style={{ fontSize: '0.68rem', color: '#38BDF8', textAlign: 'right' }}>
+                * 유동주식기준(시장표준)
+              </div>
             </div>
           </div>
         ))}
@@ -421,11 +428,11 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
                 <span style={{ color: '#94a3b8' }}>재무부 순차입 규모 및 10년물/30년물 장기 국채 발행 비중 가이드 발표</span>
               </div>
               <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#10B981', fontWeight: 700 }}>📊 US 10년물 국채 벤치마크 입찰</span> | <strong>매월 2주차 (8월 7일 예정)</strong><br />
+                <span style={{ color: '#10B981', fontWeight 700 }}>📊 US 10년물 국채 벤치마크 입찰</span> | <strong>매월 2주차 (8월 7일 예정)</strong><br />
                 <span style={{ color: '#94a3b8' }}>$38B 규모 10년물 국채 입찰 응찰률(Auction Multiple) 및 프라이머리 딜러 인수 비율</span>
               </div>
               <div style={{ background: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#A855F7', fontWeight: 700 }}>📈 US CPI / PCE 인플레이션 지표</span> | <strong>8월 14일 (CPI) / 8월 30일 (PCE)</strong><br />
+                <span style={{ color: '#A855F7', fontWeight 700 }}>📈 US CPI / PCE 인플레이션 지표</span> | <strong>8월 14일 (CPI) / 8월 30일 (PCE)</strong><br />
                 <span style={{ color: '#94a3b8' }}>소비자물가지수(CPI) 및 개인소비지출(PCE) 물가 둔화세 확인 시 국채 금리 급락 유발</span>
               </div>
             </div>
