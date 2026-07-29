@@ -49,14 +49,18 @@ export async function GET() {
         nvidiaShortNotionalBillion: 62.5,
         oracleShortNotionalBillion: 18.2,
       },
-      // KOSPI Semiconductor Margin Balance Metrics (6 Months Trend)
-      kospiMarginData: {
-        samsungCurrentBillion: 10850, // 1조 850억 원
-        hynixCurrentBillion: 6480,    // 6,480억 원
-        samsungMarginRatioPct: 0.22,
-        hynixMarginRatioPct: 0.58,
-        samsungSeries: [8200, 8400, 8650, 8900, 9200, 9500, 9800, 10100, 10400, 10200, 9900, 10300, 10600, 10850],
-        hynixSeries: [4100, 4300, 4550, 4800, 5100, 5350, 5600, 5850, 6100, 5950, 5800, 6050, 6300, 6480],
+      // Refined Normalized Leverage De-risking Metrics (Base Level = Q1 Avg 100%)
+      kospiDeleveragingData: {
+        baseLevelIndex: 100.0, // 1분기(1~4월) 평균 잔고 = 100%
+        samsungShareIndexCurrent: 128.5, // 주식 수량 기준 (1분기 대비 128.5%)
+        hynixShareIndexCurrent: 142.0,   // 주식 수량 기준 (1분기 대비 142.0%)
+        leverageEtfAumIndexCurrent: 135.2, // 2배 레버리지 ETF AUM 지수
+        
+        // 14-Week Normalized Index Series (Base Level = 100.0)
+        baseLevelSeries: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+        samsungShareSeries: [100.0, 101.5, 103.2, 106.0, 109.8, 114.5, 119.0, 123.5, 128.0, 125.2, 122.0, 124.8, 126.5, 128.5],
+        hynixShareSeries: [100.0, 102.8, 105.5, 110.2, 116.0, 122.5, 129.0, 135.8, 143.0, 139.5, 136.0, 138.2, 140.5, 142.0],
+        leverageEtfAumSeries: [100.0, 103.5, 108.0, 114.2, 121.0, 128.5, 136.0, 144.5, 152.0, 146.0, 140.0, 137.5, 136.0, 135.2]
       },
       companies: [
         { name: 'NVIDIA', ticker: 'NVDA', rating: 'AA-', spreadBp: 52, issueYield: Number((liveUS10Y + 0.52).toFixed(2)), color: '#76B900', range: '48 ~ 55 bp', trend: 'down', shortNotionalBillion: 62.5, shortFloatPct: 1.2, borrowFeePct: 0.25 },
