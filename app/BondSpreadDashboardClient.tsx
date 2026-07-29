@@ -209,7 +209,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
         <button
           onClick={fetchLiveMarketData}
-          style={{ background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38BDF8', padding: '0.4rem 0.9rem', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, fontSize: '0.8rem' }}
+          style={{ background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38BDF8', padding: '0.4rem 0.9rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '0.8rem' }}
         >
           🔄 Refresh Live Market Data
         </button>
@@ -218,7 +218,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       {/* 16-Year High Short Interest Alert Banner with "유동주식기준(시장표준)" label */}
       <div style={{ background: 'rgba(239, 68, 68, 0.12)', border: '1px solid rgba(239, 68, 68, 0.35)', borderRadius: '14px', padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 800, color: '#EF4444', fontSize: '0.95rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '800', color: '#EF4444', fontSize: '0.95rem' }}>
             🚨 S&P 500 공매도 잔고 비중 16년 만에 사상 최고치 경고 <span style={{ fontSize: '0.78rem', background: 'rgba(239, 68, 68, 0.25)', color: '#FCA5A5', padding: '0.1rem 0.5rem', borderRadius: '10px' }}>유동주식기준(시장표준)</span>
           </div>
           <div style={{ color: '#cbd5e1', fontSize: '0.82rem', marginTop: '0.2rem' }}>
@@ -228,30 +228,30 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
 
         <div style={{ display: 'flex', gap: '0.75rem' }}>
           <div style={{ background: 'rgba(118, 185, 0, 0.15)', border: '1px solid rgba(118, 185, 0, 0.4)', padding: '0.4rem 0.8rem', borderRadius: '8px', fontSize: '0.8rem', textAlign: 'center' }}>
-            <span style={{ color: '#76B900', fontWeight: 700 }}>🟢 NVDA 공매도 1위</span><br />
+            <span style={{ color: '#76B900', fontWeight: '700' }}>🟢 NVDA 공매도 1위</span><br />
             <strong style={{ color: '#f1f5f9' }}>${macroShort.nvidiaShortNotionalBillion}B (약 86조원)</strong>
           </div>
           <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)', padding: '0.4rem 0.8rem', borderRadius: '8px', fontSize: '0.8rem', textAlign: 'center' }}>
-            <span style={{ color: '#FCA5A5', fontWeight: 700 }}>🔴 ORCL 등급하향 공매도</span><br />
+            <span style={{ color: '#FCA5A5', fontWeight: '700' }}>🔴 ORCL 등급하향 공매도</span><br />
             <strong style={{ color: '#f1f5f9' }}>${macroShort.oracleShortNotionalBillion}B (BBB-)</strong>
           </div>
         </div>
       </div>
 
-      {/* KPI Cards with Short Interest Badges featuring "유동주식기준(시장표준)" label */}
+      {/* KPI Cards with Short Interest Badges */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
         {data.companies.map((c) => (
           <div key={c.ticker} style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '1.25rem', borderLeft: `4px solid ${c.color}` }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#94a3b8', fontWeight: 600 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#94a3b8', fontWeight: '600' }}>
               <span>{c.name}</span>
               <span style={{ background: 'rgba(255, 255, 255, 0.08)', padding: '0.1rem 0.4rem', borderRadius: '4px', color: c.color }}>{c.rating}</span>
             </div>
-            <div style={{ fontSize: '1.6rem', fontWeight: 700, color: '#f1f5f9', marginBottom: '0.2rem' }}>
-              {c.spreadBp} <span style={{ fontSize: '0.9rem', fontWeight: 400, color: '#94a3b8' }}>bp</span>
+            <div style={{ fontSize: '1.6rem', fontWeight: '700', color: '#f1f5f9', marginBottom: '0.2rem' }}>
+              {c.spreadBp} <span style={{ fontSize: '0.9rem', fontWeight: '400', color: '#94a3b8' }}>bp</span>
             </div>
             <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.4rem' }}>발행 금리: <strong style={{ color: '#f1f5f9' }}>{c.issueYield}%</strong></div>
 
-            {/* Short Interest Info Badge with Explicit "유동주식기준(시장표준)" label */}
+            {/* Short Interest Info Badge */}
             <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.4rem', fontSize: '0.74rem', color: '#64748b', display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>공매도 노출: <strong style={{ color: '#cbd5e1' }}>${c.shortNotionalBillion || 10}B</strong></span>
@@ -265,12 +265,12 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         ))}
 
         <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '1.25rem', borderLeft: '4px solid #3B82F6' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#94a3b8', fontWeight: 600 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#94a3b8', fontWeight: '600' }}>
             <span>US 10Y Treasury</span>
             <span style={{ background: 'rgba(59, 130, 246, 0.2)', padding: '0.1rem 0.4rem', borderRadius: '4px', color: '#60A5FA' }}>미국채 금리</span>
           </div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 700, color: '#60A5FA', marginBottom: '0.2rem' }}>
-            {data.us10yYield} <span style={{ fontSize: '0.9rem', fontWeight: 400, color: '#94a3b8' }}>%</span>
+          <div style={{ fontSize: '1.6rem', fontWeight: '700', color: '#60A5FA', marginBottom: '0.2rem' }}>
+            {data.us10yYield} <span style={{ fontSize: '0.9rem', fontWeight: '400', color: '#94a3b8' }}>%</span>
           </div>
           <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>기준 10년물 국채 수익률</div>
         </div>
@@ -303,7 +303,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
 
         {/* Enhanced Comment 1 with Threshold & Problem Analysis */}
         <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #76B900', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: 700, color: '#76B900', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{ fontWeight: '700', color: '#76B900', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             💡 엔비디아(NVIDIA) & 빅테크 회사채 스프레드(OAS) 임계치 분석
           </div>
           
@@ -320,32 +320,32 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
 
           {/* BigTech Corporate Events Calendar */}
           <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '0.8rem', marginTop: '0.8rem' }}>
-            <div style={{ fontWeight: 700, color: '#f1f5f9', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
+            <div style={{ fontWeight: '700', color: '#f1f5f9', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
               📅 빅테크 주요 기업 이벤트 & 실적 발표 캘린더 (Key Catalysts)
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.6rem', fontSize: '0.78rem' }}>
               <div style={{ background: 'rgba(118, 185, 0, 0.1)', border: '1px solid rgba(118, 185, 0, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#76B900', fontWeight: 700 }}>🟢 NVIDIA (NVDA)</span> | <strong>8월 28일 (Q2 실적)</strong><br />
+                <span style={{ color: '#76B900', fontWeight: '700' }}>🟢 NVIDIA (NVDA)</span> | <strong>8월 28일 (Q2 실적)</strong><br />
                 <span style={{ color: '#94a3b8' }}>Blackwell B200 출하 일정 & AI 데이터센터 CapEx 자금 조달 발표</span>
               </div>
               <div style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#38BDF8', fontWeight: 700 }}>🔵 Microsoft (MSFT)</span> | <strong>7월 30일 (Q4 실적)</strong><br />
+                <span style={{ color: '#38BDF8', fontWeight: '700' }}>🔵 Microsoft (MSFT)</span> | <strong>7월 30일 (Q4 실적)</strong><br />
                 <span style={{ color: '#94a3b8' }}>Azure AI 성장률 및 연간 $19B 인프라 CapEx 회사채 재원 계획</span>
               </div>
               <div style={{ background: 'rgba(66, 133, 244, 0.1)', border: '1px solid rgba(66, 133, 244, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#60A5FA', fontWeight: 700 }}>🔵 Alphabet (GOOGL)</span> | <strong>7월 23일 (Q2 진행)</strong><br />
+                <span style={{ color: '#60A5FA', fontWeight: '700' }}>🔵 Alphabet (GOOGL)</span> | <strong>7월 23일 (Q2 진행)</strong><br />
                 <span style={{ color: '#94a3b8' }}>Custom TPU v5p 확장 가이드라인 & 클라우드 분기 매출 공개</span>
               </div>
               <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#F59E0B', fontWeight: 700 }}>🟡 Amazon (AMZN)</span> | <strong>8월 1일 (Q2 실적)</strong><br />
+                <span style={{ color: '#F59E0B', fontWeight: '700' }}>🟡 Amazon (AMZN)</span> | <strong>8월 1일 (Q2 실적)</strong><br />
                 <span style={{ color: '#94a3b8' }}>AWS 서버 설비투자 및 장기 채권 만기 차환(Refinancing) 발표</span>
               </div>
               <div style={{ background: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#A855F7', fontWeight: 700 }}>🟣 Meta (META)</span> | <strong>7월 31일 (Q2 실적)</strong><br />
+                <span style={{ color: '#A855F7', fontWeight: '700' }}>🟣 Meta (META)</span> | <strong>7월 31일 (Q2 실적)</strong><br />
                 <span style={{ color: '#94a3b8' }}>Llama 3.1 인프라 투자 $37~$40B 상향 조정 & 신규 사채 발행</span>
               </div>
               <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#EF4444', fontWeight: 700 }}>🔴 Oracle (ORCL)</span> | <strong>9월 9일 (Q1 FY25)</strong><br />
+                <span style={{ color: '#EF4444', fontWeight: '700' }}>🔴 Oracle (ORCL)</span> | <strong>9월 9일 (Q1 FY25)</strong><br />
                 <span style={{ color: '#94a3b8' }}>OCI AI 데이터센터 사채 추가 발행 & BBB- 등급 가이드라인</span>
               </div>
             </div>
@@ -362,17 +362,17 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
 
         {/* Enhanced Comment 2 */}
         <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #F43F5E', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: 700, color: '#F43F5E', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{ fontWeight: '700', color: '#F43F5E', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             🚨 물량 소화 불량(Indigestion) 지표별 정상/위험 임계치
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.2)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
             <div>
-              <div style={{ fontWeight: 700, color: '#F43F5E' }}>🏷️ 발행 프리미엄 (NIC)</div>
+              <div style={{ fontWeight: '700', color: '#F43F5E' }}>🏷️ 발행 프리미엄 (NIC)</div>
               <div>🟢 <strong>정상</strong>: 0 ~ 5bp | 🔴 <strong>위험 (소화불량)</strong>: 15bp 이상</div>
             </div>
             <div>
-              <div style={{ fontWeight: 700, color: '#818CF8' }}>📈 청약 경쟁률 (Orderbook Multiple)</div>
+              <div style={{ fontWeight: '700', color: '#818CF8' }}>📈 청약 경쟁률 (Orderbook Multiple)</div>
               <div>🟢 <strong>정상</strong>: 3.5배 이상 | 🔴 <strong>위험 (수급고갈)</strong>: 2.5배 이하</div>
             </div>
           </div>
@@ -393,17 +393,17 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
 
         {/* Enhanced Comment 3 with Treasury Macro Events */}
         <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #3B82F6', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: 700, color: '#60A5FA', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{ fontWeight: '700', color: '#60A5FA', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             🇺🇸 미국채 금리 & 10Y-2Y 수익률 곡선 임계치 분석
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.2)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
             <div>
-              <div style={{ fontWeight: 700, color: '#3B82F6' }}>💵 미국채 10년물 금리 (US10Y)</div>
+              <div style={{ fontWeight: '700', color: '#3B82F6' }}>💵 미국채 10년물 금리 (US10Y)</div>
               <div>🟢 <strong>정상</strong>: 3.5% ~ 4.0% | 🔴 <strong>위험 (조달압박)</strong>: 4.5% 이상</div>
             </div>
             <div>
-              <div style={{ fontWeight: 700, color: '#10B981' }}>📐 10년-2년 금리차 (Yield Gap)</div>
+              <div style={{ fontWeight: '700', color: '#10B981' }}>📐 10년-2년 금리차 (Yield Gap)</div>
               <div>🟢 <strong>정상</strong>: +50bp ~ +150bp | 🔴 <strong>위험 (역전/스티프닝)</strong>: 0bp 이하</div>
             </div>
           </div>
@@ -415,24 +415,24 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
 
           {/* Treasury & Fed Macro Events Calendar */}
           <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '0.8rem', marginTop: '0.8rem' }}>
-            <div style={{ fontWeight: 700, color: '#f1f5f9', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
+            <div style={{ fontWeight: '700', color: '#f1f5f9', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
               🏛️ 미국채 & 미 연준(Fed) 주요 매크로 이벤트 캘린더 (Treasury Catalysts)
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.6rem', fontSize: '0.78rem' }}>
               <div style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#60A5FA', fontWeight: 700 }}>🏛️ FOMC 금리 결정 회의</span> | <strong>7월 30-31일 / 9월 17-18일</strong><br />
+                <span style={{ color: '#60A5FA', fontWeight: '700' }}>🏛️ FOMC 금리 결정 회의</span> | <strong>7월 30-31일 / 9월 17-18일</strong><br />
                 <span style={{ color: '#94a3b8' }}>파월 의장 통화정책 성명서 & 9월 피벗(Pivot, 25/50bp 금리 인하) 시그널</span>
               </div>
               <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#F59E0B', fontWeight: 700 }}>📜 미 재무부 분기 환류계획 (QRA)</span> | <strong>7월 29일 & 7월 31일</strong><br />
+                <span style={{ color: '#F59E0B', fontWeight: '700' }}>📜 미 재무부 분기 환류계획 (QRA)</span> | <strong>7월 29일 & 7월 31일</strong><br />
                 <span style={{ color: '#94a3b8' }}>재무부 순차입 규모 및 10년물/30년물 장기 국채 발행 비중 가이드 발표</span>
               </div>
               <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#10B981', fontWeight 700 }}>📊 US 10년물 국채 벤치마크 입찰</span> | <strong>매월 2주차 (8월 7일 예정)</strong><br />
+                <span style={{ color: '#10B981', fontWeight: '700' }}>📊 US 10년물 국채 벤치마크 입찰</span> | <strong>매월 2주차 (8월 7일 예정)</strong><br />
                 <span style={{ color: '#94a3b8' }}>$38B 규모 10년물 국채 입찰 응찰률(Auction Multiple) 및 프라이머리 딜러 인수 비율</span>
               </div>
               <div style={{ background: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#A855F7', fontWeight 700 }}>📈 US CPI / PCE 인플레이션 지표</span> | <strong>8월 14일 (CPI) / 8월 30일 (PCE)</strong><br />
+                <span style={{ color: '#A855F7', fontWeight: '700' }}>📈 US CPI / PCE 인플레이션 지표</span> | <strong>8월 14일 (CPI) / 8월 30일 (PCE)</strong><br />
                 <span style={{ color: '#94a3b8' }}>소비자물가지수(CPI) 및 개인소비지출(PCE) 물가 둔화세 확인 시 국채 금리 급락 유발</span>
               </div>
             </div>
