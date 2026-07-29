@@ -262,7 +262,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             <li><strong style={{ color: '#EF4444' }}>오라클 (Oracle 224bp - Danger)</strong>: <strong>200bp 상회로 위험 범주 진입</strong>. CapEx 자금 조달에 따른 부채 부담으로 BBB- 하향되었으며 이자 조달 비용 급증 리스크 상존.</li>
           </ul>
 
-          {/* NEW: BigTech Corporate Events Calendar */}
+          {/* BigTech Corporate Events Calendar */}
           <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '0.8rem', marginTop: '0.8rem' }}>
             <div style={{ fontWeight: 700, color: '#f1f5f9', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
               📅 빅테크 주요 기업 이벤트 & 실적 발표 캘린더 (Key Catalysts)
@@ -285,11 +285,11 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
                 <span style={{ color: '#94a3b8' }}>AWS 서버 설비투자 및 장기 채권 만기 차환(Refinancing) 발표</span>
               </div>
               <div style={{ background: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#A855F7', fontWeight 700 }}>🟣 Meta (META)</span> | <strong>7월 31일 (Q2 실적)</strong><br />
+                <span style={{ color: '#A855F7', fontWeight: 700 }}>🟣 Meta (META)</span> | <strong>7월 31일 (Q2 실적)</strong><br />
                 <span style={{ color: '#94a3b8' }}>Llama 3.1 인프라 투자 $37~$40B 상향 조정 & 신규 사채 발행</span>
               </div>
               <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#EF4444', fontWeight 700 }}>🔴 Oracle (ORCL)</span> | <strong>9월 9일 (Q1 FY25)</strong><br />
+                <span style={{ color: '#EF4444', fontWeight: 700 }}>🔴 Oracle (ORCL)</span> | <strong>9월 9일 (Q1 FY25)</strong><br />
                 <span style={{ color: '#94a3b8' }}>OCI AI 데이터센터 사채 추가 발행 & BBB- 등급 가이드라인</span>
               </div>
             </div>
@@ -357,7 +357,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             <li><strong style={{ color: '#10B981' }}>수익률 곡선 Gap (+22bp - Normal/Recovery)</strong>: 장단기 금리차 정상화 속도 모니터링 필요.</li>
           </ul>
 
-          {/* NEW: Treasury & Fed Macro Events Calendar */}
+          {/* Treasury & Fed Macro Events Calendar */}
           <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '0.8rem', marginTop: '0.8rem' }}>
             <div style={{ fontWeight: 700, color: '#f1f5f9', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
               🏛️ 미국채 & 미 연준(Fed) 주요 매크로 이벤트 캘린더 (Treasury Catalysts)
@@ -368,15 +368,15 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
                 <span style={{ color: '#94a3b8' }}>파월 의장 통화정책 성명서 & 9월 피벗(Pivot, 25/50bp 금리 인하) 시그널</span>
               </div>
               <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#F59E0B', fontWeight 700 }}>📜 미 재무부 분기 환류계획 (QRA)</span> | <strong>7월 29일 & 7월 31일</strong><br />
+                <span style={{ color: '#F59E0B', fontWeight: 700 }}>📜 미 재무부 분기 환류계획 (QRA)</span> | <strong>7월 29일 & 7월 31일</strong><br />
                 <span style={{ color: '#94a3b8' }}>재무부 순차입 규모 및 10년물/30년물 장기 국채 발행 비중 가이드 발표</span>
               </div>
               <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#10B981', fontWeight 700 }}>📊 US 10년물 국채 벤치마크 입찰</span> | <strong>매월 2주차 (8월 7일 예정)</strong><br />
+                <span style={{ color: '#10B981', fontWeight: 700 }}>📊 US 10년물 국채 벤치마크 입찰</span> | <strong>매월 2주차 (8월 7일 예정)</strong><br />
                 <span style={{ color: '#94a3b8' }}>$38B 규모 10년물 국채 입찰 응찰률(Auction Multiple) 및 프라이머리 딜러 인수 비율</span>
               </div>
               <div style={{ background: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#A855F7', fontWeight 700 }}>📈 US CPI / PCE 인플레이션 지표</span> | <strong>8월 14일 (CPI) / 8월 30일 (PCE)</strong><br />
+                <span style={{ color: '#A855F7', fontWeight: 700 }}>📈 US CPI / PCE 인플레이션 지표</span> | <strong>8월 14일 (CPI) / 8월 30일 (PCE)</strong><br />
                 <span style={{ color: '#94a3b8' }}>소비자물가지수(CPI) 및 개인소비지출(PCE) 물가 둔화세 확인 시 국채 금리 급락 유발</span>
               </div>
             </div>
