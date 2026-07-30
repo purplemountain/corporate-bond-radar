@@ -42,8 +42,8 @@ export async function GET() {
       us10yYield: liveUS10Y,
       // Standardized Free-Float Short Interest Metrics
       shortInterestMacro: {
-        sp500ShortRatioPct: 3.7, // 16-Year High S&P 500 Average
-        bigtechShortFloatPct: 1.2, // Standardized BigTech Average Short Float %
+        sp500ShortRatioPct: 3.7,
+        bigtechShortFloatPct: 1.2,
         totalShortNotionalBillion: 1.25,
         is16YearHigh: true,
         nvidiaShortNotionalBillion: 62.5,
@@ -51,16 +51,28 @@ export async function GET() {
       },
       // Refined Normalized Leverage De-risking Metrics (Base Level = Q1 Avg 100%)
       kospiDeleveragingData: {
-        baseLevelIndex: 100.0, // 1분기(1~4월) 평균 잔고 = 100%
-        samsungShareIndexCurrent: 128.5, // 주식 수량 기준 (1분기 대비 128.5%)
-        hynixShareIndexCurrent: 142.0,   // 주식 수량 기준 (1분기 대비 142.0%)
-        leverageEtfAumIndexCurrent: 135.2, // 2배 레버리지 ETF AUM 지수
-        
-        // 14-Week Normalized Index Series (Base Level = 100.0)
+        baseLevelIndex: 100.0,
+        samsungShareIndexCurrent: 128.5,
+        hynixShareIndexCurrent: 142.0,
+        leverageEtfAumIndexCurrent: 135.2,
         baseLevelSeries: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
         samsungShareSeries: [100.0, 101.5, 103.2, 106.0, 109.8, 114.5, 119.0, 123.5, 128.0, 125.2, 122.0, 124.8, 126.5, 128.5],
         hynixShareSeries: [100.0, 102.8, 105.5, 110.2, 116.0, 122.5, 129.0, 135.8, 143.0, 139.5, 136.0, 138.2, 140.5, 142.0],
         leverageEtfAumSeries: [100.0, 103.5, 108.0, 114.2, 121.0, 128.5, 136.0, 144.5, 152.0, 146.0, 140.0, 137.5, 136.0, 135.2]
+      },
+      // NEW: Gemini Shared Arbitrage Pressure Prediction Model Data
+      arbitragePrediction: {
+        currentStatus: 'NEARING_EXHAUSTION', // 'ACTIVE' | 'NEARING_EXHAUSTION' | 'EXHAUSTED'
+        statusText: '차익거래 압박 해소 임계점 임접 (Q3 실적 catalyst 대기)',
+        pairRatioCurrent: 2.35, // SK하이닉스 / 삼성전자 주가 비율 (역사적 평균 2.10)
+        pairRatioHistoricalMean: 2.10,
+        foreignNetBuyInversionRatePct: 68, // 외국인 삼성전자 매수 전환율 %
+        shortCoveringProgressPct: 74, // 삼성전자 공매도 숏커버링 진행률 %
+        estimatedDaysToExhaustion: 18, // 예상 남은 차익거래 압박 기간 (약 18일 후 8월 중순 해소 완수)
+        
+        // Time series for Pair Ratio & Foreign Net Flow
+        pairRatioSeries: [1.85, 1.90, 1.98, 2.05, 2.15, 2.28, 2.42, 2.55, 2.62, 2.58, 2.48, 2.42, 2.38, 2.35],
+        foreignSamsungNetFlowSeries: [-1200, -1500, -1800, -2100, -2500, -3200, -4100, -4500, -3800, -2400, -1200, -400, 800, 1500] // 억원
       },
       companies: [
         { name: 'NVIDIA', ticker: 'NVDA', rating: 'AA-', spreadBp: 52, issueYield: Number((liveUS10Y + 0.52).toFixed(2)), color: '#76B900', range: '48 ~ 55 bp', trend: 'down', shortNotionalBillion: 62.5, shortFloatPct: 1.2, borrowFeePct: 0.25 },
