@@ -47,14 +47,14 @@ export async function GET() {
     const corporateData = {
       timestamp: formattedTimestamp,
       us10yYield: liveUS10Y,
-      // Standardized Free-Float Short Interest Metrics
+      // Standardized Free-Float Short Interest Metrics (Updated to Latest 16-Year High 3.85%)
       shortInterestMacro: {
-        sp500ShortRatioPct: 3.7,
-        bigtechShortFloatPct: 1.2,
-        totalShortNotionalBillion: 1.25,
+        sp500ShortRatioPct: 3.85, // Updated from 3.7% to latest 16-year peak 3.85%
+        bigtechShortFloatPct: 1.25,
+        totalShortNotionalBillion: 1.28, // $1.28 Trillion
         is16YearHigh: true,
-        nvidiaShortNotionalBillion: 62.5,
-        oracleShortNotionalBillion: 18.2,
+        nvidiaShortNotionalBillion: 64.8, // $64.8B (#1 in S&P 500)
+        oracleShortNotionalBillion: 19.5, // $19.5B
       },
       // BigTech Free Cash Flow (FCF) Trend Data ($ Billion) - Includes Google FCF Deficit (-$1.8B)
       fcfTrendData: {
@@ -81,21 +81,21 @@ export async function GET() {
       arbitragePrediction: {
         currentStatus: 'IMMINENT_EXHAUSTION',
         statusText: '차익거래 압박 종료 임박 (8월 15일 목표 88% 커버링 완료)',
-        pairRatioCurrent: 2.22, // Pair Ratio 2.22배로 역사적 평균 2.10 회귀 임접
+        pairRatioCurrent: 2.22,
         pairRatioHistoricalMean: 2.10,
-        foreignNetBuyInversionRatePct: 82, // 외국인 매수 전환율 82%로 확대
-        shortCoveringProgressPct: 88, // 숏커버링 진행률 88%
-        estimatedDaysToExhaustion: daysLeft, // 오늘(8/7) 기준 D-8일 동적 산출
+        foreignNetBuyInversionRatePct: 82,
+        shortCoveringProgressPct: 88,
+        estimatedDaysToExhaustion: daysLeft,
         pairRatioSeries: [1.85, 1.90, 1.98, 2.05, 2.15, 2.28, 2.42, 2.55, 2.62, 2.58, 2.48, 2.42, 2.32, 2.22],
-        foreignSamsungNetFlowSeries: [-1200, -1500, -1800, -2100, -2500, -3200, -4100, -4500, -3800, -2400, -1200, 400, 1800, 2900] // 억 원
+        foreignSamsungNetFlowSeries: [-1200, -1500, -1800, -2100, -2500, -3200, -4100, -4500, -3800, -2400, -1200, 400, 1800, 2900]
       },
       companies: [
-        { name: 'NVIDIA', ticker: 'NVDA', rating: 'AA-', spreadBp: 52, issueYield: Number((liveUS10Y + 0.52).toFixed(2)), color: '#76B900', range: '48 ~ 55 bp', trend: 'down', shortNotionalBillion: 62.5, shortFloatPct: 1.2, borrowFeePct: 0.25 },
+        { name: 'NVIDIA', ticker: 'NVDA', rating: 'AA-', spreadBp: 52, issueYield: Number((liveUS10Y + 0.52).toFixed(2)), color: '#76B900', range: '48 ~ 55 bp', trend: 'down', shortNotionalBillion: 64.8, shortFloatPct: 1.25, borrowFeePct: 0.25 },
         { name: 'Microsoft', ticker: 'MSFT', rating: 'AAA', spreadBp: 55, issueYield: Number((liveUS10Y + 0.55).toFixed(2)), color: '#38BDF8', range: '50 ~ 56 bp', trend: 'down', shortNotionalBillion: 24.1, shortFloatPct: 1.2, borrowFeePct: 0.25 },
         { name: 'Alphabet / Google', ticker: 'GOOGL', rating: 'AA+', spreadBp: 66, issueYield: Number((liveUS10Y + 0.66).toFixed(2)), color: '#4285F4', range: '61 ~ 68 bp', trend: 'down', shortNotionalBillion: 18.7, shortFloatPct: 1.2, borrowFeePct: 0.25 },
         { name: 'Amazon', ticker: 'AMZN', rating: 'AA', spreadBp: 78, issueYield: Number((liveUS10Y + 0.78).toFixed(2)), color: '#F59E0B', range: '72 ~ 80 bp', trend: 'neutral', shortNotionalBillion: 19.5, shortFloatPct: 1.2, borrowFeePct: 0.25 },
         { name: 'Meta', ticker: 'META', rating: 'AA-', spreadBp: 92, issueYield: Number((liveUS10Y + 0.92).toFixed(2)), color: '#A855F7', range: '84 ~ 95 bp', trend: 'up', shortNotionalBillion: 15.3, shortFloatPct: 1.3, borrowFeePct: 0.25 },
-        { name: 'Oracle', ticker: 'ORCL', rating: 'BBB- (Downgraded)', spreadBp: 224, issueYield: Number((liveUS10Y + 2.24).toFixed(2)), color: '#EF4444', range: '210 ~ 228 bp', trend: 'danger', shortNotionalBillion: 18.2, shortFloatPct: 1.8, borrowFeePct: 0.45 }
+        { name: 'Oracle', ticker: 'ORCL', rating: 'BBB- (Downgraded)', spreadBp: 224, issueYield: Number((liveUS10Y + 2.24).toFixed(2)), color: '#EF4444', range: '210 ~ 228 bp', trend: 'danger', shortNotionalBillion: 19.5, shortFloatPct: 1.85, borrowFeePct: 0.45 }
       ],
       treasuryGapBp: 22,
       nicBp: 22,
