@@ -47,7 +47,7 @@ export async function GET() {
     const corporateData = {
       timestamp: formattedTimestamp,
       us10yYield: liveUS10Y,
-      // Standardized Free-Float Short Interest Metrics (Updated to Latest 16-Year High 3.85%)
+      // Standardized Free-Float Short Interest Metrics (16-Year High 3.85%)
       shortInterestMacro: {
         sp500ShortRatioPct: 3.85,
         bigtechShortFloatPct: 1.25,
@@ -56,15 +56,15 @@ export async function GET() {
         nvidiaShortNotionalBillion: 64.8,
         oracleShortNotionalBillion: 19.5,
       },
-      // BigTech Free Cash Flow (FCF) Trend Data ($ Billion) - Corrected Real Alphabet FCF (+ $13.5B)
+      // BigTech Free Cash Flow (FCF) Trend Data ($ Billion) - Accurate Q2 2026 Google FCF Deficit (-$5.9B)
       fcfTrendData: {
         labels: fcfLabels,
         nvidia: [14.5, 18.2, 23.1, 26.4],
         microsoft: [21.0, 19.5, 22.8, 24.7],
-        alphabet: [17.5, 16.8, 14.2, 13.5], // Corrected Real Google FCF: Strong Positive +$13.5B
+        alphabet: [17.5, 12.8, 4.2, -5.9], // Real Q2 2026 Google FCF Deficit -$5.9B (CapEx $44.9B vs OCF $39.1B)
         amazon: [11.2, 14.0, 17.8, 19.1],
         meta: [8.5, 6.4, 9.2, 10.8],
-        oracle: [2.1, 0.8, -1.2, -2.5] // Oracle is the only Negative FCF company (-$2.5B)
+        oracle: [2.1, 0.8, -1.2, -2.5]
       },
       // Refined Normalized Leverage De-risking Metrics (Base Level = Q1 Avg 100%)
       kospiDeleveragingData: {

@@ -172,7 +172,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       labels: ['2025 Q3', '2025 Q4', '2026 Q1', '2026 Q2 (Latest)'],
       nvidia: [14.5, 18.2, 23.1, 26.4],
       microsoft: [21.0, 19.5, 22.8, 24.7],
-      alphabet: [17.5, 16.8, 14.2, 13.5],
+      alphabet: [17.5, 12.8, 4.2, -5.9],
       amazon: [11.2, 14.0, 17.8, 19.1],
       meta: [8.5, 6.4, 9.2, 10.8],
       oracle: [2.1, 0.8, -1.2, -2.5]
@@ -224,7 +224,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           datasets: [
             { label: 'NVIDIA (NVDA)', data: fcfData.nvidia, borderColor: '#76B900', backgroundColor: 'rgba(118, 185, 0, 0.1)', borderWidth: 3.5, tension: 0.3 },
             { label: 'Microsoft (MSFT)', data: fcfData.microsoft, borderColor: '#38BDF8', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Alphabet / Google (GOOGL)', data: fcfData.alphabet, borderColor: '#4285F4', backgroundColor: 'rgba(66, 133, 244, 0.15)', borderWidth: 3.5, tension: 0.3 },
+            { label: 'Alphabet / Google (GOOGL)', data: fcfData.alphabet, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.2)', borderWidth: 3.5, tension: 0.3 },
             { label: 'Amazon (AMZN)', data: fcfData.amazon, borderColor: '#F59E0B', borderWidth: 2.5, tension: 0.3 },
             { label: 'Meta (META)', data: fcfData.meta, borderColor: '#A855F7', borderWidth: 2.5, tension: 0.3 },
             { label: 'Oracle (ORCL)', data: fcfData.oracle, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.25)', borderWidth: 3.5, tension: 0.3 }
@@ -469,7 +469,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
     labels: ['2025 Q3', '2025 Q4', '2026 Q1', '2026 Q2 (Latest)'],
     nvidia: [14.5, 18.2, 23.1, 26.4],
     microsoft: [21.0, 19.5, 22.8, 24.7],
-    alphabet: [17.5, 16.8, 14.2, 13.5],
+    alphabet: [17.5, 12.8, 4.2, -5.9],
     amazon: [11.2, 14.0, 17.8, 19.1],
     meta: [8.5, 6.4, 9.2, 10.8],
     oracle: [2.1, 0.8, -1.2, -2.5]
@@ -629,10 +629,10 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <canvas ref={spreadChartRef}></canvas>
         </div>
 
-        {/* Enhanced Comment 1 with Correct Google FCF & Spread Analysis */}
-        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #4285F4', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: '700', color: '#4285F4', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            💡 구글(Alphabet/GOOGL 66bp) & 엔비디아(NVDA 52bp) 빅테크 회사채 스프레드(OAS) 임계치 분석
+        {/* Enhanced Comment 1 with Google Q2 2026 FCF Deficit & Bond Issuance Analysis */}
+        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #EF4444', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+          <div style={{ fontWeight: '700', color: '#EF4444', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            🚨 구글(Alphabet/GOOGL 66bp) FCF 사상 첫 적자 전환(-$5.9B) 및 빅테크 회사채 스프레드(OAS) 임계치 분석
           </div>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.2)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
@@ -642,9 +642,9 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           </div>
 
           <ul style={{ margin: 0, paddingLeft: '1.2rem', marginBottom: '1rem' }}>
-            <li><strong style={{ color: '#60A5FA' }}>구글 (Alphabet / GOOGL 66bp - AA+ Solid Tier)</strong>: TPU v5p 및 AI 데이터센터 CapEx 투자 분기 $13B 지속에도 불구하고, **분기 +$13.5B (약 18조 원)의 압도적 잉여현금흐름(FCF) 흑자**를 올리며 AA+ 우량 등급 및 66bp 안정적 스프레드 안착.</li>
-            <li><strong style={{ color: '#76B900' }}>엔비디아 (NVIDIA 52bp - Normal Top Tier)</strong>: AI 가속기 독점 및 FCF $26.4B 수확에 힘입어 Microsoft(55bp), Alphabet(66bp)보다 낮은 **최저 52bp 스프레드 유지**.</li>
-            <li><strong style={{ color: '#EF4444' }}>오라클 (Oracle 224bp - Danger)</strong>: **200bp 상회로 위험 범주 진입**. <strong>빅테크 중 유일한 FCF -$2.5B 적자 지속</strong>으로 신용등급 BBB- 하향.</li>
+            <li><strong style={{ color: '#EF4444' }}>구글 (Alphabet / GOOGL 66bp - Q2 2026 FCF 적자 쇼크)</strong>: 2026년 7월 실적 발표 기준, AI 데이터센터 CapEx가 **$44.9B**로 폭발하며 상장 20년 만에 **사상 첫 FCF 마이너스 적자(-$5.9B)** 기록. 이에 따라 **$25B 규모의 대형 회사채 신규 발행 조달**에 착수하며 66bp대 스프레드 형성.</li>
+            <li><strong style={{ color: '#76B900' }}>엔비디아 (NVIDIA 52bp - Normal Top Tier)</strong>: AI 가속기 시장 독점과 FCF $26.4B 수확에 힘입어 Microsoft(55bp), Alphabet(66bp)보다 낮은 **최저 52bp 스프레드 유지**.</li>
+            <li><strong style={{ color: '#EF4444' }}>오라클 (Oracle 224bp - Danger)</strong>: **200bp 상회로 위험 범주 진입**. FCF -$2.5B 적자 지속으로 신용등급 BBB- 하향.</li>
           </ul>
 
           {/* BigTech Corporate Events Calendar */}
@@ -653,9 +653,9 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
               📅 빅테크 주요 기업 이벤트 & 실적 발표 캘린더 (Key Catalysts)
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.6rem', fontSize: '0.78rem' }}>
-              <div style={{ background: 'rgba(66, 133, 244, 0.1)', border: '1px solid rgba(66, 133, 244, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#60A5FA', fontWeight: '700' }}>🔵 Alphabet / Google (GOOGL)</span> | <strong>7월 23일 (Q2 진행)</strong><br />
-                <span style={{ color: '#94a3b8' }}>Custom TPU v5p 확장 & FCF +$13.5B 흑자 재원 안내</span>
+              <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
+                <span style={{ color: '#EF4444', fontWeight: '700' }}>🔴 Alphabet / Google (GOOGL)</span> | <strong>7월 23일 (Q2 실적 발표 완료)</strong><br />
+                <span style={{ color: '#94a3b8' }}>CapEx $44.9B / FCF -$5.9B 적자 기록 ➔ $25B 회사채 발행 조달 공식화</span>
               </div>
               <div style={{ background: 'rgba(118, 185, 0, 0.1)', border: '1px solid rgba(118, 185, 0, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
                 <span style={{ color: '#76B900', fontWeight: '700' }}>🟢 NVIDIA (NVDA)</span> | <strong>8월 28일 (Q2 실적)</strong><br />
@@ -691,8 +691,8 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <div style={{ display: 'flex', gap: '0.4rem', fontSize: '0.78rem' }}>
             <span style={{ background: 'rgba(118, 185, 0, 0.15)', color: '#76B900', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>NVDA: <strong>${fcfTrend.nvidia[3]}B</strong></span>
             <span style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>MSFT: <strong>${fcfTrend.microsoft[3]}B</strong></span>
-            <span style={{ background: 'rgba(66, 133, 244, 0.15)', color: '#60A5FA', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>GOOGL: <strong>+${fcfTrend.alphabet[3]}B (양호 🟢)</strong></span>
-            <span style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#EF4444', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>ORCL: <strong>${fcfTrend.oracle[3]}B (유일 적자 🔴)</strong></span>
+            <span style={{ background: 'rgba(239, 68, 68, 0.25)', color: '#EF4444', padding: '0.2rem 0.5rem', borderRadius: '6px', border: '1px solid rgba(239, 68, 68, 0.4)' }}>GOOGL: <strong>-${Math.abs(fcfTrend.alphabet[3])}B (사상 첫 적자 🔴)</strong></span>
+            <span style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#EF4444', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>ORCL: <strong>${fcfTrend.oracle[3]}B (적자)</strong></span>
           </div>
         </div>
 
@@ -700,26 +700,26 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <canvas ref={fcfChartRef}></canvas>
         </div>
 
-        {/* FCF Analysis Comment Box featuring Real FCF Data */}
-        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #38BDF8', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: '700', color: '#38BDF8', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            💡 $0B 이하 FCF 적자 위험 구간 (오라클 유일 적자) & 빅테크 FCF-스프레드 상관관계 분석
+        {/* FCF Analysis Comment Box featuring Real Q2 2026 Google Deficit (-$5.9B) */}
+        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #EF4444', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+          <div style={{ fontWeight: '700', color: '#EF4444', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            🚨 $0B 이하 FCF 적자 위험 구간 (Google -$5.9B / Oracle -$2.5B) & 빅테크 FCF-스프레드 상관관계 분석
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.25)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
             <div>
-              <div style={{ fontWeight: '700', color: '#76B900' }}>🟢 FCF 최상위 흑자군 (NVDA $26.4B / MSFT $24.7B / GOOGL $13.5B)</div>
-              <div>막대한 현금 창출로 CapEx 투자를 완벽 커버하며 <strong>회사채 스프레드 50~60bp대 최상위 독주</strong></div>
+              <div style={{ fontWeight: '700', color: '#EF4444' }}>🔴 구글 (Alphabet / GOOGL) FCF 사상 첫 적자 쇼크</div>
+              <div>2026년 7월 23일 발표 Q2 실적 기준, CapEx $44.9B 급증으로 <strong>FCF -$5.9B 사상 첫 적자 진입</strong> ➔ <strong>$25B 신규 회사채 조달 추진</strong></div>
             </div>
             <div>
-              <div style={{ fontWeight: '700', color: '#EF4444' }}>🔴 FCF 마이너스 적자 기업 (Oracle / ORCL -$2.5B)</div>
-              <div>빅테크 중 유일하게 FCF -$2.5B 적자 구역 진입 ➔ <strong>신용등급 BBB- 하향 및 스프레드 224bp 폭등 근본 원인</strong></div>
+              <div style={{ fontWeight: '700', color: '#76B900' }}>🟢 FCF 흑자 1·2위 (NVDA $26.4B / MSFT $24.7B)</div>
+              <div>압도적 잉여현금 창출로 CapEx 투자를 완벽 커버하며 <strong>회사채 스프레드 50bp대 최상위 안착</strong></div>
             </div>
           </div>
 
           <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.82rem' }}>
-            <li><strong style={{ color: '#60A5FA' }}>구글 (Alphabet / GOOGL +$13.5B 흑자)</strong>: AI CapEx 증가에도 불구하고 분기 +$13.5B (약 18조 원)의 강력한 흑자 잉여현금흐름을 시가화하여 차트상 0B 훨씬 위의 흑자 궤적에 정상 위치함.</li>
-            <li><strong style={{ color: '#EF4444' }}>오라클 (ORCL -$2.5B 적자)</strong>: 잉여현금 소진 및 $0B 아래 붉은색 위험 쉐이딩 영역에 위치한 유일한 적자 기업.</li>
+            <li><strong style={{ color: '#EF4444' }}>구글 (Alphabet / GOOGL -$5.9B 적자)</strong>: 2026 Q2 영업현금($39.1B) 대비 CapEx($44.9B) 폭발로 상장 20년 만에 처음으로 $0B 아래 붉은색 Danger Zone 적자 영역으로 하락 직행.</li>
+            <li><strong style={{ color: '#EF4444' }}>오라클 (ORCL -$2.5B 적자)</strong>: OCI 데이터센터 증설 부채 부담으로 $0B 아래 붉은색 위험 음영 구간 위치.</li>
           </ul>
         </div>
       </div>
