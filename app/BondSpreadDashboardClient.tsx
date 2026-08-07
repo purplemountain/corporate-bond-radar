@@ -167,12 +167,12 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       });
     }
 
-    // 2. Render NEW BigTech Free Cash Flow (FCF) Trend Chart (Right Under Spreads Chart)
+    // 2. Render BigTech Free Cash Flow (FCF) Trend Chart (Includes Google Deficit -$1.8B)
     const fcfData = data.fcfTrendData || {
       labels: ['2025 Q3', '2025 Q4', '2026 Q1', '2026 Q2 (Latest)'],
       nvidia: [14.5, 18.2, 23.1, 26.4],
       microsoft: [21.0, 19.5, 22.8, 24.7],
-      alphabet: [17.5, 15.8, 18.9, 20.5],
+      alphabet: [17.5, 12.8, 4.2, -1.8],
       amazon: [11.2, 14.0, 17.8, 19.1],
       meta: [8.5, 6.4, 9.2, 10.8],
       oracle: [2.1, 0.8, -1.2, -2.5]
@@ -186,7 +186,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           datasets: [
             { label: 'NVIDIA (NVDA)', data: fcfData.nvidia, borderColor: '#76B900', backgroundColor: 'rgba(118, 185, 0, 0.1)', borderWidth: 3.5, tension: 0.3 },
             { label: 'Microsoft (MSFT)', data: fcfData.microsoft, borderColor: '#38BDF8', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Alphabet (GOOGL)', data: fcfData.alphabet, borderColor: '#4285F4', borderWidth: 2.5, tension: 0.3 },
+            { label: 'Alphabet / Google (GOOGL)', data: fcfData.alphabet, borderColor: '#4285F4', backgroundColor: 'rgba(66, 133, 244, 0.15)', borderWidth: 3.5, tension: 0.3 },
             { label: 'Amazon (AMZN)', data: fcfData.amazon, borderColor: '#F59E0B', borderWidth: 2.5, tension: 0.3 },
             { label: 'Meta (META)', data: fcfData.meta, borderColor: '#A855F7', borderWidth: 2.5, tension: 0.3 },
             { label: 'Oracle (ORCL)', data: fcfData.oracle, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.2)', borderWidth: 3.5, tension: 0.3 }
@@ -430,7 +430,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
     labels: ['2025 Q3', '2025 Q4', '2026 Q1', '2026 Q2 (Latest)'],
     nvidia: [14.5, 18.2, 23.1, 26.4],
     microsoft: [21.0, 19.5, 22.8, 24.7],
-    alphabet: [17.5, 15.8, 18.9, 20.5],
+    alphabet: [17.5, 12.8, 4.2, -1.8],
     amazon: [11.2, 14.0, 17.8, 19.1],
     meta: [8.5, 6.4, 9.2, 10.8],
     oracle: [2.1, 0.8, -1.2, -2.5]
@@ -642,7 +642,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
       </div>
 
-      {/* NEW: 2. BigTech Free Cash Flow (FCF) Trend Chart Card (Placed Right Under Main Spreads Chart) */}
+      {/* 2. BigTech Free Cash Flow (FCF) Trend Chart Card (Includes Google Deficit -$1.8B) */}
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
           <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#38BDF8' }}>
@@ -651,8 +651,8 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <div style={{ display: 'flex', gap: '0.4rem', fontSize: '0.78rem' }}>
             <span style={{ background: 'rgba(118, 185, 0, 0.15)', color: '#76B900', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>NVDA: <strong>${fcfTrend.nvidia[3]}B</strong></span>
             <span style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>MSFT: <strong>${fcfTrend.microsoft[3]}B</strong></span>
-            <span style={{ background: 'rgba(66, 133, 244, 0.15)', color: '#60A5FA', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>GOOGL: <strong>${fcfTrend.alphabet[3]}B</strong></span>
-            <span style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#EF4444', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>ORCL: <strong>${fcfTrend.oracle[3]}B</strong> (적자)</span>
+            <span style={{ background: 'rgba(239, 68, 68, 0.2)', color: '#EF4444', padding: '0.2rem 0.5rem', borderRadius: '6px', border: '1px solid rgba(239, 68, 68, 0.4)' }}>GOOGL: <strong>-${Math.abs(fcfTrend.alphabet[3])}B (적자 🔴)</strong></span>
+            <span style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#EF4444', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>ORCL: <strong>${fcfTrend.oracle[3]}B (적자)</strong></span>
           </div>
         </div>
 
@@ -660,26 +660,26 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <canvas ref={fcfChartRef}></canvas>
         </div>
 
-        {/* FCF Analysis Comment Box */}
-        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #38BDF8', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: '700', color: '#38BDF8', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            💡 잉여현금흐름(FCF = 영업현금흐름 - CapEx)과 회사채 발행 스프레드(OAS) 간의 상관관계 분석
+        {/* FCF Analysis Comment Box featuring Google Deficit */}
+        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #EF4444', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+          <div style={{ fontWeight: '700', color: '#EF4444', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            🚨 구글(Alphabet) FCF 적자 전환(-$1.8B) 및 빅테크 FCF-스프레드 상관관계 분석
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.25)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
             <div>
-              <div style={{ fontWeight: '700', color: '#76B900' }}>🟢 FCF 상위 3사 (NVDA / MSFT / GOOGL)</div>
-              <div>막대한 영업현금창출로 CapEx를 상쇄하며 <strong>$20B~$26B 압도적 FCF 흑자</strong> 유지 ➔ <strong>회사채 스프레드 50bp대 최저 안착</strong></div>
+              <div style={{ fontWeight: '700', color: '#EF4444' }}>🔴 구글 (Alphabet / GOOGL) FCF 적자 쇼크</div>
+              <div>TPU v5p 및 Gemini AI 데이터센터 CapEx 폭발로 <strong>분기 FCF -$1.8B 적자 전환</strong> ➔ 자체 현금 조달 한계로 <strong>대규모 신규 회사채 발행 조달로 전환 압박</strong></div>
             </div>
             <div>
-              <div style={{ fontWeight: '700', color: '#EF4444' }}>🔴 FCF 적자 전환사 (Oracle / ORCL)</div>
-              <div>OCI AI 데이터센터 CapEx 급증으로 <strong>FCF -$2.5B 적자 전환</strong> ➔ <strong>신용등급 BBB- 하향 및 스프레드 224bp 폭등의 근본 원인</strong></div>
+              <div style={{ fontWeight: '700', color: '#76B900' }}>🟢 FCF 흑자 1·2위 (NVDA $26.4B / MSFT $24.7B)</div>
+              <div>압도적 잉여현금 창출로 CapEx 집행을 완벽 커버하며 <strong>회사채 스프레드 50bp대 최상위 독주</strong></div>
             </div>
           </div>
 
           <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.82rem' }}>
-            <li><strong style={{ color: '#76B900' }}>엔비디아 (NVDA FCF $26.4B - 1위)</strong>: AI 서버 독점에 따른 영업현금흐름 폭발로 FCF가 분기마다 신고가를 경신하며 채권 투자자들에게 완벽한 자본 안전판 제공.</li>
-            <li><strong style={{ color: '#EF4444' }}>오라클 (ORCL FCF -$2.5B - 위험)</strong>: 잉여현금흐름 소진 및 적자 전환으로 신규 AI 데이터센터 건설 비용 전액을 장기 회사채 발행에 의존해야 하는 구조적 신용 리스크 노출.</li>
+            <li><strong style={{ color: '#EF4444' }}>구글 (Alphabet / GOOGL -$1.8B 적자 쇼크)</strong>: 2025 Q3 $17.5B ➔ Q4 $12.8B ➔ 2026 Q1 $4.2B에 이어 <strong>최신 분기 -$1.8B로 사상 첫 마이너스 전환</strong>. 현금 소진에 따른 자금 조달용 신규 회사채 물량 대량 유출 우려 형성.</li>
+            <li><strong style={{ color: '#EF4444' }}>오라클 (ORCL -$2.5B 적자 지속)</strong>: 잉여현금 소진 및 적자 전환으로 신용등급 BBB- 하향 및 회사채 스프레드 224bp 폭등 위험 유지.</li>
           </ul>
         </div>
       </div>

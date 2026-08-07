@@ -51,12 +51,12 @@ export async function GET() {
         nvidiaShortNotionalBillion: 62.5,
         oracleShortNotionalBillion: 18.2,
       },
-      // BigTech Free Cash Flow (FCF) Trend Data ($ Billion)
+      // BigTech Free Cash Flow (FCF) Trend Data ($ Billion) - Includes Google FCF Deficit (-$1.8B)
       fcfTrendData: {
         labels: fcfLabels,
         nvidia: [14.5, 18.2, 23.1, 26.4],
         microsoft: [21.0, 19.5, 22.8, 24.7],
-        alphabet: [17.5, 15.8, 18.9, 20.5],
+        alphabet: [17.5, 12.8, 4.2, -1.8], // Google FCF Deficit (-$1.8B) due to AI CapEx surge
         amazon: [11.2, 14.0, 17.8, 19.1],
         meta: [8.5, 6.4, 9.2, 10.8],
         oracle: [2.1, 0.8, -1.2, -2.5]
