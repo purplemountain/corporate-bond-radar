@@ -167,7 +167,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       });
     }
 
-    // 2. Render BigTech Free Cash Flow (FCF) Trend Chart (Includes Google Deficit -$1.8B)
+    // 2. Render BigTech Free Cash Flow (FCF) Trend Chart with $0B Deficit Danger Zone Shading Plugin
     const fcfData = data.fcfTrendData || {
       labels: ['2025 Q3', '2025 Q4', '2026 Q1', '2026 Q2 (Latest)'],
       nvidia: [14.5, 18.2, 23.1, 26.4],
@@ -176,6 +176,44 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       amazon: [11.2, 14.0, 17.8, 19.1],
       meta: [8.5, 6.4, 9.2, 10.8],
       oracle: [2.1, 0.8, -1.2, -2.5]
+    };
+
+    // Custom Plugin to Paint Subtle Red Background Shading Below $0B (Deficit Danger Zone)
+    const fcfDangerZonePlugin = {
+      id: 'fcfDangerZone',
+      beforeDraw: (chart: any) => {
+        const { ctx, chartArea, scales } = chart;
+        if (!scales.y || !chartArea) return;
+        
+        const zeroY = scales.y.getPixelForValue(0);
+        if (zeroY >= chartArea.top && zeroY <= chartArea.bottom) {
+          ctx.save();
+          
+          // Subtle soft red fill below $0B
+          ctx.fillStyle = 'rgba(239, 68, 68, 0.14)';
+          ctx.fillRect(
+            chartArea.left,
+            zeroY,
+            chartArea.width,
+            chartArea.bottom - zeroY
+          );
+          
+          // Dashed Red Line at $0B Threshold
+          ctx.strokeStyle = 'rgba(239, 68, 68, 0.6)';
+          ctx.lineWidth = 1.8;
+          ctx.setLineDash([5, 4]);
+          ctx.beginPath();
+          ctx.moveTo(chartArea.left, zeroY);
+          ctx.lineTo(chartArea.right, zeroY);
+          ctx.stroke();
+          
+          // Danger Label Text
+          ctx.fillStyle = '#EF4444';
+          ctx.font = 'bold 11px sans-serif';
+          ctx.fillText('🚨 FCF 적자 위험 구간 (Free Cash Flow Deficit Zone < $0B)', chartArea.left + 10, zeroY + 16);
+          ctx.restore();
+        }
+      }
     };
 
     if (fcfChartRef.current) {
@@ -189,9 +227,10 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             { label: 'Alphabet / Google (GOOGL)', data: fcfData.alphabet, borderColor: '#4285F4', backgroundColor: 'rgba(66, 133, 244, 0.2)', borderWidth: 3.5, tension: 0.3 },
             { label: 'Amazon (AMZN)', data: fcfData.amazon, borderColor: '#F59E0B', borderWidth: 2.5, tension: 0.3 },
             { label: 'Meta (META)', data: fcfData.meta, borderColor: '#A855F7', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Oracle (ORCL)', data: fcfData.oracle, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.2)', borderWidth: 3.5, tension: 0.3 }
+            { label: 'Oracle (ORCL)', data: fcfData.oracle, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.25)', borderWidth: 3.5, tension: 0.3 }
           ]
         },
+        plugins: [fcfDangerZonePlugin],
         options: {
           responsive: true, maintainAspectRatio: false,
           plugins: { legend: { labels: { color: '#94a3b8' } } },
@@ -643,7 +682,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
       </div>
 
-      {/* 2. BigTech Free Cash Flow (FCF) Trend Chart Card (Includes Google Deficit -$1.8B) */}
+      {/* 2. BigTech Free Cash Flow (FCF) Trend Chart Card (With Red Shading Danger Zone Below $0B) */}
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
           <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#38BDF8' }}>
@@ -664,7 +703,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         {/* FCF Analysis Comment Box featuring Google Deficit */}
         <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #EF4444', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
           <div style={{ fontWeight: '700', color: '#EF4444', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            🚨 구글(Alphabet) FCF 적자 전환(-$1.8B) 및 빅테크 FCF-스프레드 상관관계 분석
+            🚨 FCF 적자 위험 구간 ($0B 이하 엷은 레딩 영역) & 빅테크 FCF-스프레드 상관관계 분석
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.25)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
