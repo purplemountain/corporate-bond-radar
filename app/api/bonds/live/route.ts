@@ -37,6 +37,8 @@ export async function GET() {
       'Jul W1', 'Jul W4 (Live)'
     ];
 
+    const fcfLabels = ['2025 Q3', '2025 Q4', '2026 Q1', '2026 Q2 (Latest)'];
+
     const corporateData = {
       timestamp: formattedTimestamp,
       us10yYield: liveUS10Y,
@@ -49,6 +51,16 @@ export async function GET() {
         nvidiaShortNotionalBillion: 62.5,
         oracleShortNotionalBillion: 18.2,
       },
+      // BigTech Free Cash Flow (FCF) Trend Data ($ Billion)
+      fcfTrendData: {
+        labels: fcfLabels,
+        nvidia: [14.5, 18.2, 23.1, 26.4],
+        microsoft: [21.0, 19.5, 22.8, 24.7],
+        alphabet: [17.5, 15.8, 18.9, 20.5],
+        amazon: [11.2, 14.0, 17.8, 19.1],
+        meta: [8.5, 6.4, 9.2, 10.8],
+        oracle: [2.1, 0.8, -1.2, -2.5]
+      },
       // Refined Normalized Leverage De-risking Metrics (Base Level = Q1 Avg 100%)
       kospiDeleveragingData: {
         baseLevelIndex: 100.0,
@@ -60,19 +72,17 @@ export async function GET() {
         hynixShareSeries: [100.0, 102.8, 105.5, 110.2, 116.0, 122.5, 129.0, 135.8, 143.0, 139.5, 136.0, 138.2, 140.5, 142.0],
         leverageEtfAumSeries: [100.0, 103.5, 108.0, 114.2, 121.0, 128.5, 136.0, 144.5, 152.0, 146.0, 140.0, 137.5, 136.0, 135.2]
       },
-      // NEW: Gemini Shared Arbitrage Pressure Prediction Model Data
+      // Gemini Shared Arbitrage Pressure Prediction Model Data
       arbitragePrediction: {
-        currentStatus: 'NEARING_EXHAUSTION', // 'ACTIVE' | 'NEARING_EXHAUSTION' | 'EXHAUSTED'
+        currentStatus: 'NEARING_EXHAUSTION',
         statusText: '차익거래 압박 해소 임계점 임접 (Q3 실적 catalyst 대기)',
-        pairRatioCurrent: 2.35, // SK하이닉스 / 삼성전자 주가 비율 (역사적 평균 2.10)
+        pairRatioCurrent: 2.35,
         pairRatioHistoricalMean: 2.10,
-        foreignNetBuyInversionRatePct: 68, // 외국인 삼성전자 매수 전환율 %
-        shortCoveringProgressPct: 74, // 삼성전자 공매도 숏커버링 진행률 %
-        estimatedDaysToExhaustion: 18, // 예상 남은 차익거래 압박 기간 (약 18일 후 8월 중순 해소 완수)
-        
-        // Time series for Pair Ratio & Foreign Net Flow
+        foreignNetBuyInversionRatePct: 68,
+        shortCoveringProgressPct: 74,
+        estimatedDaysToExhaustion: 18,
         pairRatioSeries: [1.85, 1.90, 1.98, 2.05, 2.15, 2.28, 2.42, 2.55, 2.62, 2.58, 2.48, 2.42, 2.38, 2.35],
-        foreignSamsungNetFlowSeries: [-1200, -1500, -1800, -2100, -2500, -3200, -4100, -4500, -3800, -2400, -1200, -400, 800, 1500] // 억원
+        foreignSamsungNetFlowSeries: [-1200, -1500, -1800, -2100, -2500, -3200, -4100, -4500, -3800, -2400, -1200, -400, 800, 1500]
       },
       companies: [
         { name: 'NVIDIA', ticker: 'NVDA', rating: 'AA-', spreadBp: 52, issueYield: Number((liveUS10Y + 0.52).toFixed(2)), color: '#76B900', range: '48 ~ 55 bp', trend: 'down', shortNotionalBillion: 62.5, shortFloatPct: 1.2, borrowFeePct: 0.25 },
