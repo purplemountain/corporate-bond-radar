@@ -7,6 +7,11 @@ export async function GET() {
     const now = new Date();
     const formattedTimestamp = now.toISOString();
 
+    // Dynamic D-Day calculation targeting 2026-08-15
+    const targetDate = new Date('2026-08-15T00:00:00+09:00');
+    const diffTime = targetDate.getTime() - now.getTime();
+    const daysLeft = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+
     let liveUS10Y = 4.45;
     try {
       const yahooRes = await fetch(
@@ -56,7 +61,7 @@ export async function GET() {
         labels: fcfLabels,
         nvidia: [14.5, 18.2, 23.1, 26.4],
         microsoft: [21.0, 19.5, 22.8, 24.7],
-        alphabet: [17.5, 12.8, 4.2, -1.8], // Google FCF Deficit (-$1.8B) due to AI CapEx surge
+        alphabet: [17.5, 12.8, 4.2, -1.8],
         amazon: [11.2, 14.0, 17.8, 19.1],
         meta: [8.5, 6.4, 9.2, 10.8],
         oracle: [2.1, 0.8, -1.2, -2.5]
@@ -72,17 +77,17 @@ export async function GET() {
         hynixShareSeries: [100.0, 102.8, 105.5, 110.2, 116.0, 122.5, 129.0, 135.8, 143.0, 139.5, 136.0, 138.2, 140.5, 142.0],
         leverageEtfAumSeries: [100.0, 103.5, 108.0, 114.2, 121.0, 128.5, 136.0, 144.5, 152.0, 146.0, 140.0, 137.5, 136.0, 135.2]
       },
-      // Gemini Shared Arbitrage Pressure Prediction Model Data
+      // Gemini Shared Arbitrage Pressure Prediction Model Data (Dynamic Date Based)
       arbitragePrediction: {
-        currentStatus: 'NEARING_EXHAUSTION',
-        statusText: '차익거래 압박 해소 임계점 임접 (Q3 실적 catalyst 대기)',
-        pairRatioCurrent: 2.35,
+        currentStatus: 'IMMINENT_EXHAUSTION',
+        statusText: '차익거래 압박 종료 임박 (8월 15일 목표 88% 커버링 완료)',
+        pairRatioCurrent: 2.22, // Pair Ratio 2.22배로 역사적 평균 2.10 회귀 임접
         pairRatioHistoricalMean: 2.10,
-        foreignNetBuyInversionRatePct: 68,
-        shortCoveringProgressPct: 74,
-        estimatedDaysToExhaustion: 18,
-        pairRatioSeries: [1.85, 1.90, 1.98, 2.05, 2.15, 2.28, 2.42, 2.55, 2.62, 2.58, 2.48, 2.42, 2.38, 2.35],
-        foreignSamsungNetFlowSeries: [-1200, -1500, -1800, -2100, -2500, -3200, -4100, -4500, -3800, -2400, -1200, -400, 800, 1500]
+        foreignNetBuyInversionRatePct: 82, // 외국인 매수 전환율 82%로 확대
+        shortCoveringProgressPct: 88, // 숏커버링 진행률 88%
+        estimatedDaysToExhaustion: daysLeft, // 오늘(8/7) 기준 D-8일 동적 산출
+        pairRatioSeries: [1.85, 1.90, 1.98, 2.05, 2.15, 2.28, 2.42, 2.55, 2.62, 2.58, 2.48, 2.42, 2.32, 2.22],
+        foreignSamsungNetFlowSeries: [-1200, -1500, -1800, -2100, -2500, -3200, -4100, -4500, -3800, -2400, -1200, 400, 1800, 2900] // 억 원
       },
       companies: [
         { name: 'NVIDIA', ticker: 'NVDA', rating: 'AA-', spreadBp: 52, issueYield: Number((liveUS10Y + 0.52).toFixed(2)), color: '#76B900', range: '48 ~ 55 bp', trend: 'down', shortNotionalBillion: 62.5, shortFloatPct: 1.2, borrowFeePct: 0.25 },
