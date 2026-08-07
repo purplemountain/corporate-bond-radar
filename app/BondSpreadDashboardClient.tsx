@@ -140,19 +140,19 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
     const { chartData } = data;
     const nvidiaSeries = chartData.nvidia || [55, 52, 50, 48, 46, 45, 47, 49, 52, 50, 48, 49, 51, 52];
 
-    // 1. Render Main Corporate Spread Chart (Includes NVIDIA)
+    // 1. Render Main Corporate Spread Chart (Explicitly Highlights Google GOOGL)
     if (spreadChartRef.current) {
       spreadChartInstance.current = new Chart(spreadChartRef.current, {
         type: 'line',
         data: {
           labels: chartData.labels,
           datasets: [
-            { label: 'NVIDIA (AA-)', data: nvidiaSeries, borderColor: '#76B900', backgroundColor: 'rgba(118, 185, 0, 0.1)', borderWidth: 3, tension: 0.3 },
-            { label: 'Microsoft (AAA)', data: chartData.microsoft, borderColor: '#38BDF8', backgroundColor: 'rgba(56, 189, 248, 0.1)', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Alphabet / Google (AA+)', data: chartData.alphabet, borderColor: '#4285F4', backgroundColor: 'rgba(66, 133, 244, 0.1)', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Amazon (AA)', data: chartData.amazon, borderColor: '#F59E0B', backgroundColor: 'rgba(245, 158, 11, 0.1)', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Meta (AA-)', data: chartData.meta, borderColor: '#A855F7', backgroundColor: 'rgba(168, 85, 247, 0.1)', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Oracle (BBB- Downgraded)', data: chartData.oracle, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.15)', borderWidth: 3.5, tension: 0.3 },
+            { label: 'NVIDIA (NVDA, AA-)', data: nvidiaSeries, borderColor: '#76B900', backgroundColor: 'rgba(118, 185, 0, 0.1)', borderWidth: 3, tension: 0.3 },
+            { label: 'Microsoft (MSFT, AAA)', data: chartData.microsoft, borderColor: '#38BDF8', backgroundColor: 'rgba(56, 189, 248, 0.1)', borderWidth: 2.5, tension: 0.3 },
+            { label: 'Alphabet / Google (GOOGL, AA+)', data: chartData.alphabet, borderColor: '#4285F4', backgroundColor: 'rgba(66, 133, 244, 0.2)', borderWidth: 3.5, tension: 0.3 },
+            { label: 'Amazon (AMZN, AA)', data: chartData.amazon, borderColor: '#F59E0B', backgroundColor: 'rgba(245, 158, 11, 0.1)', borderWidth: 2.5, tension: 0.3 },
+            { label: 'Meta (META, AA-)', data: chartData.meta, borderColor: '#A855F7', backgroundColor: 'rgba(168, 85, 247, 0.1)', borderWidth: 2.5, tension: 0.3 },
+            { label: 'Oracle (ORCL, BBB- Downgraded)', data: chartData.oracle, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.15)', borderWidth: 3.5, tension: 0.3 },
             { label: 'US Treasury 10Y-2Y Spread', data: chartData.treasuryGap, borderColor: '#10B981', borderDash: [6, 4], backgroundColor: 'transparent', borderWidth: 2.5, tension: 0.3 }
           ]
         },
@@ -186,7 +186,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           datasets: [
             { label: 'NVIDIA (NVDA)', data: fcfData.nvidia, borderColor: '#76B900', backgroundColor: 'rgba(118, 185, 0, 0.1)', borderWidth: 3.5, tension: 0.3 },
             { label: 'Microsoft (MSFT)', data: fcfData.microsoft, borderColor: '#38BDF8', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Alphabet / Google (GOOGL)', data: fcfData.alphabet, borderColor: '#4285F4', backgroundColor: 'rgba(66, 133, 244, 0.15)', borderWidth: 3.5, tension: 0.3 },
+            { label: 'Alphabet / Google (GOOGL)', data: fcfData.alphabet, borderColor: '#4285F4', backgroundColor: 'rgba(66, 133, 244, 0.2)', borderWidth: 3.5, tension: 0.3 },
             { label: 'Amazon (AMZN)', data: fcfData.amazon, borderColor: '#F59E0B', borderWidth: 2.5, tension: 0.3 },
             { label: 'Meta (META)', data: fcfData.meta, borderColor: '#A855F7', borderWidth: 2.5, tension: 0.3 },
             { label: 'Oracle (ORCL)', data: fcfData.oracle, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.2)', borderWidth: 3.5, tension: 0.3 }
@@ -565,10 +565,10 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
       </div>
 
-      {/* 1. Main Spreads Chart Card */}
+      {/* 1. Main Spreads Chart Card (Includes Google GOOGL Explicitly) */}
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1.2rem' }}>📊 빅테크 회사채 발행 스프레드 & 미국채 동향 (NVDA 포함)</h3>
+          <h3 style={{ margin: 0, fontSize: '1.2rem' }}>📊 빅테크 회사채 발행 스프레드 & 미국채 동향 (GOOGL & NVDA 포함)</h3>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             {['all', 'top3', 'highYield', 'treasuryOnly'].map((f) => (
               <button
@@ -581,7 +581,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
                   padding: '0.35rem 0.75rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem'
                 }}
               >
-                {f === 'all' ? '전체' : f === 'top3' ? 'NVDA/MSFT/GOOGL' : f === 'highYield' ? 'Oracle/Meta' : 'NVDA/국채'}
+                {f === 'all' ? '전체' : f === 'top3' ? 'NVDA/MSFT/GOOGL' : f === 'highYield' ? 'Oracle/Meta' : 'GOOGL/국채'}
               </button>
             ))}
           </div>
@@ -590,10 +590,10 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <canvas ref={spreadChartRef}></canvas>
         </div>
 
-        {/* Enhanced Comment 1 with Threshold & Problem Analysis */}
-        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #76B900', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: '700', color: '#76B900', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            💡 엔비디아(NVIDIA) & 빅테크 회사채 스프레드(OAS) 임계치 분석
+        {/* Enhanced Comment 1 with Google FCF Impact & Threshold Analysis */}
+        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #4285F4', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+          <div style={{ fontWeight: '700', color: '#4285F4', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            💡 구글(Alphabet/GOOGL 66bp) & 엔비디아(NVDA 52bp) 빅테크 회사채 스프레드(OAS) 임계치 분석
           </div>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.2)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
@@ -603,8 +603,9 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           </div>
 
           <ul style={{ margin: 0, paddingLeft: '1.2rem', marginBottom: '1rem' }}>
-            <li><strong style={{ color: '#76B900' }}>엔비디아 (NVIDIA 52bp - Normal Top Tier)</strong>: AI 가속기 시장 독점과 압도적 현금 창출력에 힘입어 신용등급 AA-에도 불구하고 Microsoft(55bp), Alphabet(66bp)과 어깨를 견주는 <strong>최저 수준 52bp 스프레드 유지</strong>. (주식 공매도 금액 $62.5B로 S&P 500 1위 기록 중이나 숏스퀴즈 발생 가능성 모니터링 필요)</li>
-            <li><strong style={{ color: '#EF4444' }}>오라클 (Oracle 224bp - Danger)</strong>: <strong>200bp 상회로 위험 범주 진입</strong>. CapEx 자금 조달에 따른 부채 부담으로 BBB- 하향되었으며 이자 조달 비용 급증 리스크 상존.</li>
+            <li><strong style={{ color: '#60A5FA' }}>구글 (Alphabet / GOOGL 66bp - AA+ Caution)</strong>: 최신 분기 **FCF 사상 첫 적자 전환(-$1.8B)**에 따라 TPU v5p 및 데이터센터 CapEx 재원을 위한 **회사채 발행 조달 의존도가 가중**되고 있으며, 기존 AA+ 우량 등급에도 불구하고 66bp대 스프레드 상향 조정을 받고 있음.</li>
+            <li><strong style={{ color: '#76B900' }}>엔비디아 (NVIDIA 52bp - Normal Top Tier)</strong>: AI 가속기 시장 독점과 FCF $26.4B 수확에 힘입어 Microsoft(55bp), Alphabet(66bp)보다 낮은 **최저 52bp 스프레드 유지**.</li>
+            <li><strong style={{ color: '#EF4444' }}>오라클 (Oracle 224bp - Danger)</strong>: **200bp 상회로 위험 범주 진입**. FCF -$2.5B 적자 지속으로 신용등급 BBB- 하향.</li>
           </ul>
 
           {/* BigTech Corporate Events Calendar */}
@@ -613,6 +614,10 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
               📅 빅테크 주요 기업 이벤트 & 실적 발표 캘린더 (Key Catalysts)
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.6rem', fontSize: '0.78rem' }}>
+              <div style={{ background: 'rgba(66, 133, 244, 0.1)', border: '1px solid rgba(66, 133, 244, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
+                <span style={{ color: '#60A5FA', fontWeight: '700' }}>🔵 Alphabet / Google (GOOGL)</span> | <strong>7월 23일 (Q2 진행)</strong><br />
+                <span style={{ color: '#94a3b8' }}>Custom TPU v5p 확장 & FCF 적자(-$1.8B) 대응 사채 발행 재원 공개</span>
+              </div>
               <div style={{ background: 'rgba(118, 185, 0, 0.1)', border: '1px solid rgba(118, 185, 0, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
                 <span style={{ color: '#76B900', fontWeight: '700' }}>🟢 NVIDIA (NVDA)</span> | <strong>8월 28일 (Q2 실적)</strong><br />
                 <span style={{ color: '#94a3b8' }}>Blackwell B200 출하 일정 & AI 데이터센터 CapEx 자금 조달 발표</span>
@@ -620,10 +625,6 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
               <div style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
                 <span style={{ color: '#38BDF8', fontWeight: '700' }}>🔵 Microsoft (MSFT)</span> | <strong>7월 30일 (Q4 실적)</strong><br />
                 <span style={{ color: '#94a3b8' }}>Azure AI 성장률 및 연간 $19B 인프라 CapEx 회사채 재원 계획</span>
-              </div>
-              <div style={{ background: 'rgba(66, 133, 244, 0.1)', border: '1px solid rgba(66, 133, 244, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#60A5FA', fontWeight: '700' }}>🔵 Alphabet (GOOGL)</span> | <strong>7월 23일 (Q2 진행)</strong><br />
-                <span style={{ color: '#94a3b8' }}>Custom TPU v5p 확장 가이드라인 & 클라우드 분기 매출 공개</span>
               </div>
               <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
                 <span style={{ color: '#F59E0B', fontWeight: '700' }}>🟡 Amazon (AMZN)</span> | <strong>8월 1일 (Q2 실적)</strong><br />
