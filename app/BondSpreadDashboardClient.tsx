@@ -238,7 +238,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
             y: {
               grid: { color: 'rgba(255, 255, 255, 0.06)' },
-              ticks: { color: '#94a3b8', callback: (v) => '$' + v + 'B' },
+              ticks: { color: '#94a3b8', callback: (v) => '$' + Number(v).toFixed(1) + 'B' },
               title: { display: true, text: '잉여현금흐름 Free Cash Flow ($ Billion)', color: '#38BDF8' }
             }
           }
@@ -262,14 +262,14 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           plugins: { legend: { labels: { color: '#94a3b8' } } },
           scales: {
             x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
-            yNIC: { type: 'linear', position: 'left', ticks: { color: '#F43F5E', callback: (v) => v + ' bp' }, min: 0, max: 35 },
-            yMultiple: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#818CF8', callback: (v) => v + ' 배' }, min: 1.0, max: 6.0 }
+            yNIC: { type: 'linear', position: 'left', ticks: { color: '#F43F5E', callback: (v) => Number(v).toFixed(1) + ' bp' }, min: 0, max: 35 },
+            yMultiple: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#818CF8', callback: (v) => Number(v).toFixed(1) + ' 배' }, min: 1.0, max: 6.0 }
           }
         }
       });
     }
 
-    // 4. Render US Treasury Yield Chart
+    // 4. Render US Treasury Yield Chart (Standardized to 1 Decimal Place on Y-Axis Ticks)
     if (treasuryChartRef.current) {
       treasuryChartInstance.current = new Chart(treasuryChartRef.current, {
         type: 'line',
@@ -285,8 +285,16 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           plugins: { legend: { labels: { color: '#94a3b8' } } },
           scales: {
             x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
-            yYield: { type: 'linear', position: 'left', ticks: { color: '#3B82F6', callback: (v) => v + ' %' }, min: 3.5, max: 4.8 },
-            yAuction: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#F59E0B', callback: (v) => v + ' 배' }, min: 1.5, max: 3.5 }
+            yYield: {
+              type: 'linear', position: 'left',
+              ticks: { color: '#3B82F6', callback: (v) => Number(v).toFixed(1) + ' %' }, // Standardized to 1 decimal place (e.g. 3.5 %, 4.0 %, 4.5 %)
+              min: 3.5, max: 4.8
+            },
+            yAuction: {
+              type: 'linear', position: 'right', grid: { drawOnChartArea: false },
+              ticks: { color: '#F59E0B', callback: (v) => Number(v).toFixed(1) + ' 배' }, // Standardized to 1 decimal place (e.g. 2.0 배, 2.5 배, 3.0 배)
+              min: 1.5, max: 3.5
+            }
           }
         }
       });
@@ -351,7 +359,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
             y: {
               grid: { color: 'rgba(255, 255, 255, 0.06)' },
-              ticks: { color: '#94a3b8', callback: (v) => v + ' %' },
+              ticks: { color: '#94a3b8', callback: (v) => Number(v).toFixed(1) + ' %' },
               title: { display: true, text: '1분기 Base Level 대비 정규화 지수 (%)', color: '#cbd5e1' },
               min: 90,
               max: 160
@@ -414,7 +422,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             yPair: {
               type: 'linear',
               position: 'left',
-              ticks: { color: '#A855F7', callback: (v) => Number(v).toFixed(2) + ' 배' },
+              ticks: { color: '#A855F7', callback: (v) => Number(v).toFixed(1) + ' 배' },
               title: { display: true, text: 'Hynix/Samsung 주가 비율 (Pair Ratio)', color: '#A855F7' },
               min: 1.5,
               max: 3.0
@@ -493,7 +501,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
     pairRatioHistoricalMean: 2.10,
     foreignNetBuyInversionRatePct: 82,
     shortCoveringProgressPct: 88,
-    estimatedDaysToExhaustion: 7,
+    estimatedDaysToExhaustion: 3,
     pairRatioSeries: [1.85, 1.90, 1.98, 2.05, 2.15, 2.28, 2.42, 2.55, 2.62, 2.58, 2.48, 2.42, 2.32, 2.22],
     foreignSamsungNetFlowSeries: [-1200, -1500, -1800, -2100, -2500, -3200, -4100, -4500, -3800, -2400, -1200, 400, 1800, 2900]
   };
@@ -519,7 +527,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontWeight: '800', color: '#A855F7', fontSize: '1rem' }}>
             🔮 삼성전자 vs SK하이닉스 차익거래(Arbitrage) 압박 종료 D-Day 실시간 동적 예측
             <span style={{ fontSize: '0.78rem', background: 'rgba(168, 85, 247, 0.25)', color: '#E9D5FF', padding: '0.15rem 0.6rem', borderRadius: '12px', fontWeight: '700' }}>
-              오늘 (8월 8일) 실시간 카운트다운
+              오늘 (8월 12일) 실시간 카운트다운
             </span>
           </div>
           <div style={{ color: '#cbd5e1', fontSize: '0.84rem', marginTop: '0.3rem' }}>
@@ -887,7 +895,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         {/* Gemini Arbitrage Model Analysis Box */}
         <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #10B981', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
           <div style={{ fontWeight: '700', color: '#10B981', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            💡 오늘(8월 8일) 현재 실시간 수급 현황: 차익거래 압박 해소 88% 진입 (종료 임박)
+            💡 오늘(8월 12일) 현재 실시간 수급 현황: 차익거래 압박 해소 88% 진입 (종료 임박)
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.25)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
@@ -906,7 +914,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           </div>
 
           <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.82rem' }}>
-            <li><strong style={{ color: '#10B981' }}>오늘(8월 8일) 기준 실시간 D-Day</strong>: 현재 시점 기준 남은 차익거래 해소 완료 기간은 **D-7일 (8월 15일 해소 목표 / 약 7일 남음)**로 정밀 자동 카운트다운되고 있습니다!</li>
+            <li><strong style={{ color: '#10B981' }}>오늘(8월 12일) 기준 실시간 D-Day</strong>: 현재 시점 기준 남은 차익거래 해소 완료 기간은 **D-3일 (8월 15일 해소 목표 / 약 3일 남음)**로 정밀 자동 카운트다운되고 있습니다!</li>
           </ul>
         </div>
       </div>
