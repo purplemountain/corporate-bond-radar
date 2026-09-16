@@ -35,18 +35,65 @@ export async function GET(request: NextRequest) {
 
     const tokenData = await tokenRes.json();
     const accessToken = tokenData.access_token;
+    const idToken = tokenData.id_token;
 
-    const userRes = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
+    let userEmailRaw = '';
 
-    if (!userRes.ok) {
+    // Method 1: Decode ID Token (JWT) directly - 100% reliable as Google includes email in standard ID Token
+    if (idToken) {
+      try {
+        const payloadBase64 = idToken.split('.')[1];
+        const base64 = payloadBase64.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+            .join('')
+        );
+        const decoded = JSON.parse(jsonPayload);
+        if (decoded && decoded.email) {
+          userEmailRaw = decoded.email;
+        }
+      } catch (e) {
+        console.warn('ID Token decode fallback used:', e);
+      }
+    }
+
+    // Method 2: Fetch from OpenID Connect v1 UserInfo Endpoint if ID token parsing was insufficient
+    if (!userEmailRaw && accessToken) {
+      try {
+        const oidcRes = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        if (oidcRes.ok) {
+          const oidcData = await oidcRes.json();
+          if (oidcData.email) userEmailRaw = oidcData.email;
+        }
+      } catch (e) {
+        console.warn('OIDC userinfo fetch failed:', e);
+      }
+    }
+
+    // Method 3: Fetch from Google OAuth2 v3 UserInfo Endpoint as secondary HTTP fallback
+    if (!userEmailRaw && accessToken) {
+      try {
+        const v3Res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        if (v3Res.ok) {
+          const v3Data = await v3Res.json();
+          if (v3Data.email) userEmailRaw = v3Data.email;
+        }
+      } catch (e) {
+        console.warn('OAuth2 v3 userinfo fetch failed:', e);
+      }
+    }
+
+    if (!userEmailRaw) {
       return NextResponse.redirect(new URL('/login?error=UserInfoFailed', 'https://corporate-bond-radar.onrender.com'));
     }
 
-    const userInfo = await userRes.json();
-    const email = normalizeEmail(userInfo.email);
-
+    const email = normalizeEmail(userEmailRaw);
     const allowed = isAllowedEmail(email);
 
     if (!allowed) {
