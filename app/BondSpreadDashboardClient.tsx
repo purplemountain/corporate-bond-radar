@@ -167,7 +167,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       });
     }
 
-    // 2. Render BigTech Free Cash Flow (FCF) Trend Chart with $0B Deficit Danger Zone Shading Plugin
+    // 2. Render BigTech Free Cash Flow (FCF) Trend Chart with Distinct Brand Colors (Google Blue #4285F4 vs Oracle Red #EF4444)
     const fcfData = data.fcfTrendData || {
       labels: ['2025 Q3', '2025 Q4', '2026 Q1', '2026 Q2 (Latest)'],
       nvidia: [14.5, 18.2, 23.1, 26.4],
@@ -224,7 +224,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           datasets: [
             { label: 'NVIDIA (NVDA)', data: fcfData.nvidia, borderColor: '#76B900', backgroundColor: 'rgba(118, 185, 0, 0.1)', borderWidth: 3.5, tension: 0.3 },
             { label: 'Microsoft (MSFT)', data: fcfData.microsoft, borderColor: '#38BDF8', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Alphabet / Google (GOOGL)', data: fcfData.alphabet, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.2)', borderWidth: 3.5, tension: 0.3 },
+            { label: 'Alphabet / Google (GOOGL)', data: fcfData.alphabet, borderColor: '#4285F4', backgroundColor: 'rgba(66, 133, 244, 0.2)', borderWidth: 3.5, tension: 0.3 },
             { label: 'Amazon (AMZN)', data: fcfData.amazon, borderColor: '#F59E0B', borderWidth: 2.5, tension: 0.3 },
             { label: 'Meta (META)', data: fcfData.meta, borderColor: '#A855F7', borderWidth: 2.5, tension: 0.3 },
             { label: 'Oracle (ORCL)', data: fcfData.oracle, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.25)', borderWidth: 3.5, tension: 0.3 }
@@ -527,11 +527,11 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontWeight: '800', color: '#A855F7', fontSize: '1rem' }}>
             🔮 삼성전자 vs SK하이닉스 차익거래(Arbitrage) 압박 종료 예측
             <span style={{ fontSize: '0.78rem', background: 'rgba(16, 185, 129, 0.25)', color: '#6EE7B7', padding: '0.15rem 0.6rem', borderRadius: '12px', fontWeight: '700' }}>
-              오늘 (8월 18일) 100% 해소 완수!
+              100% 해소 완수!
             </span>
           </div>
           <div style={{ color: '#cbd5e1', fontSize: '0.84rem', marginTop: '0.3rem' }}>
-            현재 수급 상태: <strong style={{ color: '#10B981' }}>🟢 {arbPredict.statusText}</strong> | 목표 상태: <strong style={{ color: '#38BDF8', fontSize: '1.05rem' }}>8월 15일 자 해소 완수 (외국인 순매수 +4,800억 유입)</strong>
+            현재 수급 상태: <strong style={{ color: '#10B981' }}>🟢 {arbPredict.statusText}</strong> | 목표 상태: <strong style={{ color: '#38BDF8', fontSize: '1.05rem' }}>해소 완수 (외국인 순매수 +4,800억 유입)</strong>
           </div>
         </div>
 
@@ -612,10 +612,10 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
       </div>
 
-      {/* 1. Main Spreads Chart Card (Includes Google GOOGL Explicitly & Updated to Aug W3) */}
+      {/* 1. Main Spreads Chart Card (Explicitly Highlights Google GOOGL) */}
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1.2rem' }}>📊 빅테크 회사채 발행 스프레드 & 미국채 동향 (8월 3주차 최신 Live 갱신)</h3>
+          <h3 style={{ margin: 0, fontSize: '1.2rem' }}>📊 빅테크 회사채 발행 스프레드 & 미국채 동향</h3>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             {['all', 'top3', 'highYield', 'treasuryOnly'].map((f) => (
               <button
@@ -640,7 +640,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         {/* Enhanced Comment 1 with Google Q2 2026 FCF Deficit & Bond Issuance Analysis */}
         <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #EF4444', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
           <div style={{ fontWeight: '700', color: '#EF4444', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            🚨 구글(Alphabet/GOOGL 63bp) FCF 사상 첫 적자 전환(-$5.9B) 및 빅테크 회사채 스프레드(OAS) 8월 최신 분석
+            🚨 구글(Alphabet/GOOGL 63bp) FCF 사상 첫 적자 전환(-$5.9B) 및 빅테크 회사채 스프레드(OAS) 분석
           </div>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.2)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
@@ -650,9 +650,9 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           </div>
 
           <ul style={{ margin: 0, paddingLeft: '1.2rem', marginBottom: '1rem' }}>
-            <li><strong style={{ color: '#EF4444' }}>구글 (Alphabet / GOOGL 63bp - 8월 3주차 최신)</strong>: Q2 실적 발표에서 CapEx($44.9B) 폭증으로 **FCF -$5.9B 사상 첫 적자 기록** 후 $25B 신규 회사채 소화가 진행되며 **63bp대 안착 중**.</li>
+            <li><strong style={{ color: '#4285F4' }}>구글 (Alphabet / GOOGL 63bp - 구글 시그니처 블루)</strong>: Q2 실적 발표에서 CapEx($44.9B) 폭증으로 **FCF -$5.9B 사상 첫 적자 기록** 후 $25B 신규 회사채 소화가 진행되며 **63bp대 안착 중**.</li>
             <li><strong style={{ color: '#76B900' }}>엔비디아 (NVIDIA 49bp - 최저 스프레드)</strong>: 8월 28일 Q2 실적 발표 및 Blackwell 출하 기대감으로 **49bp 사상 최저 수준 유지**.</li>
-            <li><strong style={{ color: '#EF4444' }}>오라클 (Oracle 222bp - Danger)</strong>: 200bp 상회 위험 범주 지속.</li>
+            <li><strong style={{ color: '#EF4444' }}>오라클 (Oracle 222bp - 오라클 레드)</strong>: 200bp 상회 위험 범주 지속.</li>
           </ul>
 
           {/* BigTech Corporate Events Calendar */}
@@ -661,28 +661,28 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
               📅 빅테크 주요 기업 이벤트 & 실적 발표 캘린더 (Key Catalysts)
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.6rem', fontSize: '0.78rem' }}>
-              <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#EF4444', fontWeight: '700' }}>🔴 Alphabet / Google (GOOGL)</span> | <strong>7월 23일 (Q2 발표 완료)</strong><br />
+              <div style={{ background: 'rgba(66, 133, 244, 0.1)', border: '1px solid rgba(66, 133, 244, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
+                <span style={{ color: '#4285F4', fontWeight: '700' }}>🔵 Alphabet / Google (GOOGL)</span> | <strong>Q2 실적 발표 완료</strong><br />
                 <span style={{ color: '#94a3b8' }}>CapEx $44.9B / FCF -$5.9B 적자 ➔ $25B 회사채 발행 소화 중</span>
               </div>
               <div style={{ background: 'rgba(118, 185, 0, 0.1)', border: '1px solid rgba(118, 185, 0, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#76B900', fontWeight: '700' }}>🟢 NVIDIA (NVDA)</span> | <strong>8월 28일 (Q2 실적 임박 🔥)</strong><br />
+                <span style={{ color: '#76B900', fontWeight: '700' }}>🟢 NVIDIA (NVDA)</span> | <strong>Q2 실적 발표 완수</strong><br />
                 <span style={{ color: '#94a3b8' }}>Blackwell B200 출하 일정 & AI 데이터센터 CapEx 자금 조달 발표</span>
               </div>
               <div style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#38BDF8', fontWeight: '700' }}>🔵 Microsoft (MSFT)</span> | <strong>7월 30일 (Q4 발표 완료)</strong><br />
+                <span style={{ color: '#38BDF8', fontWeight: '700' }}>🔵 Microsoft (MSFT)</span> | <strong>Q4 발표 완료</strong><br />
                 <span style={{ color: '#94a3b8' }}>Azure AI 성장률 및 연간 $19B 인프라 CapEx 회사채 재원 계획</span>
               </div>
               <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#F59E0B', fontWeight: '700' }}>🟡 Amazon (AMZN)</span> | <strong>8월 1일 (Q2 발표 완료)</strong><br />
+                <span style={{ color: '#F59E0B', fontWeight: '700' }}>🟡 Amazon (AMZN)</span> | <strong>Q2 발표 완료</strong><br />
                 <span style={{ color: '#94a3b8' }}>AWS 서버 설비투자 및 장기 채권 만기 차환(Refinancing) 발표</span>
               </div>
               <div style={{ background: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#A855F7', fontWeight: '700' }}>🟣 Meta (META)</span> | <strong>7월 31일 (Q2 발표 완료)</strong><br />
+                <span style={{ color: '#A855F7', fontWeight: '700' }}>🟣 Meta (META)</span> | <strong>Q2 발표 완료</strong><br />
                 <span style={{ color: '#94a3b8' }}>Llama 3.1 인프라 투자 $37~$40B 상향 조정 & 신규 사채 발행</span>
               </div>
               <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#EF4444', fontWeight: '700' }}>🔴 Oracle (ORCL)</span> | <strong>9월 9일 (Q1 FY25 예정)</strong><br />
+                <span style={{ color: '#EF4444', fontWeight: '700' }}>🔴 Oracle (ORCL)</span> | <strong>Q1 FY25 발표</strong><br />
                 <span style={{ color: '#94a3b8' }}>OCI AI 데이터센터 사채 추가 발행 & BBB- 등급 가이드라인</span>
               </div>
             </div>
@@ -690,7 +690,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
       </div>
 
-      {/* 2. BigTech Free Cash Flow (FCF) Trend Chart Card (With Red Shading Danger Zone Below $0B) */}
+      {/* 2. BigTech Free Cash Flow (FCF) Trend Chart Card (With Distinct Google Blue #4285F4 vs Oracle Red #EF4444 Colors) */}
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
           <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#38BDF8' }}>
@@ -699,8 +699,8 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <div style={{ display: 'flex', gap: '0.4rem', fontSize: '0.78rem' }}>
             <span style={{ background: 'rgba(118, 185, 0, 0.15)', color: '#76B900', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>NVDA: <strong>${fcfTrend.nvidia[3]}B</strong></span>
             <span style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>MSFT: <strong>${fcfTrend.microsoft[3]}B</strong></span>
-            <span style={{ background: 'rgba(239, 68, 68, 0.25)', color: '#EF4444', padding: '0.2rem 0.5rem', borderRadius: '6px', border: '1px solid rgba(239, 68, 68, 0.4)' }}>GOOGL: <strong>-${Math.abs(fcfTrend.alphabet[3])}B (사상 첫 적자 🔴)</strong></span>
-            <span style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#EF4444', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>ORCL: <strong>${fcfTrend.oracle[3]}B (적자)</strong></span>
+            <span style={{ background: 'rgba(66, 133, 244, 0.2)', color: '#4285F4', padding: '0.2rem 0.5rem', borderRadius: '6px', border: '1px solid rgba(66, 133, 244, 0.5)' }}>GOOGL: <strong>-${Math.abs(fcfTrend.alphabet[3])}B (구글 블루 🔵)</strong></span>
+            <span style={{ background: 'rgba(239, 68, 68, 0.2)', color: '#EF4444', padding: '0.2rem 0.5rem', borderRadius: '6px', border: '1px solid rgba(239, 68, 68, 0.5)' }}>ORCL: <strong>${fcfTrend.oracle[3]}B (오라클 레드 🔴)</strong></span>
           </div>
         </div>
 
@@ -708,26 +708,26 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <canvas ref={fcfChartRef}></canvas>
         </div>
 
-        {/* FCF Analysis Comment Box featuring Real Q2 2026 Google Deficit (-$5.9B) */}
-        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #EF4444', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: '700', color: '#EF4444', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            🚨 $0B 이하 FCF 적자 위험 구간 (Google -$5.9B / Oracle -$2.5B) & 빅테크 FCF-스프레드 상관관계 분석
+        {/* FCF Analysis Comment Box featuring Distinct Brand Colors */}
+        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #4285F4', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+          <div style={{ fontWeight: '700', color: '#4285F4', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            💡 $0B 이하 FCF 적자 위험 구간 (Google 블루 #4285F4 vs Oracle 레드 #EF4444 구분 명확화)
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.25)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
             <div>
-              <div style={{ fontWeight: '700', color: '#EF4444' }}>🔴 구글 (Alphabet / GOOGL) FCF 사상 첫 적자 쇼크</div>
-              <div>CapEx $44.9B 급증으로 <strong>FCF -$5.9B 사상 첫 적자 진입</strong> ➔ <strong>$25B 신규 회사채 조달 추진</strong></div>
+              <div style={{ fontWeight: '700', color: '#4285F4' }}>🔵 구글 (Alphabet / GOOGL) FCF 적자 (구글 블루)</div>
+              <div>CapEx $44.9B 급증으로 <strong>FCF -$5.9B 사상 첫 적자 진입</strong> ➔ 구글 공식 시그니처 딥블루(#4285F4) 범례로 오라클과 명확히 구분.</div>
             </div>
             <div>
-              <div style={{ fontWeight: '700', color: '#76B900' }}>🟢 FCF 흑자 1·2위 (NVDA $26.4B / MSFT $24.7B)</div>
-              <div>압도적 잉여현금 창출로 CapEx 투자를 완벽 커버하며 <strong>회사채 스프레드 40~50bp대 최상위 안착</strong></div>
+              <div style={{ fontWeight: '700', color: '#EF4444' }}>🔴 오라클 (Oracle / ORCL) FCF 적자 (오라클 레드)</div>
+              <div>OCI 데이터센터 부채 부담으로 <strong>FCF -$2.5B 적자 지속</strong> ➔ 오라클 레드(#EF4444) 범례 적용.</div>
             </div>
           </div>
 
           <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.82rem' }}>
-            <li><strong style={{ color: '#EF4444' }}>구글 (Alphabet / GOOGL -$5.9B 적자)</strong>: 2026 Q2 영업현금($39.1B) 대비 CapEx($44.9B) 폭발로 상장 20년 만에 처음으로 $0B 아래 붉은색 Danger Zone 적자 영역으로 하락 직행.</li>
-            <li><strong style={{ color: '#EF4444' }}>오라클 (ORCL -$2.5B 적자)</strong>: OCI 데이터센터 증설 부채 부담으로 $0B 아래 붉은색 위험 음영 구간 위치.</li>
+            <li><strong style={{ color: '#4285F4' }}>구글 (Alphabet / GOOGL -$5.9B 적자)</strong>: 2026 Q2 영업현금($39.1B) 대비 CapEx($44.9B) 폭발로 $0B 아래 붉은색 Danger Zone 적자 영역 진입.</li>
+            <li><strong style={{ color: '#EF4444' }}>오라클 (ORCL -$2.5B 적자)</strong>: $0B 아래 붉은색 위험 음영 구간 위치.</li>
           </ul>
         </div>
       </div>
@@ -742,7 +742,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         {/* Enhanced Comment 2 */}
         <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #F43F5E', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
           <div style={{ fontWeight: '700', color: '#F43F5E', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            🚨 물량 소화 불량(Indigestion) 지표별 정상/위험 임계치 (8월 3주차 안정세 회복)
+            🚨 물량 소화 불량(Indigestion) 지표별 정상/위험 임계치
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.2)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
@@ -788,34 +788,9 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           </div>
 
           <ul style={{ margin: 0, paddingLeft: '1.2rem', marginBottom: '1rem' }}>
-            <li><strong style={{ color: '#3B82F6' }}>US 10Y 금리 ({data.us10yYield}% - Live 갱신)</strong>: 4.4%대 둔화 흐름 속 9월 미 연준(Fed) 금리 인하(Pivot) 기대감 반영 중.</li>
+            <li><strong style={{ color: '#3B82F6' }}>US 10Y 금리 ({data.us10yYield}% - Live 갱신)</strong>: 4.4%대 둔화 흐름 속 미 연준(Fed) 금리 인하(Pivot) 기대감 반영 중.</li>
             <li><strong style={{ color: '#10B981' }}>수익률 곡선 Gap (+24bp - Normal)</strong>: 장단기 금리차 안정적 흑자 구간 유지.</li>
           </ul>
-
-          {/* Treasury & Fed Macro Events Calendar */}
-          <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '0.8rem', marginTop: '0.8rem' }}>
-            <div style={{ fontWeight: '700', color: '#f1f5f9', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
-              🏛️ 미국채 & 미 연준(Fed) 주요 매크로 이벤트 캘린더 (Treasury Catalysts)
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.6rem', fontSize: '0.78rem' }}>
-              <div style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#60A5FA', fontWeight: '700' }}>🏛️ FOMC 9월 피벗 회의</span> | <strong>9월 17-18일 (임박🔥)</strong><br />
-                <span style={{ color: '#94a3b8' }}>기준금리 25bp/50bp 빅컷 인하 여부 및 점도표 수정안 발표</span>
-              </div>
-              <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#F59E0B', fontWeight: '700' }}>🏔️ 잭슨홀 미팅 연설</span> | <strong>8월 22-24일 (이번 주🔥)</strong><br />
-                <span style={{ color: '#94a3b8' }}>제롬 파월 연준 의장의 통화정책 기조 및 금리 인하 힌트 공개</span>
-              </div>
-              <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#10B981', fontWeight: '700' }}>📊 US 10년물 국채 벤치마크 입찰</span> | <strong>8월 입찰 완수</strong><br />
-                <span style={{ color: '#94a3b8' }}>$38B 규모 10년물 국채 입찰 응찰률(Auction Multiple 2.25배) 호조</span>
-              </div>
-              <div style={{ background: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.25)', padding: '0.5rem 0.75rem', borderRadius: '6px' }}>
-                <span style={{ color: '#A855F7', fontWeight: '700' }}>📈 US 7월 PCE 물가지수</span> | <strong>8월 30일 예정</strong><br />
-                <span style={{ color: '#94a3b8' }}>연준 최우선 참고 물가지표(PCE) 둔화세 확인 시 채권 금리 추가 하락 유발</span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -823,7 +798,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
           <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#38BDF8' }}>
-            🇰🇷 코스피 반도체 레버리지 수급 청산(De-leveraging) Base Level 모니터링 (8월 3주차)
+            🇰🇷 코스피 반도체 레버리지 수급 청산(De-leveraging) Base Level 모니터링
           </h3>
           <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.78rem' }}>
             <span style={{ background: 'rgba(255, 255, 255, 0.08)', color: '#94a3b8', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>
@@ -844,39 +819,13 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         <div style={{ position: 'relative', height: '390px' }}>
           <canvas ref={deleveragingChartRef}></canvas>
         </div>
-
-        {/* Gemini Inspired Logic Analysis Comment Box */}
-        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #38BDF8', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: '700', color: '#38BDF8', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            💡 주가 착시 현상을 완벽 제거한 3대 Base Level 수급 청산(De-leveraging) 논리 분석
-          </div>
-
-          <p style={{ margin: '0 0 0.75rem 0', fontSize: '0.82rem', color: '#94a3b8' }}>
-            * 단순 원화 신용잔고 금액(원)은 주가 하락 시 금액만 줄어들어 수급이 해소된 것처럼 착시를 유발하므로 지우고, <strong>1분기 정규화 기준점(100.0%) 대비 3대 실물 지표</strong>로 전면 개편했습니다.
-          </p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.25)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
-            <div>
-              <div style={{ fontWeight: '700', color: '#94a3b8' }}>1️⃣ 상반기 1분기 평균 Base Level</div>
-              <div>레버리지 상품 본격화 전 1분기 평균(100%)을 정규화 기준점으로 산정.</div>
-            </div>
-            <div>
-              <div style={{ fontWeight: '700', color: '#38BDF8' }}>2️⃣ 개별 종목 '신용 잔고 주식 수(주)'</div>
-              <div>주가 변동을 배제하고 삼성전자({kospiDeleveraging.samsungShareIndexCurrent}%) & SK하이닉스({kospiDeleveraging.hynixShareIndexCurrent}%)의 실체적 수량 회복 추적.</div>
-            </div>
-            <div>
-              <div style={{ fontWeight: '700', color: '#A855F7' }}>3️⃣ 2X 레버리지 ETF AUM 연동</div>
-              <div>2배 레버리지 ETF 설정액({kospiDeleveraging.leverageEtfAumIndexCurrent}%) 감소 폭을 동시 차감 계산하여 '진정한 수급 청산' 확인.</div>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* 6. Gemini Arbitrage Pressure Prediction Chart Card */}
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(168, 85, 247, 0.35)', borderRadius: '16px', padding: '1.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
           <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#E9D5FF' }}>
-            🔮 삼성전자 vs SK하이닉스 차익거래(Arbitrage) 압박 종료 예측 (8월 18일 해소 완수)
+            🔮 삼성전자 vs SK하이닉스 차익거래(Arbitrage) 압박 종료 예측 (100% 해소 완수)
           </h3>
           <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.78rem' }}>
             <span style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#E9D5FF', padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
@@ -890,32 +839,6 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
 
         <div style={{ position: 'relative', height: '390px' }}>
           <canvas ref={arbitrageChartRef}></canvas>
-        </div>
-
-        {/* Gemini Arbitrage Model Analysis Box */}
-        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #10B981', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: '700', color: '#10B981', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            💡 오늘(8월 18일) 현재 수급 현황: 차익거래 압박 100% 해소 완수!
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.25)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
-            <div>
-              <div style={{ fontWeight: '700', color: '#A855F7' }}>📊 1. Pair Ratio (Hynix / Samsung)</div>
-              <div>5월 고점(2.62배) ➔ <strong>현재 {arbPredict.pairRatioCurrent}배로 수렴</strong> (역사적 평균 2.10배 복귀 완수).</div>
-            </div>
-            <div>
-              <div style={{ fontWeight: '700', color: '#10B981' }}>💵 2. 외국인 순매수 유입 (+4,800억 원)</div>
-              <div>외국인 삼성전자 순매수가 <strong>+4,800억 원</strong>으로 대폭 유입되며 수급 반전 완전 정착.</div>
-            </div>
-            <div>
-              <div style={{ fontWeight: '700', color: '#38BDF8' }}>🔄 3. 숏커버링 진행률 (100% 완료)</div>
-              <div>삼성전자 공매도 숏포지션 청산이 100% 완료되어 숏스퀴즈 수급 안정화 달성.</div>
-            </div>
-          </div>
-
-          <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.82rem' }}>
-            <li><strong style={{ color: '#10B981' }}>8월 15일 해소 완수 실시간 확인</strong>: 목표일이었던 8월 15일을 지나 오늘(8월 18일) 기준 **차익거래 수급 압박이 100% 완전히 해소 및 종료**되었습니다!</li>
-          </ul>
         </div>
       </div>
     </div>
