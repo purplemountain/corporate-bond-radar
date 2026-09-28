@@ -28,6 +28,19 @@ interface ShortInterestMacro {
   oracleShortNotionalBillion: number;
 }
 
+interface ShortInterestTrendData {
+  labels: string[];
+  sp500Macro: number[];
+  nvidia: number[];
+  microsoft: number[];
+  alphabet: number[];
+  amazon: number[];
+  meta: number[];
+  oracle: number[];
+  nvidiaNotionalBillion?: number[];
+  oracleNotionalBillion?: number[];
+}
+
 interface FcfTrendData {
   labels: string[];
   nvidia: number[];
@@ -65,6 +78,7 @@ interface LiveBondData {
   timestamp: string;
   us10yYield: number;
   shortInterestMacro?: ShortInterestMacro;
+  shortInterestTrendData?: ShortInterestTrendData;
   fcfTrendData?: FcfTrendData;
   kospiDeleveragingData?: KospiDeleveragingData;
   arbitragePrediction?: ArbitragePrediction;
@@ -93,8 +107,10 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
   const [data, setData] = useState<LiveBondData | null>(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const [shortMetric, setShortMetric] = useState<'floatPct' | 'notionalBillion'>('floatPct');
 
   const spreadChartRef = useRef<HTMLCanvasElement | null>(null);
+  const shortInterestChartRef = useRef<HTMLCanvasElement | null>(null);
   const fcfChartRef = useRef<HTMLCanvasElement | null>(null);
   const indigestionChartRef = useRef<HTMLCanvasElement | null>(null);
   const treasuryChartRef = useRef<HTMLCanvasElement | null>(null);
@@ -102,6 +118,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
   const arbitrageChartRef = useRef<HTMLCanvasElement | null>(null);
 
   const spreadChartInstance = useRef<Chart | null>(null);
+  const shortInterestChartInstance = useRef<Chart | null>(null);
   const fcfChartInstance = useRef<Chart | null>(null);
   const indigestionChartInstance = useRef<Chart | null>(null);
   const treasuryChartInstance = useRef<Chart | null>(null);
@@ -131,6 +148,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
     if (!data) return;
 
     if (spreadChartInstance.current) spreadChartInstance.current.destroy();
+    if (shortInterestChartInstance.current) shortInterestChartInstance.current.destroy();
     if (fcfChartInstance.current) fcfChartInstance.current.destroy();
     if (indigestionChartInstance.current) indigestionChartInstance.current.destroy();
     if (treasuryChartInstance.current) treasuryChartInstance.current.destroy();
@@ -170,6 +188,67 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           scales: {
             x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
             y: { grid: { color: 'rgba(255, 255, 255, 0.06)' }, ticks: { color: '#94a3b8', callback: (v) => v + ' bp' }, min: -20, max: 260 }
+          }
+        }
+      });
+    }
+
+    // 1-B. Render Short Interest Trend Chart (Float % & Dollar Notional)
+    const shortTrend = data.shortInterestTrendData || {
+      labels: chartData.labels,
+      sp500Macro: Array(chartData.labels.length).fill(3.65),
+      nvidia: Array(chartData.labels.length).fill(1.25),
+      microsoft: Array(chartData.labels.length).fill(0.80),
+      alphabet: Array(chartData.labels.length).fill(1.20),
+      amazon: Array(chartData.labels.length).fill(1.00),
+      meta: Array(chartData.labels.length).fill(1.15),
+      oracle: Array(chartData.labels.length).fill(1.85),
+      nvidiaNotionalBillion: Array(chartData.labels.length).fill(64.8),
+      oracleNotionalBillion: Array(chartData.labels.length).fill(19.5)
+    };
+
+    if (shortInterestChartRef.current) {
+      const isPct = shortMetric === 'floatPct';
+      shortInterestChartInstance.current = new Chart(shortInterestChartRef.current, {
+        type: 'line',
+        data: {
+          labels: shortTrend.labels,
+          datasets: isPct ? [
+            { label: 'S&P 500 Macro Average (지수 평균)', data: shortTrend.sp500Macro, borderColor: '#94a3b8', borderDash: [5, 5], borderWidth: 2, pointRadius: 2, tension: 0.3 },
+            { label: 'NVIDIA (NVDA)', data: shortTrend.nvidia, borderColor: '#76B900', backgroundColor: 'rgba(118, 185, 0, 0.1)', borderWidth: 3, tension: 0.3 },
+            { label: 'Microsoft (MSFT)', data: shortTrend.microsoft, borderColor: '#38BDF8', backgroundColor: 'rgba(56, 189, 248, 0.1)', borderWidth: 2.5, tension: 0.3 },
+            { label: 'Alphabet / Google (GOOGL, 구글 블루)', data: shortTrend.alphabet, borderColor: '#4285F4', backgroundColor: 'rgba(66, 133, 244, 0.2)', borderWidth: 3.5, tension: 0.3 },
+            { label: 'Amazon (AMZN)', data: shortTrend.amazon, borderColor: '#F59E0B', backgroundColor: 'rgba(245, 158, 11, 0.1)', borderWidth: 2.5, tension: 0.3 },
+            { label: 'Meta (META)', data: shortTrend.meta, borderColor: '#A855F7', backgroundColor: 'rgba(168, 85, 247, 0.1)', borderWidth: 2.5, tension: 0.3 },
+            { label: 'Oracle (ORCL, 등급하향 급증)', data: shortTrend.oracle, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.15)', borderWidth: 3.5, tension: 0.3 }
+          ] : [
+            { label: 'NVIDIA 공매도 잔고 금액 ($B)', data: shortTrend.nvidiaNotionalBillion || Array(shortTrend.labels.length).fill(64.8), borderColor: '#76B900', backgroundColor: 'rgba(118, 185, 0, 0.15)', borderWidth: 3.5, tension: 0.3 },
+            { label: 'Oracle 공매도 잔고 금액 ($B)', data: shortTrend.oracleNotionalBillion || Array(shortTrend.labels.length).fill(19.5), borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.15)', borderWidth: 3.5, tension: 0.3 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: { padding: commonLayoutPadding },
+          plugins: {
+            legend: { labels: { color: '#94a3b8' } }
+          },
+          scales: {
+            x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
+            y: {
+              grid: { color: 'rgba(255, 255, 255, 0.06)' },
+              ticks: {
+                color: '#94a3b8',
+                callback: (v) => isPct ? Number(v).toFixed(2) + ' %' : '$' + Number(v).toFixed(1) + 'B'
+              },
+              title: {
+                display: true,
+                text: isPct ? '유동주식 기준 공매도 비율 (Short Float %)' : '공매도 노출 금액 ($ Billion)',
+                color: '#cbd5e1'
+              },
+              min: isPct ? 0.5 : 10,
+              max: isPct ? 4.5 : 100
+            }
           }
         }
       });
@@ -457,7 +536,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         }
       });
     }
-  }, [data]);
+  }, [data, shortMetric]);
 
   const applyFilter = (filterType: string) => {
     setFilter(filterType);
@@ -652,6 +731,64 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
         <div style={{ position: 'relative', height: '380px' }}>
           <canvas ref={spreadChartRef}></canvas>
+        </div>
+      </div>
+
+      {/* 1-B. Short Interest Ratio & Amount Trend Chart Card */}
+      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <div>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#38BDF8', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              📈 빅테크 & S&P 500 공매도 비율(Short Float %) 및 노출액 추이 (1월 ~ 9월 W4)
+            </h3>
+            <div style={{ fontSize: '0.8rem', color: '#cbd5e1', marginTop: '0.2rem' }}>
+              * 각 기업의 공매도 비율(%)이 상승(공매도 증가)하는지 하락(숏커버링)하는지 주차별 시계열 추이를 모니터링합니다.
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button
+              onClick={() => setShortMetric('floatPct')}
+              style={{
+                background: shortMetric === 'floatPct' ? 'rgba(56, 189, 248, 0.25)' : 'transparent',
+                border: '1px solid rgba(56, 189, 248, 0.4)',
+                color: shortMetric === 'floatPct' ? '#38BDF8' : '#94a3b8',
+                padding: '0.35rem 0.8rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: '600'
+              }}
+            >
+              📊 공매도 비율 (%)
+            </button>
+            <button
+              onClick={() => setShortMetric('notionalBillion')}
+              style={{
+                background: shortMetric === 'notionalBillion' ? 'rgba(118, 185, 0, 0.25)' : 'transparent',
+                border: '1px solid rgba(118, 185, 0, 0.4)',
+                color: shortMetric === 'notionalBillion' ? '#76B900' : '#94a3b8',
+                padding: '0.35rem 0.8rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: '600'
+              }}
+            >
+              💵 공매도 노출액 ($B)
+            </button>
+          </div>
+        </div>
+
+        {/* Short Trend Dynamic Summary Badges */}
+        <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '1rem', fontSize: '0.78rem' }}>
+          <span style={{ background: 'rgba(239, 68, 68, 0.18)', color: '#FCA5A5', padding: '0.25rem 0.6rem', borderRadius: '6px', border: '1px solid rgba(239, 68, 68, 0.4)' }}>
+            🚨 공매도 급증 피크 후 완화: <strong>Oracle (1.50% → 2.85% → 1.85%)</strong>
+          </span>
+          <span style={{ background: 'rgba(66, 133, 244, 0.18)', color: '#93C5FD', padding: '0.25rem 0.6rem', borderRadius: '6px', border: '1px solid rgba(66, 133, 244, 0.4)' }}>
+            ⚠️ 적자전환 공매도 증가: <strong>Alphabet (0.85% → 1.45% → 1.20%)</strong>
+          </span>
+          <span style={{ background: 'rgba(118, 185, 0, 0.18)', color: '#86EFAC', padding: '0.25rem 0.6rem', borderRadius: '6px', border: '1px solid rgba(118, 185, 0, 0.4)' }}>
+            📉 지속적 숏커버링 진행: <strong>NVIDIA (1.80% → 1.25%)</strong>
+          </span>
+          <span style={{ background: 'rgba(148, 163, 184, 0.18)', color: '#CBD5E1', padding: '0.25rem 0.6rem', borderRadius: '6px', border: '1px solid rgba(148, 163, 184, 0.3)' }}>
+            📊 S&P 500 시장 평균: <strong>3.20% → 3.85% (8월 고점) → 3.65% (연준 인하 후 안착)</strong>
+          </span>
+        </div>
+
+        <div style={{ position: 'relative', height: '370px' }}>
+          <canvas ref={shortInterestChartRef}></canvas>
         </div>
       </div>
 

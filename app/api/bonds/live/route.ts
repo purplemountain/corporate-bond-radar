@@ -97,6 +97,17 @@ export async function GET() {
     const pairRatioSeries = buildSeries([1.85, 1.90, 1.98, 2.05, 2.15, 2.28, 2.42, 2.55, 2.62, 2.58, 2.48, 2.42, 2.32, 2.22, 2.18, 2.14, 2.12, 2.11, 2.10], 2.10);
     const foreignSamsungNetFlowSeries = buildSeries([-1200, -1500, -1800, -2100, -2500, -3200, -4100, -4500, -3800, -2400, -1200, 400, 1800, 2900, 3500, 4100, 4800, 5400, 6100], 6800);
 
+    const sp500ShortSeries = buildSeries([3.20, 3.25, 3.30, 3.40, 3.52, 3.65, 3.75, 3.85, 3.82, 3.80, 3.78, 3.75, 3.72, 3.70, 3.68], 3.65);
+    const nvdaShortSeries = buildSeries([1.80, 1.75, 1.70, 1.65, 1.60, 1.55, 1.50, 1.45, 1.40, 1.38, 1.35, 1.32, 1.30, 1.28, 1.26], 1.25);
+    const msftShortSeries = buildSeries([0.95, 0.92, 0.90, 0.88, 0.86, 0.85, 0.84, 0.83, 0.82, 0.81, 0.80, 0.80, 0.80, 0.80, 0.80], 0.80);
+    const googlShortSeries = buildSeries([0.85, 0.88, 0.92, 0.95, 1.00, 1.10, 1.20, 1.30, 1.40, 1.45, 1.42, 1.40, 1.38, 1.35, 1.30], 1.20);
+    const amznShortSeries = buildSeries([1.15, 1.12, 1.10, 1.08, 1.05, 1.04, 1.03, 1.02, 1.01, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00], 1.00);
+    const metaShortSeries = buildSeries([1.35, 1.32, 1.30, 1.28, 1.25, 1.22, 1.20, 1.18, 1.16, 1.15, 1.15, 1.15, 1.15, 1.15, 1.15], 1.15);
+    const oracleShortSeries = buildSeries([1.50, 1.60, 1.75, 1.90, 2.10, 2.35, 2.55, 2.75, 2.85, 2.80, 2.75, 2.70, 2.65, 2.50, 2.35], 1.85);
+
+    const nvdaNotionalSeries = buildSeries([93.2, 90.6, 88.0, 85.4, 82.8, 80.2, 77.6, 75.0, 72.4, 71.3, 69.8, 68.3, 67.2, 66.1, 65.2], 64.8);
+    const oracleNotionalSeries = buildSeries([15.8, 16.8, 18.4, 20.0, 22.1, 24.7, 26.8, 28.9, 29.9, 29.4, 28.9, 28.4, 27.8, 26.3, 24.7], 19.5);
+
     const corporateData = {
       timestamp: formattedTimestamp,
       us10yYield: liveUS10Y,
@@ -108,6 +119,18 @@ export async function GET() {
         is16YearHigh: false, // Eased after Fed rate cut
         nvidiaShortNotionalBillion: 64.8,
         oracleShortNotionalBillion: 19.5,
+      },
+      shortInterestTrendData: {
+        labels,
+        sp500Macro: sp500ShortSeries,
+        nvidia: nvdaShortSeries,
+        microsoft: msftShortSeries,
+        alphabet: googlShortSeries,
+        amazon: amznShortSeries,
+        meta: metaShortSeries,
+        oracle: oracleShortSeries,
+        nvidiaNotionalBillion: nvdaNotionalSeries,
+        oracleNotionalBillion: oracleNotionalSeries
       },
       fcfTrendData: {
         labels: fcfLabels,
