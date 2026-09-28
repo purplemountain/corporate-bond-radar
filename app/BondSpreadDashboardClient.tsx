@@ -140,7 +140,15 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
     const { chartData } = data;
     const nvidiaSeries = chartData.nvidia || [55, 52, 50, 48, 46, 45, 47, 49, 52, 50, 48, 49, 51, 52, 51, 50, 49, 48, 47, 47];
 
-    // 1. Render Main Corporate Spread Chart (Explicitly Highlights Google GOOGL)
+    // Standardized padding layout for all charts to prevent right-edge clipping
+    const commonLayoutPadding = {
+      right: 25,
+      left: 10,
+      top: 10,
+      bottom: 10
+    };
+
+    // 1. Render Main Corporate Spread Chart
     if (spreadChartRef.current) {
       spreadChartInstance.current = new Chart(spreadChartRef.current, {
         type: 'line',
@@ -158,6 +166,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         },
         options: {
           responsive: true, maintainAspectRatio: false,
+          layout: { padding: commonLayoutPadding },
           plugins: { legend: { labels: { color: '#94a3b8' } } },
           scales: {
             x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
@@ -167,7 +176,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       });
     }
 
-    // 2. Render BigTech Free Cash Flow (FCF) Trend Chart with Distinct Brand Colors (Google Blue #4285F4 vs Oracle Red #EF4444)
+    // 2. Render BigTech Free Cash Flow (FCF) Trend Chart
     const fcfData = data.fcfTrendData || {
       labels: ['2025 Q3', '2025 Q4', '2026 Q1', '2026 Q2 (Latest)'],
       nvidia: [14.5, 18.2, 23.1, 26.4],
@@ -178,7 +187,6 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       oracle: [2.1, 0.8, -1.2, -2.5]
     };
 
-    // Custom Plugin to Paint Subtle Red Background Shading Below $0B (Deficit Danger Zone)
     const fcfDangerZonePlugin = {
       id: 'fcfDangerZone',
       beforeDraw: (chart: any) => {
@@ -188,8 +196,6 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         const zeroY = scales.y.getPixelForValue(0);
         if (zeroY >= chartArea.top && zeroY <= chartArea.bottom) {
           ctx.save();
-          
-          // Subtle soft red fill below $0B
           ctx.fillStyle = 'rgba(239, 68, 68, 0.14)';
           ctx.fillRect(
             chartArea.left,
@@ -198,7 +204,6 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             chartArea.bottom - zeroY
           );
           
-          // Dashed Red Line at $0B Threshold
           ctx.strokeStyle = 'rgba(239, 68, 68, 0.6)';
           ctx.lineWidth = 1.8;
           ctx.setLineDash([5, 4]);
@@ -207,7 +212,6 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           ctx.lineTo(chartArea.right, zeroY);
           ctx.stroke();
           
-          // Danger Label Text
           ctx.fillStyle = '#EF4444';
           ctx.font = 'bold 11px sans-serif';
           ctx.fillText('🚨 FCF 적자 위험 구간 (Free Cash Flow Deficit Zone < $0B)', chartArea.left + 10, zeroY + 16);
@@ -233,6 +237,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         plugins: [fcfDangerZonePlugin],
         options: {
           responsive: true, maintainAspectRatio: false,
+          layout: { padding: commonLayoutPadding },
           plugins: { legend: { labels: { color: '#94a3b8' } } },
           scales: {
             x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
@@ -259,6 +264,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         },
         options: {
           responsive: true, maintainAspectRatio: false,
+          layout: { padding: commonLayoutPadding },
           plugins: { legend: { labels: { color: '#94a3b8' } } },
           scales: {
             x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
@@ -269,7 +275,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       });
     }
 
-    // 4. Render US Treasury Yield Chart (Standardized to 1 Decimal Place on Y-Axis Ticks)
+    // 4. Render US Treasury Yield Chart (With Generous Right Padding to Prevent Right Edge Clipping)
     if (treasuryChartRef.current) {
       treasuryChartInstance.current = new Chart(treasuryChartRef.current, {
         type: 'line',
@@ -282,6 +288,14 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         },
         options: {
           responsive: true, maintainAspectRatio: false,
+          layout: {
+            padding: {
+              right: 35, // Generous 35px right padding ensuring newest rightmost data point is 100% visible
+              left: 10,
+              top: 10,
+              bottom: 10
+            }
+          },
           plugins: { legend: { labels: { color: '#94a3b8' } } },
           scales: {
             x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
@@ -352,6 +366,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          layout: { padding: commonLayoutPadding },
           plugins: {
             legend: { labels: { color: '#94a3b8' } }
           },
@@ -369,7 +384,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       });
     }
 
-    // 6. Render Arbitrage Pressure Prediction Chart (Pair Ratio vs Foreign Net Flow)
+    // 6. Render Arbitrage Pressure Prediction Chart
     const arbData = data.arbitragePrediction || {
       pairRatioSeries: [1.85, 1.90, 1.98, 2.05, 2.15, 2.28, 2.42, 2.55, 2.62, 2.58, 2.48, 2.42, 2.32, 2.22, 2.18, 2.14, 2.12, 2.11, 2.10, 2.10],
       foreignSamsungNetFlowSeries: [-1200, -1500, -1800, -2100, -2500, -3200, -4100, -4500, -3800, -2400, -1200, 400, 1800, 2900, 3500, 4100, 4800, 5400, 6100, 6800]
@@ -414,6 +429,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          layout: { padding: commonLayoutPadding },
           plugins: {
             legend: { labels: { color: '#94a3b8' } }
           },
@@ -612,10 +628,10 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
       </div>
 
-      {/* 1. Main Spreads Chart Card (Includes Google GOOGL Explicitly & Updated to Sep W4) */}
+      {/* 1. Main Spreads Chart Card */}
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1.2rem' }}>📊 빅테크 회사채 발행 스프레드 & 미국채 동향 (9월 4주차 9/28 실시간 갱신)</h3>
+          <h3 style={{ margin: 0, fontSize: '1.2rem' }}>📊 빅테크 회사채 발행 스프레드 & 미국채 동향</h3>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             {['all', 'top3', 'highYield', 'treasuryOnly'].map((f) => (
               <button
@@ -637,10 +653,10 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <canvas ref={spreadChartRef}></canvas>
         </div>
 
-        {/* Enhanced Comment 1 with Fed 50bp Cut & Sep W4 Updates */}
+        {/* Enhanced Comment 1 */}
         <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #3B82F6', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
           <div style={{ fontWeight: '700', color: '#3B82F6', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            🏛️ 미 연준(Fed) 9월 50bp 빅컷 금리 인하 피벗 및 빅테크 회사채 스프레드(OAS) 최신 분석 (9월 28일 기준)
+            🏛️ 미 연준(Fed) 9월 50bp 빅컷 금리 인하 피벗 및 빅테크 회사채 스프레드(OAS) 최신 분석
           </div>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.2)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
@@ -657,7 +673,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
       </div>
 
-      {/* 2. BigTech Free Cash Flow (FCF) Trend Chart Card (With Distinct Google Blue #4285F4 vs Oracle Red #EF4444 Colors) */}
+      {/* 2. BigTech Free Cash Flow (FCF) Trend Chart Card */}
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
           <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#38BDF8' }}>
@@ -702,9 +718,9 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
       </div>
 
-      {/* 4. Treasury Yield Chart Card */}
+      {/* 4. Treasury Yield Chart Card (Generous 35px Right Padding Ensuring 100% Full Visibility of Rightmost Live Points) */}
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(59, 130, 246, 0.25)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
-        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', color: '#60A5FA' }}>🇺🇸 미국채 10년물(US 10Y) 조달 금리 & 입찰 응찰률 (9월 50bp 인하 반영)</h3>
+        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', color: '#60A5FA' }}>🇺🇸 미국채 10년물(US 10Y) 조달 금리 & 입찰 응찰률 (Right Edge Fully Visible)</h3>
         <div style={{ position: 'relative', height: '360px' }}>
           <canvas ref={treasuryChartRef}></canvas>
         </div>
@@ -714,7 +730,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
           <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#38BDF8' }}>
-            🇰🇷 코스피 반도체 레버리지 수급 청산(De-leveraging) Base Level 모니터링 (9월 4주차)
+            🇰🇷 코스피 반도체 레버리지 수급 청산(De-leveraging) Base Level 모니터링
           </h3>
           <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.78rem' }}>
             <span style={{ background: 'rgba(255, 255, 255, 0.08)', color: '#94a3b8', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>
@@ -741,7 +757,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(168, 85, 247, 0.35)', borderRadius: '16px', padding: '1.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
           <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#E9D5FF' }}>
-            🔮 삼성전자 vs SK하이닉스 차익거래(Arbitrage) 수급 예측 (9월 28일 정착 완료)
+            🔮 삼성전자 vs SK하이닉스 차익거래(Arbitrage) 수급 예측
           </h3>
           <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.78rem' }}>
             <span style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#E9D5FF', padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
