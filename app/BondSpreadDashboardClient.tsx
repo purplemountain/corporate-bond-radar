@@ -647,28 +647,6 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
       </div>
 
-      {/* Post-Fed 50bp Rate Cut Short Interest Moderation Banner */}
-      <div style={{ background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: '14px', padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '800', color: '#38BDF8', fontSize: '0.95rem' }}>
-            📊 S&P 500 공매도 잔고 비중 (9월 연준 50bp 빅컷 금리 인하 후 숏커버링 진정세) <span style={{ fontSize: '0.78rem', background: 'rgba(56, 189, 248, 0.25)', color: '#BAE6FD', padding: '0.1rem 0.5rem', borderRadius: '10px' }}>유동주식기준(시장표준)</span>
-          </div>
-          <div style={{ color: '#cbd5e1', fontSize: '0.82rem', marginTop: '0.2rem' }}>
-            S&P 500 <strong style={{ color: '#BAE6FD' }}>유동주식기준(시장표준)</strong> 공매도 비율 <strong style={{ color: '#38BDF8' }}>{macroShort.sp500ShortRatioPct}%</strong> (8월 고점 3.85% 대비 9월 연준 피벗으로 진정세) | 전체 공매도 노출액 <strong style={{ color: '#f1f5f9' }}>${macroShort.totalShortNotionalBillion}T</strong>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', gap: '0.75rem' }}>
-          <div style={{ background: 'rgba(118, 185, 0, 0.15)', border: '1px solid rgba(118, 185, 0, 0.4)', padding: '0.4rem 0.8rem', borderRadius: '8px', fontSize: '0.8rem', textAlign: 'center' }}>
-            <span style={{ color: '#76B900', fontWeight: '700' }}>🟢 NVDA 공매도 1위</span><br />
-            <strong style={{ color: '#f1f5f9' }}>${macroShort.nvidiaShortNotionalBillion}B (약 88조원)</strong>
-          </div>
-          <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)', padding: '0.4rem 0.8rem', borderRadius: '8px', fontSize: '0.8rem', textAlign: 'center' }}>
-            <span style={{ color: '#FCA5A5', fontWeight: '700' }}>🔴 ORCL 등급하향 공매도</span><br />
-            <strong style={{ color: '#f1f5f9' }}>${macroShort.oracleShortNotionalBillion}B (BBB-)</strong>
-          </div>
-        </div>
-      </div>
 
       {/* KPI Cards with Short Interest Badges */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
