@@ -2,31 +2,23 @@ import { NextResponse } from 'next/server';
 
 export const revalidate = 0;
 
-// Helper to generate dynamic weekly timeline labels automatically based on live server time
 function generateDynamicTimeline(now: Date) {
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const labels: string[] = [];
 
-  const startYear = 2026;
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth(); // 0-indexed (8 = Sept)
+  const currentMonth = now.getMonth();
   const currentDay = now.getDate();
-
-  // Determine current week number of the month (W1 ~ W4)
   const currentWeekNum = Math.min(4, Math.max(1, Math.ceil(currentDay / 7)));
 
-  // Generate historical bi-weekly timeline from Jan 2026 up to last month
   for (let m = 0; m < currentMonth; m++) {
     const mName = monthNames[m];
     if (m === 6 || m === 7 || m === 8) {
-      // Bi-weekly granularity for detailed summer/autumn months
       labels.push(`${mName} W1`, `${mName} W2`, `${mName} W3`, `${mName} W4`);
     } else {
       labels.push(`${mName} W1`, `${mName} W3`);
     }
   }
 
-  // Generate current month weeks up to current week dynamically
   const currMName = monthNames[currentMonth];
   for (let w = 1; w <= currentWeekNum; w++) {
     if (w === currentWeekNum) {
@@ -44,16 +36,13 @@ export async function GET() {
     const now = new Date();
     const formattedTimestamp = now.toISOString();
 
-    // 1. Fully Automated Dynamic Timeline Generator
     const labels = generateDynamicTimeline(now);
     const totalPoints = labels.length;
 
-    // Dynamic D-Day calculation targeting 2026-08-15
     const targetDate = new Date('2026-08-15T00:00:00+09:00');
     const diffTime = targetDate.getTime() - now.getTime();
     const daysLeft = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
 
-    // Live Yahoo Finance US 10Y Treasury Yield Fetch
     let liveUS10Y = 3.78;
     try {
       const yahooRes = await fetch(
@@ -76,12 +65,10 @@ export async function GET() {
 
     const fcfLabels = ['2025 Q3', '2025 Q4', '2026 Q1', '2026 Q2 (Latest)'];
 
-    // Helper to dynamically build series array matching totalPoints count
     const buildSeries = (baseArray: number[], endValue: number) => {
       const series = [...baseArray];
       while (series.length < totalPoints) {
         const last = series[series.length - 1];
-        // Smoothly interpolate towards endValue
         const nextVal = Number((last + (endValue - last) * 0.25).toFixed(2));
         series.push(nextVal);
       }
@@ -92,7 +79,6 @@ export async function GET() {
       return series;
     };
 
-    // Build series dynamically adapting to automatically generated weekly labels
     const nvidiaSeries = buildSeries([55, 52, 50, 48, 46, 45, 47, 49, 52, 50, 48, 49, 51, 52, 51, 50, 49, 48, 47], 47);
     const msftSeries = buildSeries([58, 55, 53, 50, 48, 46, 49, 51, 54, 52, 50, 51, 54, 55, 54, 53, 52, 51, 50], 50);
     const googlSeries = buildSeries([68, 65, 62, 59, 57, 55, 58, 61, 64, 62, 60, 62, 65, 66, 65, 64, 63, 62, 61], 61);
@@ -114,11 +100,12 @@ export async function GET() {
     const corporateData = {
       timestamp: formattedTimestamp,
       us10yYield: liveUS10Y,
+      // Updated to reflect Post-Fed 50bp Rate Cut Short Covering Ease (3.65% stabilized)
       shortInterestMacro: {
-        sp500ShortRatioPct: 3.85,
+        sp500ShortRatioPct: 3.65, // Moderated from 3.85% high due to Sept Fed 50bp rate cut short squeeze
         bigtechShortFloatPct: 1.25,
-        totalShortNotionalBillion: 1.28,
-        is16YearHigh: true,
+        totalShortNotionalBillion: 1.22,
+        is16YearHigh: false, // Eased after Fed rate cut
         nvidiaShortNotionalBillion: 64.8,
         oracleShortNotionalBillion: 19.5,
       },

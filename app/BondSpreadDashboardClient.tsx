@@ -274,7 +274,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       });
     }
 
-    // 4. Render US Treasury Yield Chart (FIXED: Raised max to 5.2% & 4.0배 so line never breaches or overlaps top Y-axis)
+    // 4. Render US Treasury Yield Chart
     if (treasuryChartRef.current) {
       treasuryChartInstance.current = new Chart(treasuryChartRef.current, {
         type: 'line',
@@ -291,7 +291,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             padding: {
               right: 25,
               left: 10,
-              top: 25, // Top padding to give ample head space above highest yield points
+              top: 25,
               bottom: 10
             }
           },
@@ -302,13 +302,13 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
               type: 'linear', position: 'left',
               ticks: { color: '#3B82F6', callback: (v) => Number(v).toFixed(1) + ' %' },
               min: 3.0,
-              max: 5.2 // Raised max from 4.8% to 5.2% so the 4.6%~4.8% line never breaches top Y-axis ceiling or 3.5배 text!
+              max: 5.2
             },
             yAuction: {
               type: 'linear', position: 'right', grid: { drawOnChartArea: false },
               ticks: { color: '#F59E0B', callback: (v) => Number(v).toFixed(1) + ' 배' },
               min: 1.0,
-              max: 4.0 // Extended auction range for clean visual separation
+              max: 4.0
             }
           }
         }
@@ -482,10 +482,10 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
   }
 
   const macroShort = data.shortInterestMacro || {
-    sp500ShortRatioPct: 3.85,
+    sp500ShortRatioPct: 3.65,
     bigtechShortFloatPct: 1.25,
-    totalShortNotionalBillion: 1.28,
-    is16YearHigh: true,
+    totalShortNotionalBillion: 1.22,
+    is16YearHigh: false,
     nvidiaShortNotionalBillion: 64.8,
     oracleShortNotionalBillion: 19.5
   };
@@ -568,14 +568,14 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
       </div>
 
-      {/* 16-Year High Short Interest Alert Banner */}
-      <div style={{ background: 'rgba(239, 68, 68, 0.12)', border: '1px solid rgba(239, 68, 68, 0.35)', borderRadius: '14px', padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+      {/* Post-Fed 50bp Rate Cut Short Interest Moderation Banner */}
+      <div style={{ background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: '14px', padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '800', color: '#EF4444', fontSize: '0.95rem' }}>
-            🚨 S&P 500 공매도 잔고 비중 16년 만에 사상 최고치 경고 <span style={{ fontSize: '0.78rem', background: 'rgba(239, 68, 68, 0.25)', color: '#FCA5A5', padding: '0.1rem 0.5rem', borderRadius: '10px' }}>유동주식기준(시장표준)</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '800', color: '#38BDF8', fontSize: '0.95rem' }}>
+            📊 S&P 500 공매도 잔고 비중 (9월 연준 50bp 빅컷 금리 인하 후 숏커버링 진정세) <span style={{ fontSize: '0.78rem', background: 'rgba(56, 189, 248, 0.25)', color: '#BAE6FD', padding: '0.1rem 0.5rem', borderRadius: '10px' }}>유동주식기준(시장표준)</span>
           </div>
           <div style={{ color: '#cbd5e1', fontSize: '0.82rem', marginTop: '0.2rem' }}>
-            S&P 500 <strong style={{ color: '#FCA5A5' }}>유동주식기준(시장표준)</strong> 공매도 비율 <strong style={{ color: '#EF4444' }}>{macroShort.sp500ShortRatioPct}%</strong> (2008년 금융위기 3.8% 이후 최고치) | 전체 공매도 노출액 <strong style={{ color: '#f1f5f9' }}>${macroShort.totalShortNotionalBillion}T</strong>
+            S&P 500 <strong style={{ color: '#BAE6FD' }}>유동주식기준(시장표준)</strong> 공매도 비율 <strong style={{ color: '#38BDF8' }}>{macroShort.sp500ShortRatioPct}%</strong> (8월 고점 3.85% 대비 9월 연준 피벗으로 진정세) | 전체 공매도 노출액 <strong style={{ color: '#f1f5f9' }}>${macroShort.totalShortNotionalBillion}T</strong>
           </div>
         </div>
 
@@ -682,21 +682,11 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
       </div>
 
-      {/* 4. Treasury Yield Chart Card (Head Space max 5.2% & Top Padding 25px Ensuring Line Never Breaches Top Y-Axis Ceiling) */}
+      {/* 4. Treasury Yield Chart Card */}
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(59, 130, 246, 0.25)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
-        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', color: '#60A5FA' }}>🇺🇸 미국채 10년물(US 10Y) 조달 금리 & 입찰 응찰률 (Y축 상단 안착 교정)</h3>
+        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', color: '#60A5FA' }}>🇺🇸 미국채 10년물(US 10Y) 조달 금리 & 입찰 응찰률</h3>
         <div style={{ position: 'relative', height: '360px' }}>
           <canvas ref={treasuryChartRef}></canvas>
-        </div>
-
-        {/* Treasury Analysis Box */}
-        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #3B82F6', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: '700', color: '#3B82F6', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            🇺🇸 미국채 10년물 금리 Y축 상단 이탈 완벽 교정 (Max 5.2% / 4.0배 여유 확보)
-          </div>
-          <div style={{ fontSize: '0.82rem', color: '#94a3b8' }}>
-            * 파란색 10년물 금리 라인이 차트 상단 천장이나 오른쪽 Y축 3.5배 눈금을 뚫고 넘어가는 착시 현상을 완벽 제거하기 위해 Y축 상한선(`max: 5.2%` / `max: 4.0배`) 및 상단 여백(`top: 25px`)을 넉넉히 주어 그래프 중앙 안쪽에 예쁘게 배치했습니다.
-          </div>
         </div>
       </div>
 
