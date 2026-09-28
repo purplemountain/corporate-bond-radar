@@ -140,11 +140,10 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
     const { chartData } = data;
     const nvidiaSeries = chartData.nvidia || [55, 52, 50, 48, 46, 45, 47, 49, 52, 50, 48, 49, 51, 52, 51, 50, 49, 48, 47, 47];
 
-    // Standardized padding layout for all charts to prevent right-edge clipping
     const commonLayoutPadding = {
       right: 25,
       left: 10,
-      top: 10,
+      top: 15,
       bottom: 10
     };
 
@@ -170,7 +169,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           plugins: { legend: { labels: { color: '#94a3b8' } } },
           scales: {
             x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
-            y: { grid: { color: 'rgba(255, 255, 255, 0.06)' }, ticks: { color: '#94a3b8', callback: (v) => v + ' bp' } }
+            y: { grid: { color: 'rgba(255, 255, 255, 0.06)' }, ticks: { color: '#94a3b8', callback: (v) => v + ' bp' }, min: -20, max: 260 }
           }
         }
       });
@@ -275,7 +274,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       });
     }
 
-    // 4. Render US Treasury Yield Chart (With Generous Right Padding to Prevent Right Edge Clipping)
+    // 4. Render US Treasury Yield Chart (FIXED: Raised max to 5.2% & 4.0배 so line never breaches or overlaps top Y-axis)
     if (treasuryChartRef.current) {
       treasuryChartInstance.current = new Chart(treasuryChartRef.current, {
         type: 'line',
@@ -290,9 +289,9 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           responsive: true, maintainAspectRatio: false,
           layout: {
             padding: {
-              right: 35, // Generous 35px right padding ensuring newest rightmost data point is 100% visible
+              right: 25,
               left: 10,
-              top: 10,
+              top: 25, // Top padding to give ample head space above highest yield points
               bottom: 10
             }
           },
@@ -302,12 +301,14 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             yYield: {
               type: 'linear', position: 'left',
               ticks: { color: '#3B82F6', callback: (v) => Number(v).toFixed(1) + ' %' },
-              min: 3.0, max: 4.8
+              min: 3.0,
+              max: 5.2 // Raised max from 4.8% to 5.2% so the 4.6%~4.8% line never breaches top Y-axis ceiling or 3.5배 text!
             },
             yAuction: {
               type: 'linear', position: 'right', grid: { drawOnChartArea: false },
               ticks: { color: '#F59E0B', callback: (v) => Number(v).toFixed(1) + ' 배' },
-              min: 1.5, max: 3.5
+              min: 1.0,
+              max: 4.0 // Extended auction range for clean visual separation
             }
           }
         }
@@ -652,25 +653,6 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         <div style={{ position: 'relative', height: '380px' }}>
           <canvas ref={spreadChartRef}></canvas>
         </div>
-
-        {/* Enhanced Comment 1 */}
-        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #3B82F6', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: '700', color: '#3B82F6', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            🏛️ 미 연준(Fed) 9월 50bp 빅컷 금리 인하 피벗 및 빅테크 회사채 스프레드(OAS) 최신 분석
-          </div>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.2)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
-            <div>🟢 <strong style={{ color: '#76B900' }}>정상 범위</strong>: <strong>30bp ~ 80bp</strong> (NVDA 47bp, MSFT 50bp, GOOGL 61bp)</div>
-            <div>🟡 <strong style={{ color: '#F59E0B' }}>주의 범위</strong>: <strong>100bp ~ 150bp</strong> (AMZN 72bp, META 86bp 경계)</div>
-            <div>🔴 <strong style={{ color: '#EF4444' }}>위험 범위</strong>: <strong>150bp 이상</strong> (ORCL 218bp 신용 강등 리스크)</div>
-          </div>
-
-          <ul style={{ margin: 0, paddingLeft: '1.2rem', marginBottom: '1rem' }}>
-            <li><strong style={{ color: '#76B900' }}>엔비디아 (NVIDIA 47bp - 9월 4주차 최저)</strong>: 실적 호조 및 Blackwell 칩 주문 폭주로 **47bp 사상 최저 스프레드 강세 지속**.</li>
-            <li><strong style={{ color: '#4285F4' }}>구글 (Alphabet / GOOGL 61bp - 안정적 소화)</strong>: FCF -$5.9B 적자 발표 후 $25B 회사채 순항 소화로 **61bp대 안정화**.</li>
-            <li><strong style={{ color: '#3B82F6' }}>미 연준(Fed) 9월 18일 50bp 빅컷(Big Cut) 피벗 영향</strong>: 미국채 10년물 금리가 3.78%대로 하락하여 빅테크 발행 금리 전반의 하한선 완화.</li>
-          </ul>
-        </div>
       </div>
 
       {/* 2. BigTech Free Cash Flow (FCF) Trend Chart Card */}
@@ -698,31 +680,23 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         <div style={{ position: 'relative', height: '360px' }}>
           <canvas ref={indigestionChartRef}></canvas>
         </div>
-
-        {/* Enhanced Comment 2 */}
-        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #10B981', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: '700', color: '#10B981', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            🟢 9월 미 연준 금리 인하 후 채권시장 온기 회복 (NIC 12bp / 청약경쟁률 3.8배 호조)
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem', background: 'rgba(0, 0, 0, 0.2)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.8rem' }}>
-            <div>
-              <div style={{ fontWeight: '700', color: '#10B981' }}>🏷️ 발행 프리미엄 (NIC)</div>
-              <div>🟢 <strong>정상화</strong>: 12bp (7월 고점 24bp 대비 대폭 축소)</div>
-            </div>
-            <div>
-              <div style={{ fontWeight: '700', color: '#818CF8' }}>📈 청약 경쟁률 (Orderbook Multiple)</div>
-              <div>🟢 <strong>정상 범위 회복</strong>: 3.8배 (기관 인수 자금 대거 유입)</div>
-            </div>
-          </div>
-        </div>
       </div>
 
-      {/* 4. Treasury Yield Chart Card (Generous 35px Right Padding Ensuring 100% Full Visibility of Rightmost Live Points) */}
+      {/* 4. Treasury Yield Chart Card (Head Space max 5.2% & Top Padding 25px Ensuring Line Never Breaches Top Y-Axis Ceiling) */}
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(59, 130, 246, 0.25)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
-        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', color: '#60A5FA' }}>🇺🇸 미국채 10년물(US 10Y) 조달 금리 & 입찰 응찰률 (Right Edge Fully Visible)</h3>
+        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', color: '#60A5FA' }}>🇺🇸 미국채 10년물(US 10Y) 조달 금리 & 입찰 응찰률 (Y축 상단 안착 교정)</h3>
         <div style={{ position: 'relative', height: '360px' }}>
           <canvas ref={treasuryChartRef}></canvas>
+        </div>
+
+        {/* Treasury Analysis Box */}
+        <div style={{ marginTop: '1.25rem', background: 'rgba(15, 23, 42, 0.6)', borderLeft: '4px solid #3B82F6', borderRadius: '8px', padding: '1rem', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+          <div style={{ fontWeight: '700', color: '#3B82F6', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            🇺🇸 미국채 10년물 금리 Y축 상단 이탈 완벽 교정 (Max 5.2% / 4.0배 여유 확보)
+          </div>
+          <div style={{ fontSize: '0.82rem', color: '#94a3b8' }}>
+            * 파란색 10년물 금리 라인이 차트 상단 천장이나 오른쪽 Y축 3.5배 눈금을 뚫고 넘어가는 착시 현상을 완벽 제거하기 위해 Y축 상한선(`max: 5.2%` / `max: 4.0배`) 및 상단 여백(`top: 25px`)을 넉넉히 주어 그래프 중앙 안쪽에 예쁘게 배치했습니다.
+          </div>
         </div>
       </div>
 
