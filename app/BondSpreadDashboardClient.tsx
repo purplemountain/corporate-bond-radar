@@ -681,35 +681,6 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </button>
       </div>
 
-      {/* Gemini Arbitrage Pressure Prediction Counter & Dynamic Traffic Light Widget */}
-      <div style={{ background: 'rgba(168, 85, 247, 0.12)', border: '1px solid rgba(168, 85, 247, 0.35)', borderRadius: '14px', padding: '1.25rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontWeight: '800', color: '#A855F7', fontSize: '1rem' }}>
-            🔮 삼성전자 vs SK하이닉스 차익거래(Arbitrage) 수급 예측
-            <span style={{ fontSize: '0.78rem', background: 'rgba(16, 185, 129, 0.25)', color: '#6EE7B7', padding: '0.15rem 0.6rem', borderRadius: '12px', fontWeight: '700' }}>
-              오늘 ({new Date(data.timestamp).getMonth() + 1}월 {new Date(data.timestamp).getDate()}일 Live) 100% 해소 정착!
-            </span>
-          </div>
-          <div style={{ color: '#cbd5e1', fontSize: '0.84rem', marginTop: '0.3rem' }}>
-            현재 수급 상태: <strong style={{ color: '#10B981' }}>🟢 {arbPredict.statusText}</strong> | 수급 상태: <strong style={{ color: '#38BDF8', fontSize: '1.05rem' }}>외국인 순매수 +6,800억 유입 / Pair Ratio 2.10배 안착</strong>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-          <div style={{ background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.8rem', textAlign: 'center' }}>
-            <span style={{ color: '#38BDF8', fontWeight: '700' }}>📈 외국인 매수 전환율</span><br />
-            <strong style={{ color: '#f1f5f9', fontSize: '1rem' }}>{arbPredict.foreignNetBuyInversionRatePct}%</strong>
-          </div>
-          <div style={{ background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.8rem', textAlign: 'center' }}>
-            <span style={{ color: '#10B981', fontWeight: '700' }}>🔄 숏커버링 진행률</span><br />
-            <strong style={{ color: '#f1f5f9', fontSize: '1rem' }}>{arbPredict.shortCoveringProgressPct}% (완료)</strong>
-          </div>
-          <div style={{ background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(168, 85, 247, 0.4)', padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.8rem', textAlign: 'center' }}>
-            <span style={{ color: '#E9D5FF', fontWeight: '700' }}>⚖️ 현재 페어 비율</span><br />
-            <strong style={{ color: '#f1f5f9', fontSize: '1rem' }}>{arbPredict.pairRatioCurrent} 배</strong> <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>(목표 평균 2.10)</span>
-          </div>
-        </div>
-      </div>
 
       {/* KPI Cards with Short Interest Badges & Long-term Bond Tranche Badges */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
@@ -904,8 +875,59 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
       </div>
 
-      {/* 5. KOSPI Semiconductor Normalized De-leveraging Base Level Chart Card */}
-      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
+      {/* 5. Gemini Arbitrage Pressure Prediction Counter & Dynamic Chart Card (Placed Right Above Bottom-most Graph) */}
+      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(168, 85, 247, 0.35)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
+        {/* Dynamic Traffic Light Widget */}
+        <div style={{ background: 'rgba(168, 85, 247, 0.12)', border: '1px solid rgba(168, 85, 247, 0.35)', borderRadius: '14px', padding: '1rem 1.25rem', marginBottom: '1.25rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontWeight: '800', color: '#A855F7', fontSize: '1rem' }}>
+              🔮 삼성전자 vs SK하이닉스 차익거래(Arbitrage) 수급 모니터링
+              <span style={{ fontSize: '0.78rem', background: 'rgba(16, 185, 129, 0.25)', color: '#6EE7B7', padding: '0.15rem 0.6rem', borderRadius: '12px', fontWeight: '700' }}>
+                오늘 ({new Date(data.timestamp).getMonth() + 1}월 {new Date(data.timestamp).getDate()}일 Live) 100% 해소 정착!
+              </span>
+            </div>
+            <div style={{ color: '#cbd5e1', fontSize: '0.84rem', marginTop: '0.3rem' }}>
+              현재 수급 상태: <strong style={{ color: '#10B981' }}>🟢 {arbPredict.statusText}</strong> | 수급 상태: <strong style={{ color: '#38BDF8', fontSize: '1.05rem' }}>외국인 순매수 +6,800억 유입 / Pair Ratio 2.10배 안착</strong>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <div style={{ background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.8rem', textAlign: 'center' }}>
+              <span style={{ color: '#38BDF8', fontWeight: '700' }}>📈 외국인 매수 전환율</span><br />
+              <strong style={{ color: '#f1f5f9', fontSize: '1rem' }}>{arbPredict.foreignNetBuyInversionRatePct}%</strong>
+            </div>
+            <div style={{ background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.8rem', textAlign: 'center' }}>
+              <span style={{ color: '#10B981', fontWeight: '700' }}>🔄 숏커버링 진행률</span><br />
+              <strong style={{ color: '#f1f5f9', fontSize: '1rem' }}>{arbPredict.shortCoveringProgressPct}% (완료)</strong>
+            </div>
+            <div style={{ background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(168, 85, 247, 0.4)', padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.8rem', textAlign: 'center' }}>
+              <span style={{ color: '#E9D5FF', fontWeight: '700' }}>⚖️ 현재 페어 비율</span><br />
+              <strong style={{ color: '#f1f5f9', fontSize: '1rem' }}>{arbPredict.pairRatioCurrent} 배</strong> <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>(목표 평균 2.10)</span>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#E9D5FF' }}>
+            🔮 삼성전자 vs SK하이닉스 차익거래(Arbitrage) 수급 예측 시계열 차트
+          </h3>
+          <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.78rem' }}>
+            <span style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#E9D5FF', padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
+              Pair Ratio: <strong>{arbPredict.pairRatioCurrent} 배</strong> (평균 {arbPredict.pairRatioHistoricalMean} 안착)
+            </span>
+            <span style={{ background: 'rgba(16, 185, 129, 0.2)', color: '#10B981', padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
+              외인 삼전 유입: <strong>+6,800억 원</strong> (대폭 순매수 확정)
+            </span>
+          </div>
+        </div>
+
+        <div style={{ position: 'relative', height: '390px' }}>
+          <canvas ref={arbitrageChartRef}></canvas>
+        </div>
+      </div>
+
+      {/* 6. KOSPI Semiconductor Normalized De-leveraging Base Level Chart Card (Bottom-most Graph) */}
+      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '16px', padding: '1.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
           <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#38BDF8' }}>
             🇰🇷 코스피 반도체 레버리지 수급 청산(De-leveraging) Base Level 모니터링
@@ -928,27 +950,6 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
 
         <div style={{ position: 'relative', height: '390px' }}>
           <canvas ref={deleveragingChartRef}></canvas>
-        </div>
-      </div>
-
-      {/* 6. Gemini Arbitrage Pressure Prediction Chart Card */}
-      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(168, 85, 247, 0.35)', borderRadius: '16px', padding: '1.5rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#E9D5FF' }}>
-            🔮 삼성전자 vs SK하이닉스 차익거래(Arbitrage) 수급 예측
-          </h3>
-          <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.78rem' }}>
-            <span style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#E9D5FF', padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
-              Pair Ratio: <strong>{arbPredict.pairRatioCurrent} 배</strong> (평균 {arbPredict.pairRatioHistoricalMean} 안착)
-            </span>
-            <span style={{ background: 'rgba(16, 185, 129, 0.2)', color: '#10B981', padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
-              외인 삼전 유입: <strong>+6,800억 원</strong> (대폭 순매수 확정)
-            </span>
-          </div>
-        </div>
-
-        <div style={{ position: 'relative', height: '390px' }}>
-          <canvas ref={arbitrageChartRef}></canvas>
         </div>
       </div>
     </div>
