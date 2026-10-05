@@ -12,7 +12,7 @@ function generateDynamicTimeline(now: Date) {
 
   for (let m = 0; m < currentMonth; m++) {
     const mName = monthNames[m];
-    if (m === 6 || m === 7 || m === 8) {
+    if (m >= 6) {
       labels.push(`${mName} W1`, `${mName} W2`, `${mName} W3`, `${mName} W4`);
     } else {
       labels.push(`${mName} W1`, `${mName} W3`);
@@ -166,7 +166,7 @@ export async function GET() {
         { name: 'NVIDIA', ticker: 'NVDA', rating: 'AA-', spreadBp: 47, issueYield: Number((liveUS10Y + 0.47).toFixed(2)), color: '#76B900', range: '44 ~ 50 bp', trend: 'down', shortNotionalBillion: 64.8, shortFloatPct: 1.25, borrowFeePct: 0.25 },
         { name: 'Microsoft', ticker: 'MSFT', rating: 'AAA', spreadBp: 50, issueYield: Number((liveUS10Y + 0.50).toFixed(2)), color: '#38BDF8', range: '46 ~ 53 bp', trend: 'down', shortNotionalBillion: 24.1, shortFloatPct: 1.2, borrowFeePct: 0.25 },
         { name: 'Alphabet / Google', ticker: 'GOOGL', rating: 'AA+', spreadBp: 61, issueYield: Number((liveUS10Y + 0.61).toFixed(2)), color: '#4285F4', range: '58 ~ 64 bp', trend: 'down', shortNotionalBillion: 18.7, shortFloatPct: 1.2, borrowFeePct: 0.25 },
-        { name: 'Amazon', ticker: 'AMZN', rating: 'AA', spreadBp: 72, issueYield: Number((liveUS10Y + 0.72).toFixed(2)), color: '#F59E0B', range: '68 ~ 76 bp', trend: 'neutral', shortNotionalBillion: 19.5, shortFloatPct: 1.2, borrowFeePct: 0.25 },
+        { name: 'Amazon', ticker: 'AMZN', rating: 'AA', spreadBp: 72, issueYield: Number((liveUS10Y + 0.72).toFixed(2)), longTermYield: '6.25% ~ 7.10%', color: '#F59E0B', range: '68 ~ 76 bp', trend: 'neutral', shortNotionalBillion: 19.5, shortFloatPct: 1.2, borrowFeePct: 0.25 },
         { name: 'Meta', ticker: 'META', rating: 'AA-', spreadBp: 86, issueYield: Number((liveUS10Y + 0.86).toFixed(2)), color: '#A855F7', range: '80 ~ 90 bp', trend: 'down', shortNotionalBillion: 15.3, shortFloatPct: 1.3, borrowFeePct: 0.25 },
         { name: 'Oracle', ticker: 'ORCL', rating: 'BBB- (Downgraded)', spreadBp: 218, issueYield: Number((liveUS10Y + 2.18).toFixed(2)), color: '#EF4444', range: '205 ~ 224 bp', trend: 'danger', shortNotionalBillion: 19.5, shortFloatPct: 1.85, borrowFeePct: 0.45 }
       ],

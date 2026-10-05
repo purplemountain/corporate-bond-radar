@@ -11,6 +11,7 @@ interface CompanyData {
   rating: string;
   spreadBp: number;
   issueYield: number;
+  longTermYield?: string;
   color: string;
   range: string;
   trend: string;
@@ -623,7 +624,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontWeight: '800', color: '#A855F7', fontSize: '1rem' }}>
             🔮 삼성전자 vs SK하이닉스 차익거래(Arbitrage) 수급 예측
             <span style={{ fontSize: '0.78rem', background: 'rgba(16, 185, 129, 0.25)', color: '#6EE7B7', padding: '0.15rem 0.6rem', borderRadius: '12px', fontWeight: '700' }}>
-              오늘 (9월 28일) 100% 해소 정착!
+              오늘 ({new Date(data.timestamp).getMonth() + 1}월 {new Date(data.timestamp).getDate()}일 Live) 100% 해소 정착!
             </span>
           </div>
           <div style={{ color: '#cbd5e1', fontSize: '0.84rem', marginTop: '0.3rem' }}>
@@ -647,8 +648,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
       </div>
 
-
-      {/* KPI Cards with Short Interest Badges */}
+      {/* KPI Cards with Short Interest Badges & Long-term Bond Tranche Badges */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
         {data.companies.map((c) => (
           <div key={c.ticker} style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '1.25rem', borderLeft: `4px solid ${c.color}` }}>
@@ -659,7 +659,15 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             <div style={{ fontSize: '1.6rem', fontWeight: '700', color: '#f1f5f9', marginBottom: '0.2rem' }}>
               {c.spreadBp} <span style={{ fontSize: '0.9rem', fontWeight: '400', color: '#94a3b8' }}>bp</span>
             </div>
-            <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.4rem' }}>발행 금리: <strong style={{ color: '#f1f5f9' }}>{c.issueYield}%</strong></div>
+            <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: c.longTermYield ? '0.2rem' : '0.4rem' }}>
+              10년물 발행 금리: <strong style={{ color: '#f1f5f9' }}>{c.issueYield}%</strong>
+            </div>
+
+            {c.longTermYield && (
+              <div style={{ fontSize: '0.72rem', color: '#F59E0B', fontWeight: '700', marginBottom: '0.4rem', background: 'rgba(245, 158, 11, 0.15)', padding: '0.2rem 0.4rem', borderRadius: '6px', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
+                🔥 30~40년 장기채: <strong style={{ color: '#FCD34D' }}>{c.longTermYield}</strong> (7%대 유통)
+              </div>
+            )}
 
             {/* Short Interest Info Badge */}
             <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.4rem', fontSize: '0.74rem', color: '#64748b', display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
@@ -717,7 +725,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
           <div>
             <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#38BDF8', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              📈 빅테크 & S&P 500 공매도 비율(Short Float %) 및 노출액 추이 (1월 ~ 9월 W4)
+              📈 빅테크 & S&P 500 공매도 비율(Short Float %) 및 노출액 추이 (1월 ~ {data.chartData?.labels?.[data.chartData.labels.length - 1] || '최신 Live'})
             </h3>
             <div style={{ fontSize: '0.8rem', color: '#cbd5e1', marginTop: '0.2rem' }}>
               * 각 기업의 공매도 비율(%)이 상승(공매도 증가)하는지 하락(숏커버링)하는지 주차별 시계열 추이를 모니터링합니다.
