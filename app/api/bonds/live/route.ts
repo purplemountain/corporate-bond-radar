@@ -108,6 +108,15 @@ export async function GET() {
     const nvdaNotionalSeries = buildSeries([93.2, 90.6, 88.0, 85.4, 82.8, 80.2, 77.6, 75.0, 72.4, 71.3, 69.8, 68.3, 67.2, 66.1, 65.2], 64.8);
     const oracleNotionalSeries = buildSeries([15.8, 16.8, 18.4, 20.0, 22.1, 24.7, 26.8, 28.9, 29.9, 29.4, 28.9, 28.4, 27.8, 26.3, 24.7], 19.5);
 
+    const us30ySeries = buildSeries([4.15, 4.20, 4.28, 4.35, 4.42, 4.50, 4.45, 4.58, 4.65, 4.68, 4.70, 4.65, 4.55, 4.25, 4.18], 4.15);
+
+    const nvda30ySeries = buildSeries([5.85, 5.75, 5.65, 5.55, 5.50, 5.48, 5.52, 5.58, 5.65, 5.60, 5.58, 5.55, 5.52, 5.50, 5.48], 5.60);
+    const msft40ySeries = buildSeries([5.70, 5.60, 5.52, 5.45, 5.40, 5.38, 5.42, 5.48, 5.52, 5.48, 5.45, 5.42, 5.40, 5.38, 5.35], 5.45);
+    const googl30ySeries = buildSeries([5.50, 5.55, 5.62, 5.70, 5.80, 5.92, 6.05, 6.15, 6.10, 6.05, 5.98, 5.92, 5.88, 5.85, 5.82], 5.85);
+    const amzn40ySeries = buildSeries([6.20, 6.35, 6.50, 6.68, 6.85, 7.02, 7.15, 7.22, 7.18, 7.12, 7.05, 6.98, 6.92, 6.88, 6.85], 7.05);
+    const meta30ySeries = buildSeries([5.90, 5.82, 5.75, 5.70, 5.68, 5.72, 5.80, 5.90, 5.98, 5.92, 5.88, 5.85, 5.82, 5.80, 5.78], 5.95);
+    const oracle30ySeries = buildSeries([6.50, 6.65, 6.85, 7.05, 7.25, 7.45, 7.60, 7.75, 7.68, 7.58, 7.50, 7.42, 7.38, 7.32, 7.28], 7.35);
+
     const corporateData = {
       timestamp: formattedTimestamp,
       us10yYield: liveUS10Y,
@@ -187,6 +196,16 @@ export async function GET() {
         orderbookMultipleSeries,
         us10yYieldSeries: us10ySeries,
         auctionMultipleSeries
+      },
+      longTermBondChartData: {
+        labels,
+        nvidia: nvda30ySeries,
+        microsoft: msft40ySeries,
+        alphabet: googl30ySeries,
+        amazon: amzn40ySeries,
+        meta: meta30ySeries,
+        oracle: oracle30ySeries,
+        us30yYieldSeries: us30ySeries
       }
     };
 
