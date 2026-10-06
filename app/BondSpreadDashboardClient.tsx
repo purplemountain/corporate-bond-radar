@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, type CSSProperties } from 'react';
 import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
@@ -114,6 +114,38 @@ interface LiveBondData {
     auctionMultipleSeries: number[];
   };
   longTermBondChartData?: LongTermBondChartData;
+  us10yIsLive?: boolean;
+  fedPolicy?: FedPolicy;
+  oracleCds?: CdsPoint[];
+}
+
+interface FedPolicy {
+  lastAction: string;
+  decisionDate: string;
+  targetRange: string;
+  nextMeetingDate: string;
+  source: string;
+}
+
+interface CdsPoint {
+  date: string;
+  bp: number;
+  bpHigh?: number;
+  source: string;
+  reliability: 'high' | 'medium' | 'low';
+  note: string;
+}
+
+// Data provenance badges — every number on screen must say where it came from
+const badgeBase: CSSProperties = { fontSize: '0.68rem', fontWeight: 700, padding: '0.1rem 0.45rem', borderRadius: '999px', whiteSpace: 'nowrap', verticalAlign: 'middle' };
+function LiveBadge() {
+  return <span style={{ ...badgeBase, background: 'rgba(16, 185, 129, 0.2)', color: '#6EE7B7', border: '1px solid rgba(16, 185, 129, 0.5)' }}>● 실시간</span>;
+}
+function SourcedBadge({ label = '출처 확인' }: { label?: string }) {
+  return <span style={{ ...badgeBase, background: 'rgba(59, 130, 246, 0.2)', color: '#93C5FD', border: '1px solid rgba(59, 130, 246, 0.5)' }}>✓ {label}</span>;
+}
+function SampleBadge() {
+  return <span style={{ ...badgeBase, background: 'rgba(148, 163, 184, 0.18)', color: '#CBD5E1', border: '1px dashed rgba(148, 163, 184, 0.6)' }}>예시 데이터</span>;
 }
 
 export default function BondSpreadDashboardClient({ userEmail }: { userEmail: string }) {
@@ -656,7 +688,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
 
   const arbPredict = data.arbitragePrediction || {
     currentStatus: 'COMPLETED',
-    statusText: '차익거래 압박 100% 해소 완수 (연준 50bp 빅컷 인하 & 외국인 순매수 +6,800억 유입)',
+    statusText: '차익거래 압박 해소 (예시 시나리오 — 실데이터 미연동)',
     pairRatioCurrent: 2.10,
     pairRatioHistoricalMean: 2.10,
     foreignNetBuyInversionRatePct: 96,
@@ -666,21 +698,52 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
     foreignSamsungNetFlowSeries: [-1200, -1500, -1800, -2100, -2500, -3200, -4100, -4500, -3800, -2400, -1200, 400, 1800, 2900, 3500, 4100, 4800, 5400, 6100, 6800]
   };
 
+  const fed = data.fedPolicy || {
+    lastAction: '+25bp 인상',
+    decisionDate: '2026-09-16',
+    targetRange: '3.75% ~ 4.00%',
+    nextMeetingDate: '2026-10-28',
+    source: 'FOMC Statement (federalreserve.gov)'
+  };
+
+  const oracleCds = data.oracleCds || [];
+
   return (
     <div>
       {/* Top Banner with Refresh Action */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', background: 'rgba(18, 26, 43, 0.75)', padding: '1rem 1.25rem', borderRadius: '14px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
         <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
-          Last Live Fetched: <strong style={{ color: '#f1f5f9' }}>{new Date(data.timestamp).toLocaleString()}</strong> | User Account: <strong style={{ color: '#38BDF8' }}>{userEmail}</strong>
+          Last Fetched: <strong style={{ color: '#f1f5f9' }}>{new Date(data.timestamp).toLocaleString()}</strong> | User Account: <strong style={{ color: '#38BDF8' }}>{userEmail}</strong>
         </div>
         <button
           onClick={fetchLiveMarketData}
           style={{ background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38BDF8', padding: '0.4rem 0.9rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '0.8rem' }}
         >
-          🔄 Refresh Live Market Data
+          🔄 Refresh
         </button>
       </div>
 
+      {/* Data Provenance Notice */}
+      <div style={{ background: 'rgba(234, 179, 8, 0.08)', border: '1px solid rgba(234, 179, 8, 0.35)', borderRadius: '12px', padding: '0.75rem 1rem', marginBottom: '1rem', fontSize: '0.8rem', color: '#e2e8f0', lineHeight: 1.6 }}>
+        <strong style={{ color: '#FDE047' }}>⚠️ 데이터 출처 안내</strong> — 투자 판단 전 반드시 확인하세요.
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '0.35rem' }}>
+          <span><LiveBadge /> 외부 API에서 실시간 조회 (현재: 미국채 10년물)</span>
+          <span><SourcedBadge /> 공식/보도 출처를 확인한 수동 입력값 (연준 정책, 오라클 CDS)</span>
+          <span><SampleBadge /> 실데이터 미연동 예시 수치 — 실제 시장값과 다를 수 있음</span>
+        </div>
+      </div>
+
+      {/* Verified Fed Policy Banner */}
+      <div style={{ background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.35)', borderRadius: '12px', padding: '0.75rem 1rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
+        <div style={{ fontSize: '0.9rem', color: '#f1f5f9' }}>
+          🏛️ <strong>연준 기준금리</strong>: <strong style={{ color: '#FCA5A5' }}>{fed.lastAction}</strong> → 목표범위 <strong>{fed.targetRange}</strong>
+          <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}> ({fed.decisionDate} FOMC, 2023년 이후 첫 인상)</span>
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', fontSize: '0.78rem', color: '#94a3b8' }}>
+          다음 FOMC: <strong style={{ color: '#f1f5f9' }}>{fed.nextMeetingDate}</strong>
+          <SourcedBadge label={fed.source} />
+        </div>
+      </div>
 
       {/* KPI Cards with Short Interest Badges & Long-term Bond Tranche Badges */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
@@ -690,8 +753,8 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
               <span>{c.name}</span>
               <span style={{ background: 'rgba(255, 255, 255, 0.08)', padding: '0.1rem 0.4rem', borderRadius: '4px', color: c.color }}>{c.rating}</span>
             </div>
-            <div style={{ fontSize: '1.6rem', fontWeight: '700', color: '#f1f5f9', marginBottom: '0.2rem' }}>
-              {c.spreadBp} <span style={{ fontSize: '0.9rem', fontWeight: '400', color: '#94a3b8' }}>bp</span>
+            <div style={{ fontSize: '1.6rem', fontWeight: '700', color: '#f1f5f9', marginBottom: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              {c.spreadBp} <span style={{ fontSize: '0.9rem', fontWeight: '400', color: '#94a3b8' }}>bp</span> <SampleBadge />
             </div>
             <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: c.longTermYield ? '0.2rem' : '0.4rem' }}>
               10년물 발행 금리: <strong style={{ color: '#f1f5f9' }}>{c.issueYield}%</strong>
@@ -699,7 +762,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
 
             {c.longTermYield && (
               <div style={{ fontSize: '0.72rem', color: '#F59E0B', fontWeight: '700', marginBottom: '0.4rem', background: 'rgba(245, 158, 11, 0.15)', padding: '0.2rem 0.4rem', borderRadius: '6px', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
-                🔥 30~40년 장기채: <strong style={{ color: '#FCD34D' }}>{c.longTermYield}</strong> (7%대 유통)
+                30~40년 장기채: <strong style={{ color: '#FCD34D' }}>{c.longTermYield}</strong> <SampleBadge />
               </div>
             )}
 
@@ -709,8 +772,8 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
                 <span>공매도 노출: <strong style={{ color: '#cbd5e1' }}>${c.shortNotionalBillion || 10}B</strong></span>
                 <span>비율: <strong style={{ color: '#38BDF8' }}>{c.shortFloatPct || 1.2}%</strong></span>
               </div>
-              <div style={{ fontSize: '0.68rem', color: '#38BDF8', textAlign: 'right' }}>
-                * 유동주식기준(시장표준)
+              <div style={{ textAlign: 'right' }}>
+                <SampleBadge />
               </div>
             </div>
           </div>
@@ -719,12 +782,12 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '1.25rem', borderLeft: '4px solid #3B82F6' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#94a3b8', fontWeight: '600' }}>
             <span>US 10Y Treasury</span>
-            <span style={{ background: 'rgba(59, 130, 246, 0.2)', padding: '0.1rem 0.4rem', borderRadius: '4px', color: '#60A5FA' }}>미국채 금리</span>
+            {data.us10yIsLive ? <LiveBadge /> : <span style={{ ...badgeBase, background: 'rgba(239, 68, 68, 0.2)', color: '#FCA5A5', border: '1px solid rgba(239, 68, 68, 0.5)' }}>조회 실패 · 대체값</span>}
           </div>
           <div style={{ fontSize: '1.6rem', fontWeight: '700', color: '#60A5FA', marginBottom: '0.2rem' }}>
             {data.us10yYield} <span style={{ fontSize: '0.9rem', fontWeight: '400', color: '#94a3b8' }}>%</span>
           </div>
-          <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>기준 10년물 국채 수익률 (Fed 50bp 인하)</div>
+          <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>Yahoo Finance ^TNX · 연준 {fed.lastAction} 이후</div>
         </div>
       </div>
 
@@ -732,8 +795,8 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
           <div>
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#f1f5f9' }}>📊 [10년물 벤치마크] 빅테크 회사채 발행 스프레드 & 미국채 10년물</h3>
-            <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.2rem' }}>* 10년 만기 표준 회사채 가산금리(bp)와 10년물 미국채 금리 동향</div>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#f1f5f9', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>📊 [10년물 벤치마크] 빅테크 회사채 발행 스프레드 & 미국채 10년물 <SampleBadge /></h3>
+            <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.2rem' }}>* 회사채 금리 − 동일 만기 미국채 금리 (bp). <strong style={{ color: '#cbd5e1' }}>CDS가 아닙니다</strong> — CDS는 아래 별도 패널 참고.</div>
           </div>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             {['all', 'top3', 'highYield', 'treasuryOnly'].map((f) => (
@@ -757,24 +820,56 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         </div>
       </div>
 
+      {/* 1-A-1. Oracle 5Y CDS Panel (report-based manual entries) */}
+      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#FCA5A5', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+          🛡️ Oracle 5년물 CDS 스프레드 <SourcedBadge label="보도 기반 수동 입력" />
+        </h3>
+        <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.3rem', lineHeight: 1.6 }}>
+          CDS = 오라클 부도 위험을 보장받는 보험료(연간, bp). 회사채 스프레드와 비슷하게 움직이지만 별개 시장입니다.
+          실시간 CDS 피드(Bloomberg/Markit 등 유료)가 없어, <strong style={{ color: '#cbd5e1' }}>보도된 시점의 값만</strong> 표시하고 중간 값은 추정하지 않습니다.
+        </div>
+        <div style={{ overflowX: 'auto', marginTop: '1rem' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+            <thead>
+              <tr style={{ color: '#94a3b8', textAlign: 'left', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                <th style={{ padding: '0.5rem' }}>날짜</th>
+                <th style={{ padding: '0.5rem' }}>5Y CDS</th>
+                <th style={{ padding: '0.5rem' }}>출처</th>
+                <th style={{ padding: '0.5rem' }}>신뢰도</th>
+                <th style={{ padding: '0.5rem' }}>비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              {oracleCds.map((p) => (
+                <tr key={p.date} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', color: '#e2e8f0' }}>
+                  <td style={{ padding: '0.5rem', whiteSpace: 'nowrap' }}>{p.date}</td>
+                  <td style={{ padding: '0.5rem', fontWeight: 700, color: '#FCA5A5', whiteSpace: 'nowrap' }}>{p.bp}{p.bpHigh ? ` ~ ${p.bpHigh}` : ''} bp</td>
+                  <td style={{ padding: '0.5rem' }}>{p.source}</td>
+                  <td style={{ padding: '0.5rem', color: p.reliability === 'high' ? '#6EE7B7' : p.reliability === 'medium' ? '#FDE047' : '#FCA5A5' }}>
+                    {p.reliability === 'high' ? '높음' : p.reliability === 'medium' ? '중간' : '낮음'}
+                  </td>
+                  <td style={{ padding: '0.5rem', color: '#94a3b8' }}>{p.note}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.75rem' }}>
+          참고: 연준 {fed.lastAction}({fed.decisionDate}) 이후 오라클 CDS는 사상 최고치권으로 상승한 것으로 보도됨.
+        </div>
+      </div>
+
       {/* 1-A-2. Long-Term (30Y-40Y) Bond Yield Chart Card */}
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(245, 158, 11, 0.35)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
           <div>
             <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#F59E0B', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              🔥 [초장기채 30~40년물] 빅테크 초장기채 수익률 & 조달 금리 추이 (%)
+              🔥 [초장기채 30~40년물] 빅테크 초장기채 수익률 추이 (%) <SampleBadge />
             </h3>
             <div style={{ fontSize: '0.8rem', color: '#cbd5e1', marginTop: '0.2rem' }}>
-              * 30년~40년 만기 초장기채의 실시간 유통 수익률 모니터링 (Amazon 7.05% / Oracle 7.35% 최고 금리 구간 적용)
+              * 실데이터 미연동. 참고로 아마존 2026년 7월 발행분 쿠폰은 4.60% ~ 6.25%로 보도됨 (유통 수익률은 별도 확인 필요).
             </div>
-          </div>
-          <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.78rem' }}>
-            <span style={{ background: 'rgba(245, 158, 11, 0.2)', color: '#FCD34D', padding: '0.25rem 0.6rem', borderRadius: '6px', border: '1px solid rgba(245, 158, 11, 0.4)' }}>
-              🔥 AMZN 40년물: <strong>6.85% ~ 7.10%</strong>
-            </span>
-            <span style={{ background: 'rgba(239, 68, 68, 0.2)', color: '#FCA5A5', padding: '0.25rem 0.6rem', borderRadius: '6px', border: '1px solid rgba(239, 68, 68, 0.4)' }}>
-              🔴 ORCL 30년물: <strong>7.25% ~ 7.45%</strong>
-            </span>
           </div>
         </div>
         <div style={{ position: 'relative', height: '380px' }}>
@@ -787,10 +882,10 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
           <div>
             <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#38BDF8', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              📈 빅테크 & S&P 500 공매도 비율(Short Float %) 및 노출액 추이 (1월 ~ {data.chartData?.labels?.[data.chartData.labels.length - 1] || '최신 Live'})
+              📈 빅테크 & S&P 500 공매도 비율(Short Float %) 및 노출액 추이 <SampleBadge />
             </h3>
             <div style={{ fontSize: '0.8rem', color: '#cbd5e1', marginTop: '0.2rem' }}>
-              * 각 기업의 공매도 비율(%)이 상승(공매도 증가)하는지 하락(숏커버링)하는지 주차별 시계열 추이를 모니터링합니다.
+              * 각 기업의 공매도 비율(%)이 상승(공매도 증가)하는지 하락(숏커버링)하는지 주차별 추이. 현재 실데이터 미연동.
             </div>
           </div>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -831,7 +926,7 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             📉 지속적 숏커버링 진행: <strong>NVIDIA (1.80% → 1.25%)</strong>
           </span>
           <span style={{ background: 'rgba(148, 163, 184, 0.18)', color: '#CBD5E1', padding: '0.25rem 0.6rem', borderRadius: '6px', border: '1px solid rgba(148, 163, 184, 0.3)' }}>
-            📊 S&P 500 시장 평균: <strong>3.20% → 3.85% (8월 고점) → 3.65% (연준 인하 후 안착)</strong>
+            📊 S&P 500 시장 평균: <strong>3.20% → 3.85% (8월 고점) → 3.65% (기준금리 인상기 조정)</strong>
           </span>
         </div>
 

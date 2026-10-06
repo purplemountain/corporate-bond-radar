@@ -44,6 +44,7 @@ export async function GET() {
     const daysLeft = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
 
     let liveUS10Y = 3.78;
+    let us10yIsLive = false; // true only when Yahoo Finance fetch succeeds
     try {
       const yahooRes = await fetch(
         'https://query1.finance.yahoo.com/v8/finance/chart/%5ETNX?interval=1d&range=1d',
@@ -57,6 +58,7 @@ export async function GET() {
         const meta = yahooData?.chart?.result?.[0]?.meta;
         if (meta?.regularMarketPrice) {
           liveUS10Y = Number((meta.regularMarketPrice).toFixed(2));
+          us10yIsLive = true;
         }
       }
     } catch (e) {
@@ -120,12 +122,32 @@ export async function GET() {
     const corporateData = {
       timestamp: formattedTimestamp,
       us10yYield: liveUS10Y,
-      // Updated to reflect Post-Fed 50bp Rate Cut Short Covering Ease (3.65% stabilized)
+      us10yIsLive,
+      // Verified: FOMC Sept 15-16, 2026 statement (federalreserve.gov) — +25bp hike, first since 2023
+      fedPolicy: {
+        lastAction: '+25bp 인상',
+        decisionDate: '2026-09-16',
+        targetRange: '3.75% ~ 4.00%',
+        nextMeetingDate: '2026-10-28',
+        source: 'FOMC Statement (federalreserve.gov)'
+      },
+      // Oracle 5Y CDS — report-based manual entries only (not a live feed). Do NOT interpolate.
+      oracleCds: [
+        { date: '2026-09-25', bp: 227, bpHigh: 232, source: 'TradingView / Seeking Alpha 보도', reliability: 'medium', note: 'Project Jupiter(뉴멕시코 데이터센터) 불가항력 통지 이후 사상 최고치' },
+        { date: '2026-10 초', bp: 251, source: 'Substack 논평', reliability: 'low', note: '단일 2차 출처 — 1차 데이터로 재확인 필요' }
+      ],
+      // Which fields are live vs illustrative. UI uses this to render badges.
+      dataProvenance: {
+        live: ['us10yYield'],
+        verifiedManual: ['fedPolicy', 'oracleCds'],
+        illustrative: ['chartData', 'longTermBondChartData', 'shortInterestTrendData', 'shortInterestMacro', 'fcfTrendData', 'companies.spreadBp', 'companies.shortFloatPct', 'companies.longTermYield', 'kospiDeleveragingData', 'arbitragePrediction']
+      },
+      // ILLUSTRATIVE values — not sourced from a live short-interest feed
       shortInterestMacro: {
-        sp500ShortRatioPct: 3.65, // Moderated from 3.85% high due to Sept Fed 50bp rate cut short squeeze
+        sp500ShortRatioPct: 3.65,
         bigtechShortFloatPct: 1.25,
         totalShortNotionalBillion: 1.22,
-        is16YearHigh: false, // Eased after Fed rate cut
+        is16YearHigh: false,
         nvidiaShortNotionalBillion: 64.8,
         oracleShortNotionalBillion: 19.5,
       },
@@ -162,7 +184,7 @@ export async function GET() {
       },
       arbitragePrediction: {
         currentStatus: 'COMPLETED',
-        statusText: '차익거래 압박 100% 해소 완수 (연준 50bp 인하 효과 & 외국인 순매수 +6,800억 유입)',
+        statusText: '차익거래 압박 해소 (예시 시나리오 — 실데이터 미연동)',
         pairRatioCurrent: 2.10,
         pairRatioHistoricalMean: 2.10,
         foreignNetBuyInversionRatePct: 96,
