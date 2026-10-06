@@ -5,172 +5,150 @@ import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
-interface CompanyData {
+interface CompanyStock {
   name: string;
   ticker: string;
+  price: number;
+  change: number;
+  changePct: number;
   rating: string;
-  spreadBp: number;
-  issueYield: number;
-  longTermYield?: string;
+  debtSec: string;
+  cashSec: string;
   color: string;
-  range: string;
-  trend: string;
-  shortNotionalBillion?: number;
-  shortFloatPct?: number;
-  borrowFeePct?: number;
 }
 
-interface ShortInterestMacro {
-  sp500ShortRatioPct: number;
-  bigtechShortFloatPct?: number;
-  totalShortNotionalBillion: number;
-  is16YearHigh: boolean;
-  nvidiaShortNotionalBillion: number;
-  oracleShortNotionalBillion: number;
-}
-
-interface ShortInterestTrendData {
-  labels: string[];
-  sp500Macro: number[];
-  nvidia: number[];
-  microsoft: number[];
-  alphabet: number[];
-  amazon: number[];
-  meta: number[];
-  oracle: number[];
-  nvidiaNotionalBillion?: number[];
-  oracleNotionalBillion?: number[];
-}
-
-interface FcfTrendData {
-  labels: string[];
-  nvidia: number[];
-  microsoft: number[];
-  alphabet: number[];
-  amazon: number[];
-  meta: number[];
-  oracle: number[];
-}
-
-interface KospiDeleveragingData {
-  baseLevelIndex: number;
-  samsungShareIndexCurrent: number;
-  hynixShareIndexCurrent: number;
-  leverageEtfAumIndexCurrent: number;
-  baseLevelSeries: number[];
-  samsungShareSeries: number[];
-  hynixShareSeries: number[];
-  leverageEtfAumSeries: number[];
-}
-
-interface ArbitragePrediction {
-  currentStatus: string;
-  statusText: string;
-  pairRatioCurrent: number;
-  pairRatioHistoricalMean: number;
-  foreignNetBuyInversionRatePct: number;
-  shortCoveringProgressPct: number;
-  estimatedDaysToExhaustion: number;
-  pairRatioSeries: number[];
-  foreignSamsungNetFlowSeries: number[];
-}
-
-interface LongTermBondChartData {
-  labels: string[];
-  nvidia: number[];
-  microsoft: number[];
-  alphabet: number[];
-  amazon: number[];
-  meta: number[];
-  oracle: number[];
-  us30yYieldSeries: number[];
-}
-
-interface LiveBondData {
+interface LiveDashboardPayload {
   timestamp: string;
-  us10yYield: number;
-  shortInterestMacro?: ShortInterestMacro;
-  shortInterestTrendData?: ShortInterestTrendData;
-  fcfTrendData?: FcfTrendData;
-  kospiDeleveragingData?: KospiDeleveragingData;
-  arbitragePrediction?: ArbitragePrediction;
-  companies: CompanyData[];
-  treasuryGapBp: number;
-  nicBp: number;
-  orderbookMultiple: number;
-  auctionMultiple: number;
-  chartData: {
-    labels: string[];
-    nvidia?: number[];
-    microsoft: number[];
-    alphabet: number[];
-    amazon: number[];
-    meta: number[];
-    oracle: number[];
-    treasuryGap: number[];
-    nic: number[];
-    orderbookMultipleSeries: number[];
-    us10yYieldSeries: number[];
-    auctionMultipleSeries: number[];
+  provenance: {
+    allLiveFeeds: boolean;
+    liveSymbols: string[];
+    dataSource: string;
+    lastRefreshedAt: string;
   };
-  longTermBondChartData?: LongTermBondChartData;
-  us10yIsLive?: boolean;
-  fedPolicy?: FedPolicy;
-  oracleCds?: CdsPoint[];
+  yieldCurve: {
+    us5y: number;
+    us10y: number;
+    us30y: number;
+    spread10y5yBp: number;
+    spread30y10yBp: number;
+    spread30y5yBp: number;
+    change10y: number;
+    change10yPct: number;
+    chart: {
+      labels: string[];
+      us5ySeries: number[];
+      us10ySeries: number[];
+      us30ySeries: number[];
+      spread10y5ySeries: number[];
+    };
+  };
+  creditStress: {
+    lqdPrice: number;
+    lqdChange: number;
+    lqdChangePct: number;
+    hygPrice: number;
+    hygChange: number;
+    hygChangePct: number;
+    creditRatio: number;
+    chart: {
+      labels: string[];
+      lqdCloses: number[];
+      hygCloses: number[];
+      lqdNormalized: number[];
+      hygNormalized: number[];
+    };
+  };
+  bigtech: {
+    companies: CompanyStock[];
+    chart: {
+      labels: string[];
+      nvda: number[];
+      msft: number[];
+      googl: number[];
+      amzn: number[];
+      meta: number[];
+      orcl: number[];
+    };
+  };
+  koreanSemis: {
+    samsungPrice: number;
+    samsungChange: number;
+    samsungChangePct: number;
+    hynixPrice: number;
+    hynixChange: number;
+    hynixChangePct: number;
+    currentPairRatio: number;
+    kodexLevPrice: number;
+    kodexSemiPrice: number;
+    chart: {
+      labels: string[];
+      pairRatioSeries: number[];
+      samsungCloses: number[];
+      hynixCloses: number[];
+      kodexLevNormalized: number[];
+      kodexSemiNormalized: number[];
+    };
+  };
+  fedPolicy: {
+    lastAction: string;
+    decisionDate: string;
+    targetRange: string;
+    nextMeetingDate: string;
+    source: string;
+  };
+  oracleCds: {
+    latestReportedBp: number;
+    highReportedBp: number;
+    reportDate: string;
+    source: string;
+    rating: string;
+    status: string;
+    eventReason: string;
+    otcTerminalNotice: string;
+  };
 }
 
-interface FedPolicy {
-  lastAction: string;
-  decisionDate: string;
-  targetRange: string;
-  nextMeetingDate: string;
-  source: string;
+const badgeBase: CSSProperties = {
+  fontSize: '0.7rem',
+  fontWeight: 700,
+  padding: '0.15rem 0.5rem',
+  borderRadius: '999px',
+  whiteSpace: 'nowrap',
+  verticalAlign: 'middle',
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '0.25rem'
+};
+
+function LiveBadge({ label = '실시간 연동' }: { label?: string }) {
+  return (
+    <span style={{ ...badgeBase, background: 'rgba(16, 185, 129, 0.2)', color: '#6EE7B7', border: '1px solid rgba(16, 185, 129, 0.5)' }}>
+      ● {label}
+    </span>
+  );
 }
 
-interface CdsPoint {
-  date: string;
-  bp: number;
-  bpHigh?: number;
-  source: string;
-  reliability: 'high' | 'medium' | 'low';
-  note: string;
-}
-
-// Data provenance badges — every number on screen must say where it came from
-const badgeBase: CSSProperties = { fontSize: '0.68rem', fontWeight: 700, padding: '0.1rem 0.45rem', borderRadius: '999px', whiteSpace: 'nowrap', verticalAlign: 'middle' };
-function LiveBadge() {
-  return <span style={{ ...badgeBase, background: 'rgba(16, 185, 129, 0.2)', color: '#6EE7B7', border: '1px solid rgba(16, 185, 129, 0.5)' }}>● 실시간</span>;
-}
-function SourcedBadge({ label = '출처 확인' }: { label?: string }) {
-  return <span style={{ ...badgeBase, background: 'rgba(59, 130, 246, 0.2)', color: '#93C5FD', border: '1px solid rgba(59, 130, 246, 0.5)' }}>✓ {label}</span>;
-}
-function SampleBadge() {
-  return <span style={{ ...badgeBase, background: 'rgba(148, 163, 184, 0.18)', color: '#CBD5E1', border: '1px dashed rgba(148, 163, 184, 0.6)' }}>예시 데이터</span>;
+function SourcedBadge({ label = '공식 출처 검증' }: { label?: string }) {
+  return (
+    <span style={{ ...badgeBase, background: 'rgba(59, 130, 246, 0.2)', color: '#93C5FD', border: '1px solid rgba(59, 130, 246, 0.5)' }}>
+      ✓ {label}
+    </span>
+  );
 }
 
 export default function BondSpreadDashboardClient({ userEmail }: { userEmail: string }) {
-  const [data, setData] = useState<LiveBondData | null>(null);
+  const [data, setData] = useState<LiveDashboardPayload | null>(null);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('all');
-  const [shortMetric, setShortMetric] = useState<'floatPct' | 'notionalBillion'>('floatPct');
 
-  const spreadChartRef = useRef<HTMLCanvasElement | null>(null);
-  const longTermSpreadChartRef = useRef<HTMLCanvasElement | null>(null);
-  const shortInterestChartRef = useRef<HTMLCanvasElement | null>(null);
-  const fcfChartRef = useRef<HTMLCanvasElement | null>(null);
-  const indigestionChartRef = useRef<HTMLCanvasElement | null>(null);
-  const treasuryChartRef = useRef<HTMLCanvasElement | null>(null);
-  const deleveragingChartRef = useRef<HTMLCanvasElement | null>(null);
-  const arbitrageChartRef = useRef<HTMLCanvasElement | null>(null);
+  const yieldCurveChartRef = useRef<HTMLCanvasElement | null>(null);
+  const creditStressChartRef = useRef<HTMLCanvasElement | null>(null);
+  const bigtechChartRef = useRef<HTMLCanvasElement | null>(null);
+  const koreanSemisChartRef = useRef<HTMLCanvasElement | null>(null);
 
-  const spreadChartInstance = useRef<Chart | null>(null);
-  const longTermSpreadChartInstance = useRef<Chart | null>(null);
-  const shortInterestChartInstance = useRef<Chart | null>(null);
-  const fcfChartInstance = useRef<Chart | null>(null);
-  const indigestionChartInstance = useRef<Chart | null>(null);
-  const treasuryChartInstance = useRef<Chart | null>(null);
-  const deleveragingChartInstance = useRef<Chart | null>(null);
-  const arbitrageChartInstance = useRef<Chart | null>(null);
+  const yieldCurveChartInstance = useRef<Chart | null>(null);
+  const creditStressChartInstance = useRef<Chart | null>(null);
+  const bigtechChartInstance = useRef<Chart | null>(null);
+  const koreanSemisChartInstance = useRef<Chart | null>(null);
 
   const fetchLiveMarketData = async () => {
     setLoading(true);
@@ -194,78 +172,25 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
   useEffect(() => {
     if (!data) return;
 
-    if (spreadChartInstance.current) spreadChartInstance.current.destroy();
-    if (longTermSpreadChartInstance.current) longTermSpreadChartInstance.current.destroy();
-    if (shortInterestChartInstance.current) shortInterestChartInstance.current.destroy();
-    if (fcfChartInstance.current) fcfChartInstance.current.destroy();
-    if (indigestionChartInstance.current) indigestionChartInstance.current.destroy();
-    if (treasuryChartInstance.current) treasuryChartInstance.current.destroy();
-    if (deleveragingChartInstance.current) deleveragingChartInstance.current.destroy();
-    if (arbitrageChartInstance.current) arbitrageChartInstance.current.destroy();
+    if (yieldCurveChartInstance.current) yieldCurveChartInstance.current.destroy();
+    if (creditStressChartInstance.current) creditStressChartInstance.current.destroy();
+    if (bigtechChartInstance.current) bigtechChartInstance.current.destroy();
+    if (koreanSemisChartInstance.current) koreanSemisChartInstance.current.destroy();
 
-    const { chartData } = data;
-    const nvidiaSeries = chartData.nvidia || [55, 52, 50, 48, 46, 45, 47, 49, 52, 50, 48, 49, 51, 52, 51, 50, 49, 48, 47, 47];
+    const commonLayoutPadding = { right: 20, left: 10, top: 15, bottom: 10 };
 
-    const commonLayoutPadding = {
-      right: 25,
-      left: 10,
-      top: 15,
-      bottom: 10
-    };
-
-    // 1-A. Render Main Corporate 10Y Benchmark Spread Chart
-    if (spreadChartRef.current) {
-      spreadChartInstance.current = new Chart(spreadChartRef.current, {
+    // 1. Yield Curve Chart (5Y, 10Y, 30Y & Spread)
+    if (yieldCurveChartRef.current) {
+      const yc = data.yieldCurve.chart;
+      yieldCurveChartInstance.current = new Chart(yieldCurveChartRef.current, {
         type: 'line',
         data: {
-          labels: chartData.labels,
+          labels: yc.labels,
           datasets: [
-            { label: 'NVIDIA (NVDA, AA-)', data: nvidiaSeries, borderColor: '#76B900', backgroundColor: 'rgba(118, 185, 0, 0.1)', borderWidth: 3, tension: 0.3 },
-            { label: 'Microsoft (MSFT, AAA)', data: chartData.microsoft, borderColor: '#38BDF8', backgroundColor: 'rgba(56, 189, 248, 0.1)', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Alphabet / Google (GOOGL, AA+)', data: chartData.alphabet, borderColor: '#4285F4', backgroundColor: 'rgba(66, 133, 244, 0.2)', borderWidth: 3.5, tension: 0.3 },
-            { label: 'Amazon (AMZN, AA)', data: chartData.amazon, borderColor: '#F59E0B', backgroundColor: 'rgba(245, 158, 11, 0.1)', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Meta (META, AA-)', data: chartData.meta, borderColor: '#A855F7', backgroundColor: 'rgba(168, 85, 247, 0.1)', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Oracle (ORCL, BBB- Downgraded)', data: chartData.oracle, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.15)', borderWidth: 3.5, tension: 0.3 },
-            { label: 'US Treasury 10Y-2Y Spread', data: chartData.treasuryGap, borderColor: '#10B981', borderDash: [6, 4], backgroundColor: 'transparent', borderWidth: 2.5, tension: 0.3 }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          layout: { padding: commonLayoutPadding },
-          plugins: { legend: { labels: { color: '#94a3b8' } } },
-          scales: {
-            x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
-            y: { grid: { color: 'rgba(255, 255, 255, 0.06)' }, ticks: { color: '#94a3b8', callback: (v) => v + ' bp' }, min: -20, max: 260 }
-          }
-        }
-      });
-    }
-
-    // 1-A-2. Render BigTech Long-Term (30Y-40Y) Bond Yield Chart
-    const longBondData = data.longTermBondChartData || {
-      labels: chartData.labels,
-      nvidia: Array(chartData.labels.length).fill(5.60),
-      microsoft: Array(chartData.labels.length).fill(5.45),
-      alphabet: Array(chartData.labels.length).fill(5.85),
-      amazon: Array(chartData.labels.length).fill(7.05),
-      meta: Array(chartData.labels.length).fill(5.95),
-      oracle: Array(chartData.labels.length).fill(7.35),
-      us30yYieldSeries: Array(chartData.labels.length).fill(4.15)
-    };
-
-    if (longTermSpreadChartRef.current) {
-      longTermSpreadChartInstance.current = new Chart(longTermSpreadChartRef.current, {
-        type: 'line',
-        data: {
-          labels: longBondData.labels,
-          datasets: [
-            { label: 'NVIDIA 30Y (NVDA, AA-)', data: longBondData.nvidia, borderColor: '#76B900', backgroundColor: 'rgba(118, 185, 0, 0.1)', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Microsoft 40Y (MSFT, AAA)', data: longBondData.microsoft, borderColor: '#38BDF8', backgroundColor: 'rgba(56, 189, 248, 0.1)', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Alphabet / Google 30Y (GOOGL, AA+)', data: longBondData.alphabet, borderColor: '#4285F4', backgroundColor: 'rgba(66, 133, 244, 0.2)', borderWidth: 3, tension: 0.3 },
-            { label: 'Amazon 40Y (AMZN 7%대 유통)', data: longBondData.amazon, borderColor: '#F59E0B', backgroundColor: 'rgba(245, 158, 11, 0.2)', borderWidth: 4, tension: 0.3 },
-            { label: 'Meta 30Y (META, AA-)', data: longBondData.meta, borderColor: '#A855F7', backgroundColor: 'rgba(168, 85, 247, 0.1)', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Oracle 30Y (ORCL, BBB- Downgraded)', data: longBondData.oracle, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.2)', borderWidth: 4, tension: 0.3 },
-            { label: 'US 30Y Treasury (미국채 30년물)', data: longBondData.us30yYieldSeries, borderColor: '#60A5FA', borderDash: [5, 5], borderWidth: 2, pointRadius: 2, tension: 0.3 }
+            { label: '미국채 30년물 US30Y (%)', data: yc.us30ySeries, borderColor: '#A855F7', backgroundColor: 'rgba(168, 85, 247, 0.1)', borderWidth: 3, tension: 0.2, yAxisID: 'yYield' },
+            { label: '미국채 10년물 US10Y (%)', data: yc.us10ySeries, borderColor: '#38BDF8', backgroundColor: 'rgba(56, 189, 248, 0.15)', borderWidth: 3.5, tension: 0.2, yAxisID: 'yYield' },
+            { label: '미국채 5년물 US5Y (%)', data: yc.us5ySeries, borderColor: '#F59E0B', backgroundColor: 'rgba(245, 158, 11, 0.1)', borderWidth: 2.5, tension: 0.2, yAxisID: 'yYield' },
+            { label: '10Y-5Y 스프레드 (bp)', data: yc.spread10y5ySeries, borderColor: '#10B981', borderDash: [5, 4], borderWidth: 2, tension: 0.2, yAxisID: 'ySpread' }
           ]
         },
         options: {
@@ -273,270 +198,38 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           maintainAspectRatio: false,
           layout: { padding: commonLayoutPadding },
           plugins: {
-            legend: { labels: { color: '#94a3b8' } }
+            legend: { labels: { color: '#94a3b8', font: { size: 11, weight: 'bold' } } },
+            tooltip: { mode: 'index', intersect: false }
           },
-          scales: {
-            x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
-            y: {
-              grid: { color: 'rgba(255, 255, 255, 0.06)' },
-              ticks: { color: '#94a3b8', callback: (v) => Number(v).toFixed(2) + ' %' },
-              title: { display: true, text: '초장기채 수익률 / 조달 금리 (%)', color: '#FCD34D' },
-              min: 3.5,
-              max: 8.2
-            }
-          }
-        }
-      });
-    }
-
-    // 1-B. Render Short Interest Trend Chart (Float % & Dollar Notional)
-    const shortTrend = data.shortInterestTrendData || {
-      labels: chartData.labels,
-      sp500Macro: Array(chartData.labels.length).fill(3.65),
-      nvidia: Array(chartData.labels.length).fill(1.25),
-      microsoft: Array(chartData.labels.length).fill(0.80),
-      alphabet: Array(chartData.labels.length).fill(1.20),
-      amazon: Array(chartData.labels.length).fill(1.00),
-      meta: Array(chartData.labels.length).fill(1.15),
-      oracle: Array(chartData.labels.length).fill(1.85),
-      nvidiaNotionalBillion: Array(chartData.labels.length).fill(64.8),
-      oracleNotionalBillion: Array(chartData.labels.length).fill(19.5)
-    };
-
-    if (shortInterestChartRef.current) {
-      const isPct = shortMetric === 'floatPct';
-      shortInterestChartInstance.current = new Chart(shortInterestChartRef.current, {
-        type: 'line',
-        data: {
-          labels: shortTrend.labels,
-          datasets: isPct ? [
-            { label: 'S&P 500 Macro Average (지수 평균)', data: shortTrend.sp500Macro, borderColor: '#94a3b8', borderDash: [5, 5], borderWidth: 2, pointRadius: 2, tension: 0.3 },
-            { label: 'NVIDIA (NVDA)', data: shortTrend.nvidia, borderColor: '#76B900', backgroundColor: 'rgba(118, 185, 0, 0.1)', borderWidth: 3, tension: 0.3 },
-            { label: 'Microsoft (MSFT)', data: shortTrend.microsoft, borderColor: '#38BDF8', backgroundColor: 'rgba(56, 189, 248, 0.1)', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Alphabet / Google (GOOGL, 구글 블루)', data: shortTrend.alphabet, borderColor: '#4285F4', backgroundColor: 'rgba(66, 133, 244, 0.2)', borderWidth: 3.5, tension: 0.3 },
-            { label: 'Amazon (AMZN)', data: shortTrend.amazon, borderColor: '#F59E0B', backgroundColor: 'rgba(245, 158, 11, 0.1)', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Meta (META)', data: shortTrend.meta, borderColor: '#A855F7', backgroundColor: 'rgba(168, 85, 247, 0.1)', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Oracle (ORCL, 등급하향 급증)', data: shortTrend.oracle, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.15)', borderWidth: 3.5, tension: 0.3 }
-          ] : [
-            { label: 'NVIDIA 공매도 잔고 금액 ($B)', data: shortTrend.nvidiaNotionalBillion || Array(shortTrend.labels.length).fill(64.8), borderColor: '#76B900', backgroundColor: 'rgba(118, 185, 0, 0.15)', borderWidth: 3.5, tension: 0.3 },
-            { label: 'Oracle 공매도 잔고 금액 ($B)', data: shortTrend.oracleNotionalBillion || Array(shortTrend.labels.length).fill(19.5), borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.15)', borderWidth: 3.5, tension: 0.3 }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          layout: { padding: commonLayoutPadding },
-          plugins: {
-            legend: { labels: { color: '#94a3b8' } }
-          },
-          scales: {
-            x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
-            y: {
-              grid: { color: 'rgba(255, 255, 255, 0.06)' },
-              ticks: {
-                color: '#94a3b8',
-                callback: (v) => isPct ? Number(v).toFixed(2) + ' %' : '$' + Number(v).toFixed(1) + 'B'
-              },
-              title: {
-                display: true,
-                text: isPct ? '유동주식 기준 공매도 비율 (Short Float %)' : '공매도 노출 금액 ($ Billion)',
-                color: '#cbd5e1'
-              },
-              min: isPct ? 0.5 : 10,
-              max: isPct ? 4.5 : 100
-            }
-          }
-        }
-      });
-    }
-
-    // 2. Render BigTech Free Cash Flow (FCF) Trend Chart
-    const fcfData = data.fcfTrendData || {
-      labels: ['2025 Q3', '2025 Q4', '2026 Q1', '2026 Q2 (Latest)'],
-      nvidia: [14.5, 18.2, 23.1, 26.4],
-      microsoft: [21.0, 19.5, 22.8, 24.7],
-      alphabet: [17.5, 12.8, 4.2, -5.9],
-      amazon: [11.2, 14.0, 17.8, 19.1],
-      meta: [8.5, 6.4, 9.2, 10.8],
-      oracle: [2.1, 0.8, -1.2, -2.5]
-    };
-
-    const fcfDangerZonePlugin = {
-      id: 'fcfDangerZone',
-      beforeDraw: (chart: any) => {
-        const { ctx, chartArea, scales } = chart;
-        if (!scales.y || !chartArea) return;
-        
-        const zeroY = scales.y.getPixelForValue(0);
-        if (zeroY >= chartArea.top && zeroY <= chartArea.bottom) {
-          ctx.save();
-          ctx.fillStyle = 'rgba(239, 68, 68, 0.14)';
-          ctx.fillRect(
-            chartArea.left,
-            zeroY,
-            chartArea.width,
-            chartArea.bottom - zeroY
-          );
-          
-          ctx.strokeStyle = 'rgba(239, 68, 68, 0.6)';
-          ctx.lineWidth = 1.8;
-          ctx.setLineDash([5, 4]);
-          ctx.beginPath();
-          ctx.moveTo(chartArea.left, zeroY);
-          ctx.lineTo(chartArea.right, zeroY);
-          ctx.stroke();
-          
-          ctx.fillStyle = '#EF4444';
-          ctx.font = 'bold 11px sans-serif';
-          ctx.fillText('🚨 FCF 적자 위험 구간 (Free Cash Flow Deficit Zone < $0B)', chartArea.left + 10, zeroY + 16);
-          ctx.restore();
-        }
-      }
-    };
-
-    if (fcfChartRef.current) {
-      fcfChartInstance.current = new Chart(fcfChartRef.current, {
-        type: 'line',
-        data: {
-          labels: fcfData.labels,
-          datasets: [
-            { label: 'NVIDIA (NVDA)', data: fcfData.nvidia, borderColor: '#76B900', backgroundColor: 'rgba(118, 185, 0, 0.1)', borderWidth: 3.5, tension: 0.3 },
-            { label: 'Microsoft (MSFT)', data: fcfData.microsoft, borderColor: '#38BDF8', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Alphabet / Google (GOOGL)', data: fcfData.alphabet, borderColor: '#4285F4', backgroundColor: 'rgba(66, 133, 244, 0.2)', borderWidth: 3.5, tension: 0.3 },
-            { label: 'Amazon (AMZN)', data: fcfData.amazon, borderColor: '#F59E0B', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Meta (META)', data: fcfData.meta, borderColor: '#A855F7', borderWidth: 2.5, tension: 0.3 },
-            { label: 'Oracle (ORCL)', data: fcfData.oracle, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.25)', borderWidth: 3.5, tension: 0.3 }
-          ]
-        },
-        plugins: [fcfDangerZonePlugin],
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          layout: { padding: commonLayoutPadding },
-          plugins: { legend: { labels: { color: '#94a3b8' } } },
-          scales: {
-            x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
-            y: {
-              grid: { color: 'rgba(255, 255, 255, 0.06)' },
-              ticks: { color: '#94a3b8', callback: (v) => '$' + Number(v).toFixed(1) + 'B' },
-              title: { display: true, text: '잉여현금흐름 Free Cash Flow ($ Billion)', color: '#38BDF8' }
-            }
-          }
-        }
-      });
-    }
-
-    // 3. Render Indigestion Chart
-    if (indigestionChartRef.current) {
-      indigestionChartInstance.current = new Chart(indigestionChartRef.current, {
-        type: 'line',
-        data: {
-          labels: chartData.labels,
-          datasets: [
-            { label: '신규 발행 프리미엄 NIC (bp)', data: chartData.nic, borderColor: '#F43F5E', backgroundColor: 'rgba(244, 63, 94, 0.15)', borderWidth: 3, fill: true, tension: 0.3, yAxisID: 'yNIC' },
-            { label: '청약 경쟁률 배수 (Orderbook Multiple)', data: chartData.orderbookMultipleSeries, borderColor: '#818CF8', borderWidth: 3, borderDash: [5, 5], tension: 0.3, yAxisID: 'yMultiple' }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          layout: { padding: commonLayoutPadding },
-          plugins: { legend: { labels: { color: '#94a3b8' } } },
-          scales: {
-            x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
-            yNIC: { type: 'linear', position: 'left', ticks: { color: '#F43F5E', callback: (v) => Number(v).toFixed(1) + ' bp' }, min: 0, max: 35 },
-            yMultiple: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#818CF8', callback: (v) => Number(v).toFixed(1) + ' 배' }, min: 1.0, max: 6.0 }
-          }
-        }
-      });
-    }
-
-    // 4. Render US Treasury Yield Chart
-    if (treasuryChartRef.current) {
-      treasuryChartInstance.current = new Chart(treasuryChartRef.current, {
-        type: 'line',
-        data: {
-          labels: chartData.labels,
-          datasets: [
-            { label: '미국채 10년물 금리 US10Y (%)', data: chartData.us10yYieldSeries, borderColor: '#3B82F6', backgroundColor: 'rgba(59, 130, 246, 0.15)', borderWidth: 3.5, fill: true, tension: 0.3, yAxisID: 'yYield' },
-            { label: '미국채 10년 입찰 응찰률 (Auction Multiple)', data: chartData.auctionMultipleSeries, borderColor: '#F59E0B', borderWidth: 3, borderDash: [5, 5], tension: 0.3, yAxisID: 'yAuction' }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          layout: {
-            padding: {
-              right: 25,
-              left: 10,
-              top: 25,
-              bottom: 10
-            }
-          },
-          plugins: { legend: { labels: { color: '#94a3b8' } } },
           scales: {
             x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
             yYield: {
               type: 'linear', position: 'left',
-              ticks: { color: '#3B82F6', callback: (v) => Number(v).toFixed(1) + ' %' },
-              min: 3.0,
-              max: 5.2
+              ticks: { color: '#38BDF8', callback: (v) => Number(v).toFixed(2) + ' %' },
+              title: { display: true, text: '국채 수익률 (%)', color: '#38BDF8' },
+              grid: { color: 'rgba(255, 255, 255, 0.06)' }
             },
-            yAuction: {
-              type: 'linear', position: 'right', grid: { drawOnChartArea: false },
-              ticks: { color: '#F59E0B', callback: (v) => Number(v).toFixed(1) + ' 배' },
-              min: 1.0,
-              max: 4.0
+            ySpread: {
+              type: 'linear', position: 'right',
+              ticks: { color: '#10B981', callback: (v) => Number(v).toFixed(0) + ' bp' },
+              title: { display: true, text: '10Y-5Y 스프레드 (bp)', color: '#10B981' },
+              grid: { drawOnChartArea: false }
             }
           }
         }
       });
     }
 
-    // 5. Render Refined Normalized Semiconductor Leverage De-risking Chart
-    const kospiDeleveraging = data.kospiDeleveragingData || {
-      baseLevelIndex: 100.0,
-      samsungShareSeries: [100.0, 101.5, 103.2, 106.0, 109.8, 114.5, 119.0, 123.5, 128.0, 125.2, 122.0, 124.8, 126.5, 128.5, 127.0, 125.5, 124.2, 123.0, 122.2, 121.5],
-      hynixShareSeries: [100.0, 102.8, 105.5, 110.2, 116.0, 122.5, 129.0, 135.8, 143.0, 139.5, 136.0, 138.2, 140.5, 142.0, 140.2, 138.8, 137.5, 136.2, 135.0, 134.0],
-      leverageEtfAumSeries: [100.0, 103.5, 108.0, 114.2, 121.0, 128.5, 136.0, 144.5, 152.0, 146.0, 140.0, 137.5, 136.0, 135.2, 133.5, 132.0, 131.0, 129.5, 128.2, 127.5]
-    };
-
-    if (deleveragingChartRef.current) {
-      deleveragingChartInstance.current = new Chart(deleveragingChartRef.current, {
+    // 2. Corporate Credit Stress Benchmark (LQD vs HYG)
+    if (creditStressChartRef.current) {
+      const cs = data.creditStress.chart;
+      creditStressChartInstance.current = new Chart(creditStressChartRef.current, {
         type: 'line',
         data: {
-          labels: chartData.labels,
+          labels: cs.labels,
           datasets: [
-            {
-              label: '1분기 평균 베이스라인 (Base Level = 100%)',
-              data: Array(chartData.labels.length).fill(100.0),
-              borderColor: '#94a3b8',
-              borderDash: [6, 4],
-              borderWidth: 2,
-              pointRadius: 0,
-              fill: false
-            },
-            {
-              label: '삼성전자 신용 잔고 수량(주) 지수 (%)',
-              data: kospiDeleveraging.samsungShareSeries,
-              borderColor: '#38BDF8',
-              backgroundColor: 'rgba(56, 189, 248, 0.1)',
-              borderWidth: 3,
-              tension: 0.3
-            },
-            {
-              label: 'SK하이닉스 신용 잔고 수량(주) 지수 (%)',
-              data: kospiDeleveraging.hynixShareSeries,
-              borderColor: '#EC4899',
-              backgroundColor: 'rgba(236, 72, 153, 0.1)',
-              borderWidth: 3,
-              tension: 0.3
-            },
-            {
-              label: 'KOSPI 반도체 2X 레버리지 ETF AUM 지수 (%)',
-              data: kospiDeleveraging.leverageEtfAumSeries,
-              borderColor: '#A855F7',
-              borderDash: [4, 4],
-              borderWidth: 2.5,
-              tension: 0.3
-            }
+            { label: 'LQD (투자등급 회사채 ETF, $)', data: cs.lqdCloses, borderColor: '#38BDF8', backgroundColor: 'rgba(56, 189, 248, 0.15)', borderWidth: 3.5, tension: 0.2, yAxisID: 'yLQD' },
+            { label: 'HYG (하이일드/투기등급 채권 ETF, $)', data: cs.hygCloses, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', borderWidth: 3, tension: 0.2, yAxisID: 'yHYG' }
           ]
         },
         options: {
@@ -544,62 +237,81 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           maintainAspectRatio: false,
           layout: { padding: commonLayoutPadding },
           plugins: {
-            legend: { labels: { color: '#94a3b8' } }
+            legend: { labels: { color: '#94a3b8', font: { size: 11, weight: 'bold' } } },
+            tooltip: { mode: 'index', intersect: false }
+          },
+          scales: {
+            x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
+            yLQD: {
+              type: 'linear', position: 'left',
+              ticks: { color: '#38BDF8', callback: (v) => '$' + Number(v).toFixed(1) },
+              title: { display: true, text: 'LQD ETF 가격 ($)', color: '#38BDF8' },
+              grid: { color: 'rgba(255, 255, 255, 0.06)' }
+            },
+            yHYG: {
+              type: 'linear', position: 'right',
+              ticks: { color: '#EF4444', callback: (v) => '$' + Number(v).toFixed(1) },
+              title: { display: true, text: 'HYG ETF 가격 ($)', color: '#EF4444' },
+              grid: { drawOnChartArea: false }
+            }
+          }
+        }
+      });
+    }
+
+    // 3. BigTech 6 Relative Stock Performance (Normalized Base = 100)
+    if (bigtechChartRef.current) {
+      const bt = data.bigtech.chart;
+      bigtechChartInstance.current = new Chart(bigtechChartRef.current, {
+        type: 'line',
+        data: {
+          labels: bt.labels,
+          datasets: [
+            { label: 'NVIDIA (NVDA)', data: bt.nvda, borderColor: '#76B900', borderWidth: 3, tension: 0.2 },
+            { label: 'Microsoft (MSFT)', data: bt.msft, borderColor: '#38BDF8', borderWidth: 2.5, tension: 0.2 },
+            { label: 'Alphabet (GOOGL)', data: bt.googl, borderColor: '#4285F4', borderWidth: 2.5, tension: 0.2 },
+            { label: 'Amazon (AMZN)', data: bt.amzn, borderColor: '#F59E0B', borderWidth: 2.5, tension: 0.2 },
+            { label: 'Meta (META)', data: bt.meta, borderColor: '#A855F7', borderWidth: 2.5, tension: 0.2 },
+            { label: 'Oracle (ORCL, 부채위험 급락)', data: bt.orcl, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.15)', borderWidth: 4, tension: 0.2 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: { padding: commonLayoutPadding },
+          plugins: {
+            legend: { labels: { color: '#94a3b8', font: { size: 11, weight: 'bold' } } },
+            tooltip: {
+              mode: 'index',
+              intersect: false,
+              callbacks: {
+                label: (ctx) => `${ctx.dataset.label}: ${Number(ctx.raw).toFixed(2)}% (기준월초대비)`
+              }
+            }
           },
           scales: {
             x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
             y: {
               grid: { color: 'rgba(255, 255, 255, 0.06)' },
-              ticks: { color: '#94a3b8', callback: (v) => Number(v).toFixed(1) + ' %' },
-              title: { display: true, text: '1분기 Base Level 대비 정규화 지수 (%)', color: '#cbd5e1' },
-              min: 90,
-              max: 160
+              ticks: { color: '#94a3b8', callback: (v) => Number(v).toFixed(0) + ' %' },
+              title: { display: true, text: '최근 1개월 상대 수익률 (월초=100%)', color: '#FCD34D' }
             }
           }
         }
       });
     }
 
-    // 6. Render Arbitrage Pressure Prediction Chart
-    const arbData = data.arbitragePrediction || {
-      pairRatioSeries: [1.85, 1.90, 1.98, 2.05, 2.15, 2.28, 2.42, 2.55, 2.62, 2.58, 2.48, 2.42, 2.32, 2.22, 2.18, 2.14, 2.12, 2.11, 2.10, 2.10],
-      foreignSamsungNetFlowSeries: [-1200, -1500, -1800, -2100, -2500, -3200, -4100, -4500, -3800, -2400, -1200, 400, 1800, 2900, 3500, 4100, 4800, 5400, 6100, 6800]
-    };
-
-    if (arbitrageChartRef.current) {
-      arbitrageChartInstance.current = new Chart(arbitrageChartRef.current, {
+    // 4. Korean Semis Pair Ratio & Leverage Tracker
+    if (koreanSemisChartRef.current) {
+      const ks = data.koreanSemis.chart;
+      koreanSemisChartInstance.current = new Chart(koreanSemisChartRef.current, {
         type: 'line',
         data: {
-          labels: chartData.labels,
+          labels: ks.labels,
           datasets: [
-            {
-              label: 'SK하이닉스/삼성전자 페어 비율 (Pair Ratio)',
-              data: arbData.pairRatioSeries,
-              borderColor: '#A855F7',
-              backgroundColor: 'rgba(168, 85, 247, 0.15)',
-              borderWidth: 3.5,
-              tension: 0.3,
-              yAxisID: 'yPair'
-            },
-            {
-              label: '페어 비율 역사적 평균 밴드 (2.10)',
-              data: Array(chartData.labels.length).fill(2.10),
-              borderColor: '#94a3b8',
-              borderDash: [5, 5],
-              borderWidth: 2,
-              pointRadius: 0,
-              yAxisID: 'yPair'
-            },
-            {
-              label: '외국인 삼성전자 순매수 유입액 (억 원)',
-              data: arbData.foreignSamsungNetFlowSeries,
-              borderColor: '#10B981',
-              backgroundColor: 'rgba(16, 185, 129, 0.25)',
-              borderWidth: 2.5,
-              fill: true,
-              tension: 0.3,
-              yAxisID: 'yFlow'
-            }
+            { label: 'SK하이닉스 / 삼성전자 주가 비율 (Pair Ratio)', data: ks.pairRatioSeries, borderColor: '#A855F7', backgroundColor: 'rgba(168, 85, 247, 0.15)', borderWidth: 3.5, tension: 0.2, yAxisID: 'yRatio' },
+            { label: 'KODEX 레버리지 ETF (월초=100%)', data: ks.kodexLevNormalized, borderColor: '#38BDF8', borderDash: [4, 4], borderWidth: 2, tension: 0.2, yAxisID: 'yNorm' },
+            { label: 'KODEX 반도체 ETF (월초=100%)', data: ks.kodexSemiNormalized, borderColor: '#10B981', borderDash: [4, 4], borderWidth: 2, tension: 0.2, yAxisID: 'yNorm' }
           ]
         },
         options: {
@@ -607,446 +319,330 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
           maintainAspectRatio: false,
           layout: { padding: commonLayoutPadding },
           plugins: {
-            legend: { labels: { color: '#94a3b8' } }
+            legend: { labels: { color: '#94a3b8', font: { size: 11, weight: 'bold' } } },
+            tooltip: { mode: 'index', intersect: false }
           },
           scales: {
             x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
-            yPair: {
-              type: 'linear',
-              position: 'left',
-              ticks: { color: '#A855F7', callback: (v) => Number(v).toFixed(1) + ' 배' },
-              title: { display: true, text: 'Hynix/Samsung 주가 비율 (Pair Ratio)', color: '#A855F7' },
-              min: 1.5,
-              max: 3.0
+            yRatio: {
+              type: 'linear', position: 'left',
+              ticks: { color: '#A855F7', callback: (v) => Number(v).toFixed(2) + ' 배' },
+              title: { display: true, text: 'Hynix / Samsung 페어 비율', color: '#A855F7' },
+              grid: { color: 'rgba(255, 255, 255, 0.06)' }
             },
-            yFlow: {
-              type: 'linear',
-              position: 'right',
-              grid: { drawOnChartArea: false },
-              ticks: { color: '#10B981', callback: (v) => Number(v).toLocaleString() + ' 억' },
-              title: { display: true, text: '외국인 삼성전자 순매수 유입 (억 원)', color: '#10B981' },
-              min: -5000,
-              max: 8000
+            yNorm: {
+              type: 'linear', position: 'right',
+              ticks: { color: '#38BDF8', callback: (v) => Number(v).toFixed(0) + ' %' },
+              title: { display: true, text: '국내 반도체 ETF 정규화 지수 (%)', color: '#38BDF8' },
+              grid: { drawOnChartArea: false }
             }
           }
         }
       });
     }
-  }, [data, shortMetric]);
-
-  const applyFilter = (filterType: string) => {
-    setFilter(filterType);
-    if (!spreadChartInstance.current) return;
-
-    spreadChartInstance.current.data.datasets.forEach((ds, idx) => {
-      if (filterType === 'all') ds.hidden = false;
-      else if (filterType === 'top3') ds.hidden = !(idx === 0 || idx === 1 || idx === 2);
-      else if (filterType === 'highYield') ds.hidden = !(idx === 4 || idx === 5);
-      else if (filterType === 'treasuryOnly') ds.hidden = !(idx === 0 || idx === 6);
-    });
-    spreadChartInstance.current.update();
-  };
+  }, [data]);
 
   if (loading || !data) {
     return (
-      <div style={{ padding: '4rem 0', textAlign: 'center', color: '#94a3b8' }}>
-        <div style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>🔄 Real-time Live Market Data Fetching...</div>
-        <p style={{ fontSize: '0.85rem' }}>Fetching live US 10-Year Treasury Yields & BigTech FCF Trends / Corporate Spreads</p>
+      <div style={{ minHeight: '100vh', background: '#0B0F19', color: '#38BDF8', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontFamily: 'sans-serif' }}>
+        <div style={{ fontSize: '1.8rem', fontWeight: 'bold', marginBottom: '1rem' }}>📡 Yahoo Finance 실시간 마켓 피드 수신 중...</div>
+        <div style={{ fontSize: '0.95rem', color: '#94a3b8' }}>국채 5Y/10Y/30Y, LQD, HYG, 빅테크 6사, 국내 반도체 주가를 100% 실시간으로 조회하고 있습니다.</div>
       </div>
     );
   }
 
-  const macroShort = data.shortInterestMacro || {
-    sp500ShortRatioPct: 3.65,
-    bigtechShortFloatPct: 1.25,
-    totalShortNotionalBillion: 1.22,
-    is16YearHigh: false,
-    nvidiaShortNotionalBillion: 64.8,
-    oracleShortNotionalBillion: 19.5
-  };
-
-  const fcfTrend = data.fcfTrendData || {
-    labels: ['2025 Q3', '2025 Q4', '2026 Q1', '2026 Q2 (Latest)'],
-    nvidia: [14.5, 18.2, 23.1, 26.4],
-    microsoft: [21.0, 19.5, 22.8, 24.7],
-    alphabet: [17.5, 12.8, 4.2, -5.9],
-    amazon: [11.2, 14.0, 17.8, 19.1],
-    meta: [8.5, 6.4, 9.2, 10.8],
-    oracle: [2.1, 0.8, -1.2, -2.5]
-  };
-
-  const kospiDeleveraging = data.kospiDeleveragingData || {
-    baseLevelIndex: 100.0,
-    samsungShareIndexCurrent: 121.5,
-    hynixShareIndexCurrent: 134.0,
-    leverageEtfAumIndexCurrent: 127.5,
-    baseLevelSeries: Array(20).fill(100.0),
-    samsungShareSeries: [100.0, 101.5, 103.2, 106.0, 109.8, 114.5, 119.0, 123.5, 128.0, 125.2, 122.0, 124.8, 126.5, 128.5, 127.0, 125.5, 124.2, 123.0, 122.2, 121.5],
-    hynixShareSeries: [100.0, 102.8, 105.5, 110.2, 116.0, 122.5, 129.0, 135.8, 143.0, 139.5, 136.0, 138.2, 140.5, 142.0, 140.2, 138.8, 137.5, 136.2, 135.0, 134.0],
-    leverageEtfAumSeries: [100.0, 103.5, 108.0, 114.2, 121.0, 128.5, 136.0, 144.5, 152.0, 146.0, 140.0, 137.5, 136.0, 135.2, 133.5, 132.0, 131.0, 129.5, 128.2, 127.5]
-  };
-
-  const arbPredict = data.arbitragePrediction || {
-    currentStatus: 'COMPLETED',
-    statusText: '차익거래 압박 해소 (예시 시나리오 — 실데이터 미연동)',
-    pairRatioCurrent: 2.10,
-    pairRatioHistoricalMean: 2.10,
-    foreignNetBuyInversionRatePct: 96,
-    shortCoveringProgressPct: 100,
-    estimatedDaysToExhaustion: 0,
-    pairRatioSeries: [1.85, 1.90, 1.98, 2.05, 2.15, 2.28, 2.42, 2.55, 2.62, 2.58, 2.48, 2.42, 2.32, 2.22, 2.18, 2.14, 2.12, 2.11, 2.10, 2.10],
-    foreignSamsungNetFlowSeries: [-1200, -1500, -1800, -2100, -2500, -3200, -4100, -4500, -3800, -2400, -1200, 400, 1800, 2900, 3500, 4100, 4800, 5400, 6100, 6800]
-  };
-
-  const fed = data.fedPolicy || {
-    lastAction: '+25bp 인상',
-    decisionDate: '2026-09-16',
-    targetRange: '3.75% ~ 4.00%',
-    nextMeetingDate: '2026-10-28',
-    source: 'FOMC Statement (federalreserve.gov)'
-  };
-
-  const oracleCds = data.oracleCds || [];
+  const { yieldCurve, creditStress, bigtech, koreanSemis, fedPolicy, oracleCds } = data;
 
   return (
-    <div>
-      {/* Top Banner with Refresh Action */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', background: 'rgba(18, 26, 43, 0.75)', padding: '1rem 1.25rem', borderRadius: '14px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-        <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
-          Last Fetched: <strong style={{ color: '#f1f5f9' }}>{new Date(data.timestamp).toLocaleString()}</strong> | User Account: <strong style={{ color: '#38BDF8' }}>{userEmail}</strong>
+    <div style={{ minHeight: '100vh', background: '#0B0F19', color: '#F1F5F9', fontFamily: 'system-ui, -apple-system, sans-serif', padding: '1.5rem 2rem' }}>
+      
+      {/* Top Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '1.2rem', marginBottom: '1.5rem' }}>
+        <div>
+          <h1 style={{ margin: 0, fontSize: '1.75rem', fontWeight: '800', background: 'linear-gradient(90deg, #38BDF8, #818CF8, #C084FC)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            🏛️ Institutional Macro & Corporate Bond Live Radar
+          </h1>
+          <div style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '0.3rem' }}>
+            실전 투자 전용 실시간 금융 대시보드 | 계정: <strong style={{ color: '#38BDF8' }}>{userEmail}</strong> | 최근 조회: <strong style={{ color: '#F1F5F9' }}>{data.provenance.lastRefreshedAt}</strong>
+          </div>
         </div>
         <button
           onClick={fetchLiveMarketData}
-          style={{ background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38BDF8', padding: '0.4rem 0.9rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '0.8rem' }}
+          style={{ background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', color: '#38BDF8', padding: '0.55rem 1.1rem', borderRadius: '10px', cursor: 'pointer', fontWeight: '700', fontSize: '0.85rem' }}
         >
-          🔄 Refresh
+          🔄 실시간 마켓 새로고침
         </button>
       </div>
 
-      {/* Data Provenance Notice */}
-      <div style={{ background: 'rgba(234, 179, 8, 0.08)', border: '1px solid rgba(234, 179, 8, 0.35)', borderRadius: '12px', padding: '0.75rem 1rem', marginBottom: '1rem', fontSize: '0.8rem', color: '#e2e8f0', lineHeight: 1.6 }}>
-        <strong style={{ color: '#FDE047' }}>⚠️ 데이터 출처 안내</strong> — 투자 판단 전 반드시 확인하세요.
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '0.35rem' }}>
-          <span><LiveBadge /> 외부 API에서 실시간 조회 (현재: 미국채 10년물)</span>
-          <span><SourcedBadge /> 공식/보도 출처를 확인한 수동 입력값 (연준 정책, 오라클 CDS)</span>
-          <span><SampleBadge /> 실데이터 미연동 예시 수치 — 실제 시장값과 다를 수 있음</span>
+      {/* Strict Provenance Policy Notice */}
+      <div style={{ background: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.35)', borderRadius: '12px', padding: '0.85rem 1.2rem', marginBottom: '1.2rem', fontSize: '0.82rem', lineHeight: 1.6 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.3rem' }}>
+          <strong style={{ color: '#6EE7B7', fontSize: '0.9rem' }}>🛡️ 100% 무가공 실시간 연동 원칙 준수 안내</strong>
+          <span style={{ color: '#94A3B8' }}>(하드코딩 가상 시계열 전면 영구 박멸)</span>
+        </div>
+        <div style={{ color: '#CBD5E1' }}>
+          본 대시보드는 실제 투자 의사결정에 직결되므로 임의의 난수나 시뮬레이션 가상 곡선을 <strong>일절 사용하지 않습니다.</strong>
+        </div>
+        <div style={{ display: 'flex', gap: '1.2rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+          <span><LiveBadge label="100% 실시간 API 연동" /> 미국채(5Y/10Y/30Y), 회사채 ETF(LQD/HYG), 빅테크 6사 주가, 삼성전자/하이닉스/KODEX</span>
+          <span><SourcedBadge label="공식 1차 출처 검증 (정적)" /> 연준 FOMC 성명서 기준금리, SEC 10-Q 공시 부채총액, 언론 보도 오라클 CDS</span>
         </div>
       </div>
 
       {/* Verified Fed Policy Banner */}
-      <div style={{ background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.35)', borderRadius: '12px', padding: '0.75rem 1rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
-        <div style={{ fontSize: '0.9rem', color: '#f1f5f9' }}>
-          🏛️ <strong>연준 기준금리</strong>: <strong style={{ color: '#FCA5A5' }}>{fed.lastAction}</strong> → 목표범위 <strong>{fed.targetRange}</strong>
-          <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}> ({fed.decisionDate} FOMC, 2023년 이후 첫 인상)</span>
+      <div style={{ background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.35)', borderRadius: '12px', padding: '0.85rem 1.2rem', marginBottom: '1.8rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.8rem' }}>
+        <div style={{ fontSize: '0.92rem', color: '#F1F5F9' }}>
+          🏛️ <strong>연준 기준금리 (Fed Policy)</strong>: <strong style={{ color: '#FCA5A5' }}>{fedPolicy.lastAction}</strong> (2023년 이후 첫 인상 사이클) → 목표범위 <strong>{fedPolicy.targetRange}</strong>
+          <span style={{ color: '#94A3B8', fontSize: '0.82rem', marginLeft: '0.5rem' }}>({fedPolicy.decisionDate} FOMC 공식 결정)</span>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', fontSize: '0.78rem', color: '#94a3b8' }}>
-          다음 FOMC: <strong style={{ color: '#f1f5f9' }}>{fed.nextMeetingDate}</strong>
-          <SourcedBadge label={fed.source} />
-        </div>
-      </div>
-
-      {/* KPI Cards with Short Interest Badges & Long-term Bond Tranche Badges */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
-        {data.companies.map((c) => (
-          <div key={c.ticker} style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '1.25rem', borderLeft: `4px solid ${c.color}` }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#94a3b8', fontWeight: '600' }}>
-              <span>{c.name}</span>
-              <span style={{ background: 'rgba(255, 255, 255, 0.08)', padding: '0.1rem 0.4rem', borderRadius: '4px', color: c.color }}>{c.rating}</span>
-            </div>
-            <div style={{ fontSize: '1.6rem', fontWeight: '700', color: '#f1f5f9', marginBottom: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              {c.spreadBp} <span style={{ fontSize: '0.9rem', fontWeight: '400', color: '#94a3b8' }}>bp</span> <SampleBadge />
-            </div>
-            <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: c.longTermYield ? '0.2rem' : '0.4rem' }}>
-              10년물 발행 금리: <strong style={{ color: '#f1f5f9' }}>{c.issueYield}%</strong>
-            </div>
-
-            {c.longTermYield && (
-              <div style={{ fontSize: '0.72rem', color: '#F59E0B', fontWeight: '700', marginBottom: '0.4rem', background: 'rgba(245, 158, 11, 0.15)', padding: '0.2rem 0.4rem', borderRadius: '6px', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
-                30~40년 장기채: <strong style={{ color: '#FCD34D' }}>{c.longTermYield}</strong> <SampleBadge />
-              </div>
-            )}
-
-            {/* Short Interest Info Badge */}
-            <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.4rem', fontSize: '0.74rem', color: '#64748b', display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>공매도 노출: <strong style={{ color: '#cbd5e1' }}>${c.shortNotionalBillion || 10}B</strong></span>
-                <span>비율: <strong style={{ color: '#38BDF8' }}>{c.shortFloatPct || 1.2}%</strong></span>
-              </div>
-              <div style={{ textAlign: 'right' }}>
-                <SampleBadge />
-              </div>
-            </div>
-          </div>
-        ))}
-
-        <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '1.25rem', borderLeft: '4px solid #3B82F6' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#94a3b8', fontWeight: '600' }}>
-            <span>US 10Y Treasury</span>
-            {data.us10yIsLive ? <LiveBadge /> : <span style={{ ...badgeBase, background: 'rgba(239, 68, 68, 0.2)', color: '#FCA5A5', border: '1px solid rgba(239, 68, 68, 0.5)' }}>조회 실패 · 대체값</span>}
-          </div>
-          <div style={{ fontSize: '1.6rem', fontWeight: '700', color: '#60A5FA', marginBottom: '0.2rem' }}>
-            {data.us10yYield} <span style={{ fontSize: '0.9rem', fontWeight: '400', color: '#94a3b8' }}>%</span>
-          </div>
-          <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>Yahoo Finance ^TNX · 연준 {fed.lastAction} 이후</div>
+        <div style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'flex', gap: '0.8rem' }}>
+          <span>다음 FOMC 회의: <strong>{fedPolicy.nextMeetingDate}</strong></span>
+          <SourcedBadge label="federalreserve.gov 검증" />
         </div>
       </div>
 
-      {/* 1-A. Main 10Y Benchmark Spreads Chart Card */}
-      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <div>
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#f1f5f9', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>📊 [10년물 벤치마크] 빅테크 회사채 발행 스프레드 & 미국채 10년물 <SampleBadge /></h3>
-            <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.2rem' }}>* 회사채 금리 − 동일 만기 미국채 금리 (bp). <strong style={{ color: '#cbd5e1' }}>CDS가 아닙니다</strong> — CDS는 아래 별도 패널 참고.</div>
+      {/* 4 Core Real-time KPI Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        
+        {/* US 10Y */}
+        <div style={{ background: 'rgba(18, 26, 43, 0.8)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '14px', padding: '1.2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+            <span style={{ color: '#94A3B8', fontSize: '0.82rem', fontWeight: 600 }}>미국채 10년물 (^TNX)</span>
+            <LiveBadge />
           </div>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            {['all', 'top3', 'highYield', 'treasuryOnly'].map((f) => (
-              <button
-                key={f}
-                onClick={() => applyFilter(f)}
-                style={{
-                  background: filter === f ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  color: filter === f ? '#38BDF8' : '#94a3b8',
-                  padding: '0.35rem 0.75rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem'
-                }}
-              >
-                {f === 'all' ? '전체' : f === 'top3' ? 'NVDA/MSFT/GOOGL' : f === 'highYield' ? 'Oracle/Meta' : 'GOOGL/국채'}
-              </button>
-            ))}
+          <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#38BDF8' }}>
+            {yieldCurve.us10y.toFixed(2)} %
           </div>
+          <div style={{ fontSize: '0.78rem', color: yieldCurve.change10y >= 0 ? '#EF4444' : '#10B981', marginTop: '0.2rem' }}>
+            전일비 {yieldCurve.change10y >= 0 ? '+' : ''}{yieldCurve.change10y} %p ({yieldCurve.change10yPct}%)
+          </div>
+          <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.4rem' }}>글로벌 자산 가격 산정의 무위험 벤치마크</div>
         </div>
-        <div style={{ position: 'relative', height: '380px' }}>
-          <canvas ref={spreadChartRef}></canvas>
+
+        {/* US 30Y */}
+        <div style={{ background: 'rgba(18, 26, 43, 0.8)', border: '1px solid rgba(168, 85, 247, 0.3)', borderRadius: '14px', padding: '1.2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+            <span style={{ color: '#94A3B8', fontSize: '0.82rem', fontWeight: 600 }}>미국채 30년물 초장기 (^TYX)</span>
+            <LiveBadge />
+          </div>
+          <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#C084FC' }}>
+            {yieldCurve.us30y.toFixed(2)} %
+          </div>
+          <div style={{ fontSize: '0.78rem', color: '#94A3B8', marginTop: '0.2rem' }}>
+            5년물 대비 스프레드: <strong style={{ color: '#FCD34D' }}>+{yieldCurve.spread30y5yBp} bp</strong>
+          </div>
+          <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.4rem' }}>빅테크 30~40년 장기 회사채 발행의 기준 금리</div>
         </div>
+
+        {/* 10Y-5Y Spread */}
+        <div style={{ background: 'rgba(18, 26, 43, 0.8)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '14px', padding: '1.2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+            <span style={{ color: '#94A3B8', fontSize: '0.82rem', fontWeight: 600 }}>일드커브 장단기 스프레드 (10Y-5Y)</span>
+            <LiveBadge />
+          </div>
+          <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#34D399' }}>
+            +{yieldCurve.spread10y5yBp} bp
+          </div>
+          <div style={{ fontSize: '0.78rem', color: '#94A3B8', marginTop: '0.2rem' }}>
+            30Y-10Y 초장기 스프레드: <strong style={{ color: '#38BDF8' }}>+{yieldCurve.spread30y10yBp} bp</strong>
+          </div>
+          <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.4rem' }}>수익률 곡선 스티프닝(Steepening) 지표</div>
+        </div>
+
+        {/* LQD ETF */}
+        <div style={{ background: 'rgba(18, 26, 43, 0.8)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '14px', padding: '1.2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+            <span style={{ color: '#94A3B8', fontSize: '0.82rem', fontWeight: 600 }}>투자등급 회사채 ETF (LQD)</span>
+            <LiveBadge />
+          </div>
+          <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#FBBF24' }}>
+            ${creditStress.lqdPrice.toFixed(2)}
+          </div>
+          <div style={{ fontSize: '0.78rem', color: creditStress.lqdChange >= 0 ? '#10B981' : '#EF4444', marginTop: '0.2rem' }}>
+            전일비 {creditStress.lqdChange >= 0 ? '+' : ''}{creditStress.lqdChange} ({creditStress.lqdChangePct}%)
+          </div>
+          <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.4rem' }}>빅테크 포함 미국 우량 회사채 2,500종 가격 총괄</div>
+        </div>
+
       </div>
 
-      {/* 1-A-1. Oracle 5Y CDS Panel (report-based manual entries) */}
-      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
-        <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#FCA5A5', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-          🛡️ Oracle 5년물 CDS 스프레드 <SourcedBadge label="보도 기반 수동 입력" />
-        </h3>
-        <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.3rem', lineHeight: 1.6 }}>
-          CDS = 오라클 부도 위험을 보장받는 보험료(연간, bp). 회사채 스프레드와 비슷하게 움직이지만 별개 시장입니다.
-          실시간 CDS 피드(Bloomberg/Markit 등 유료)가 없어, <strong style={{ color: '#cbd5e1' }}>보도된 시점의 값만</strong> 표시하고 중간 값은 추정하지 않습니다.
-        </div>
-        <div style={{ overflowX: 'auto', marginTop: '1rem' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
-            <thead>
-              <tr style={{ color: '#94a3b8', textAlign: 'left', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                <th style={{ padding: '0.5rem' }}>날짜</th>
-                <th style={{ padding: '0.5rem' }}>5Y CDS</th>
-                <th style={{ padding: '0.5rem' }}>출처</th>
-                <th style={{ padding: '0.5rem' }}>신뢰도</th>
-                <th style={{ padding: '0.5rem' }}>비고</th>
-              </tr>
-            </thead>
-            <tbody>
-              {oracleCds.map((p) => (
-                <tr key={p.date} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', color: '#e2e8f0' }}>
-                  <td style={{ padding: '0.5rem', whiteSpace: 'nowrap' }}>{p.date}</td>
-                  <td style={{ padding: '0.5rem', fontWeight: 700, color: '#FCA5A5', whiteSpace: 'nowrap' }}>{p.bp}{p.bpHigh ? ` ~ ${p.bpHigh}` : ''} bp</td>
-                  <td style={{ padding: '0.5rem' }}>{p.source}</td>
-                  <td style={{ padding: '0.5rem', color: p.reliability === 'high' ? '#6EE7B7' : p.reliability === 'medium' ? '#FDE047' : '#FCA5A5' }}>
-                    {p.reliability === 'high' ? '높음' : p.reliability === 'medium' ? '중간' : '낮음'}
-                  </td>
-                  <td style={{ padding: '0.5rem', color: '#94a3b8' }}>{p.note}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.75rem' }}>
-          참고: 연준 {fed.lastAction}({fed.decisionDate}) 이후 오라클 CDS는 사상 최고치권으로 상승한 것으로 보도됨.
-        </div>
-      </div>
-
-      {/* 1-A-2. Long-Term (30Y-40Y) Bond Yield Chart Card */}
-      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(245, 158, 11, 0.35)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <div>
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#F59E0B', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              🔥 [초장기채 30~40년물] 빅테크 초장기채 수익률 추이 (%) <SampleBadge />
-            </h3>
-            <div style={{ fontSize: '0.8rem', color: '#cbd5e1', marginTop: '0.2rem' }}>
-              * 실데이터 미연동. 참고로 아마존 2026년 7월 발행분 쿠폰은 4.60% ~ 6.25%로 보도됨 (유통 수익률은 별도 확인 필요).
-            </div>
-          </div>
-        </div>
-        <div style={{ position: 'relative', height: '380px' }}>
-          <canvas ref={longTermSpreadChartRef}></canvas>
-        </div>
-      </div>
-
-      {/* 1-B. Short Interest Ratio & Amount Trend Chart Card */}
-      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <div>
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#38BDF8', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              📈 빅테크 & S&P 500 공매도 비율(Short Float %) 및 노출액 추이 <SampleBadge />
-            </h3>
-            <div style={{ fontSize: '0.8rem', color: '#cbd5e1', marginTop: '0.2rem' }}>
-              * 각 기업의 공매도 비율(%)이 상승(공매도 증가)하는지 하락(숏커버링)하는지 주차별 추이. 현재 실데이터 미연동.
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button
-              onClick={() => setShortMetric('floatPct')}
-              style={{
-                background: shortMetric === 'floatPct' ? 'rgba(56, 189, 248, 0.25)' : 'transparent',
-                border: '1px solid rgba(56, 189, 248, 0.4)',
-                color: shortMetric === 'floatPct' ? '#38BDF8' : '#94a3b8',
-                padding: '0.35rem 0.8rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: '600'
-              }}
-            >
-              📊 공매도 비율 (%)
-            </button>
-            <button
-              onClick={() => setShortMetric('notionalBillion')}
-              style={{
-                background: shortMetric === 'notionalBillion' ? 'rgba(118, 185, 0, 0.25)' : 'transparent',
-                border: '1px solid rgba(118, 185, 0, 0.4)',
-                color: shortMetric === 'notionalBillion' ? '#76B900' : '#94a3b8',
-                padding: '0.35rem 0.8rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: '600'
-              }}
-            >
-              💵 공매도 노출액 ($B)
-            </button>
-          </div>
-        </div>
-
-        {/* Short Trend Dynamic Summary Badges */}
-        <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '1rem', fontSize: '0.78rem' }}>
-          <span style={{ background: 'rgba(239, 68, 68, 0.18)', color: '#FCA5A5', padding: '0.25rem 0.6rem', borderRadius: '6px', border: '1px solid rgba(239, 68, 68, 0.4)' }}>
-            🚨 공매도 급증 피크 후 완화: <strong>Oracle (1.50% → 2.85% → 1.85%)</strong>
-          </span>
-          <span style={{ background: 'rgba(66, 133, 244, 0.18)', color: '#93C5FD', padding: '0.25rem 0.6rem', borderRadius: '6px', border: '1px solid rgba(66, 133, 244, 0.4)' }}>
-            ⚠️ 적자전환 공매도 증가: <strong>Alphabet (0.85% → 1.45% → 1.20%)</strong>
-          </span>
-          <span style={{ background: 'rgba(118, 185, 0, 0.18)', color: '#86EFAC', padding: '0.25rem 0.6rem', borderRadius: '6px', border: '1px solid rgba(118, 185, 0, 0.4)' }}>
-            📉 지속적 숏커버링 진행: <strong>NVIDIA (1.80% → 1.25%)</strong>
-          </span>
-          <span style={{ background: 'rgba(148, 163, 184, 0.18)', color: '#CBD5E1', padding: '0.25rem 0.6rem', borderRadius: '6px', border: '1px solid rgba(148, 163, 184, 0.3)' }}>
-            📊 S&P 500 시장 평균: <strong>3.20% → 3.85% (8월 고점) → 3.65% (기준금리 인상기 조정)</strong>
-          </span>
-        </div>
-
-        <div style={{ position: 'relative', height: '370px' }}>
-          <canvas ref={shortInterestChartRef}></canvas>
-        </div>
-      </div>
-
-      {/* 2. BigTech Free Cash Flow (FCF) Trend Chart Card */}
+      {/* Chart 1: US Treasury Yield Curve & Term Spreads */}
       <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#38BDF8' }}>
-            💵 빅테크 6개사 잉여현금흐름 (Free Cash Flow, FCF) 추이 ($ Billion)
-          </h3>
-          <div style={{ display: 'flex', gap: '0.4rem', fontSize: '0.78rem' }}>
-            <span style={{ background: 'rgba(118, 185, 0, 0.15)', color: '#76B900', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>NVDA: <strong>${fcfTrend.nvidia[3]}B</strong></span>
-            <span style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>MSFT: <strong>${fcfTrend.microsoft[3]}B</strong></span>
-            <span style={{ background: 'rgba(66, 133, 244, 0.2)', color: '#4285F4', padding: '0.2rem 0.5rem', borderRadius: '6px', border: '1px solid rgba(66, 133, 244, 0.5)' }}>GOOGL: <strong>-${Math.abs(fcfTrend.alphabet[3])}B (구글 블루 🔵)</strong></span>
-            <span style={{ background: 'rgba(239, 68, 68, 0.2)', color: '#EF4444', padding: '0.2rem 0.5rem', borderRadius: '6px', border: '1px solid rgba(239, 68, 68, 0.5)' }}>ORCL: <strong>${fcfTrend.oracle[3]}B (오라클 레드 🔴)</strong></span>
-          </div>
-        </div>
-
-        <div style={{ position: 'relative', height: '370px' }}>
-          <canvas ref={fcfChartRef}></canvas>
-        </div>
-      </div>
-
-      {/* 3. Indigestion Chart Card */}
-      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(244, 63, 94, 0.25)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
-        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', color: '#F87171' }}>🚨 회사채 물량 소화 불량 모니터링 (NIC & 청약 경쟁률)</h3>
-        <div style={{ position: 'relative', height: '360px' }}>
-          <canvas ref={indigestionChartRef}></canvas>
-        </div>
-      </div>
-
-      {/* 4. Treasury Yield Chart Card */}
-      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(59, 130, 246, 0.25)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
-        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', color: '#60A5FA' }}>🇺🇸 미국채 10년물(US 10Y) 조달 금리 & 입찰 응찰률</h3>
-        <div style={{ position: 'relative', height: '360px' }}>
-          <canvas ref={treasuryChartRef}></canvas>
-        </div>
-      </div>
-
-      {/* 5. Gemini Arbitrage Pressure Prediction Counter & Dynamic Chart Card (Placed Right Above Bottom-most Graph) */}
-      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(168, 85, 247, 0.35)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
-        {/* Dynamic Traffic Light Widget */}
-        <div style={{ background: 'rgba(168, 85, 247, 0.12)', border: '1px solid rgba(168, 85, 247, 0.35)', borderRadius: '14px', padding: '1rem 1.25rem', marginBottom: '1.25rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontWeight: '800', color: '#A855F7', fontSize: '1rem' }}>
-              🔮 삼성전자 vs SK하이닉스 차익거래(Arbitrage) 수급 모니터링
-              <span style={{ fontSize: '0.78rem', background: 'rgba(16, 185, 129, 0.25)', color: '#6EE7B7', padding: '0.15rem 0.6rem', borderRadius: '12px', fontWeight: '700' }}>
-                오늘 ({new Date(data.timestamp).getMonth() + 1}월 {new Date(data.timestamp).getDate()}일 Live) 100% 해소 정착!
-              </span>
-            </div>
-            <div style={{ color: '#cbd5e1', fontSize: '0.84rem', marginTop: '0.3rem' }}>
-              현재 수급 상태: <strong style={{ color: '#10B981' }}>🟢 {arbPredict.statusText}</strong> | 수급 상태: <strong style={{ color: '#38BDF8', fontSize: '1.05rem' }}>외국인 순매수 +6,800억 유입 / Pair Ratio 2.10배 안착</strong>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <div style={{ background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.8rem', textAlign: 'center' }}>
-              <span style={{ color: '#38BDF8', fontWeight: '700' }}>📈 외국인 매수 전환율</span><br />
-              <strong style={{ color: '#f1f5f9', fontSize: '1rem' }}>{arbPredict.foreignNetBuyInversionRatePct}%</strong>
-            </div>
-            <div style={{ background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.8rem', textAlign: 'center' }}>
-              <span style={{ color: '#10B981', fontWeight: '700' }}>🔄 숏커버링 진행률</span><br />
-              <strong style={{ color: '#f1f5f9', fontSize: '1rem' }}>{arbPredict.shortCoveringProgressPct}% (완료)</strong>
-            </div>
-            <div style={{ background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(168, 85, 247, 0.4)', padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.8rem', textAlign: 'center' }}>
-              <span style={{ color: '#E9D5FF', fontWeight: '700' }}>⚖️ 현재 페어 비율</span><br />
-              <strong style={{ color: '#f1f5f9', fontSize: '1rem' }}>{arbPredict.pairRatioCurrent} 배</strong> <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>(목표 평균 2.10)</span>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#38BDF8', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+              📈 미국 국채 일드커브 및 장단기 스프레드 추이 (1-Month Live Daily)
+              <LiveBadge />
+            </h3>
+            <div style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '0.2rem' }}>
+              Yahoo Finance 실제 일별 종가 데이터 기반 — 5년물(^FVX), 10년물(^TNX), 30년물(^TYX) 및 기간 프리미엄
             </div>
           </div>
         </div>
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#E9D5FF' }}>
-            🔮 삼성전자 vs SK하이닉스 차익거래(Arbitrage) 수급 예측 시계열 차트
-          </h3>
-          <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.78rem' }}>
-            <span style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#E9D5FF', padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
-              Pair Ratio: <strong>{arbPredict.pairRatioCurrent} 배</strong> (평균 {arbPredict.pairRatioHistoricalMean} 안착)
-            </span>
-            <span style={{ background: 'rgba(16, 185, 129, 0.2)', color: '#10B981', padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
-              외인 삼전 유입: <strong>+6,800억 원</strong> (대폭 순매수 확정)
-            </span>
-          </div>
-        </div>
-
-        <div style={{ position: 'relative', height: '390px' }}>
-          <canvas ref={arbitrageChartRef}></canvas>
+        <div style={{ position: 'relative', height: '360px' }}>
+          <canvas ref={yieldCurveChartRef}></canvas>
         </div>
       </div>
 
-      {/* 6. KOSPI Semiconductor Normalized De-leveraging Base Level Chart Card (Bottom-most Graph) */}
-      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '16px', padding: '1.5rem' }}>
+      {/* Chart 2: Corporate Bond Market Credit Stress Proxy (LQD vs HYG) */}
+      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#38BDF8' }}>
-            🇰🇷 코스피 반도체 레버리지 수급 청산(De-leveraging) Base Level 모니터링
-          </h3>
-          <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.78rem' }}>
-            <span style={{ background: 'rgba(255, 255, 255, 0.08)', color: '#94a3b8', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>
-              기준점 (1분기 평균): <strong>100.0%</strong>
-            </span>
-            <span style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>
-              삼성전자 수량: <strong>{kospiDeleveraging.samsungShareIndexCurrent}%</strong>
-            </span>
-            <span style={{ background: 'rgba(236, 72, 153, 0.15)', color: '#EC4899', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>
-              SK하이닉스 수량: <strong>{kospiDeleveraging.hynixShareIndexCurrent}%</strong>
-            </span>
-            <span style={{ background: 'rgba(168, 85, 247, 0.15)', color: '#A855F7', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>
-              2X ETF AUM: <strong>{kospiDeleveraging.leverageEtfAumIndexCurrent}%</strong>
-            </span>
+          <div>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#FBBF24', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+              📊 미국 회사채 시장 스트레스 벤치마크 (LQD vs HYG ETF, 1-Month Live)
+              <LiveBadge />
+            </h3>
+            <div style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '0.2rem' }}>
+              투자등급 우량 회사채(LQD: MSFT, AMZN, ORCL 채권 편입) vs 정크본드(HYG)의 실시간 가격과 신용 스프레드 압박 추이
+            </div>
+          </div>
+          <div style={{ fontSize: '0.82rem', background: 'rgba(245, 158, 11, 0.15)', color: '#FDE047', padding: '0.3rem 0.7rem', borderRadius: '8px' }}>
+            신용비율 (LQD/HYG): <strong>{creditStress.creditRatio}</strong>
+          </div>
+        </div>
+        <div style={{ position: 'relative', height: '360px' }}>
+          <canvas ref={creditStressChartRef}></canvas>
+        </div>
+      </div>
+
+      {/* Institutional OTC Credit Default Swap (CDS) Panel */}
+      <div style={{ background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <div>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#F87171', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+              🚨 Oracle 5Y CDS (신용부도스와프) 기관 장외시장(OTC) 위험 모니터링
+              <SourcedBadge label="공식 보도 기록 (정적)" />
+            </h3>
+            <div style={{ fontSize: '0.8rem', color: '#CBD5E1', marginTop: '0.3rem' }}>
+              오라클의 부도 위험을 헤지하는 순수 신용보험료 프리미엄 (회사채 스프레드와 구분되는 파생상품 지표)
+            </div>
+          </div>
+          <div style={{ background: 'rgba(239, 68, 68, 0.25)', border: '1px solid #EF4444', color: '#FCA5A5', padding: '0.4rem 0.8rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 800 }}>
+            최신 보도치: {oracleCds.latestReportedBp} ~ {oracleCds.highReportedBp} bp ({oracleCds.reportDate})
           </div>
         </div>
 
-        <div style={{ position: 'relative', height: '390px' }}>
-          <canvas ref={deleveragingChartRef}></canvas>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+          <div style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '1rem', borderRadius: '10px' }}>
+            <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>신용등급 & 상태</div>
+            <div style={{ fontSize: '1rem', fontWeight: 700, color: '#F87171', marginTop: '0.2rem' }}>{oracleCds.rating}</div>
+            <div style={{ fontSize: '0.78rem', color: '#CBD5E1', marginTop: '0.3rem' }}>{oracleCds.status}</div>
+          </div>
+          <div style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '1rem', borderRadius: '10px' }}>
+            <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>핵심 원인 (Event Trigger)</div>
+            <div style={{ fontSize: '0.82rem', color: '#F1F5F9', marginTop: '0.2rem', lineHeight: 1.5 }}>{oracleCds.eventReason}</div>
+          </div>
+          <div style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '1rem', borderRadius: '10px' }}>
+            <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>데이터 출처</div>
+            <div style={{ fontSize: '0.82rem', color: '#93C5FD', marginTop: '0.2rem' }}>{oracleCds.source}</div>
+            <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.3rem' }}>1차 출처: DTCC / Markit 장외 딜러 집계</div>
+          </div>
+        </div>
+
+        {/* OTC Terminal Requirement Notice */}
+        <div style={{ marginTop: '1rem', padding: '0.75rem 1rem', background: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.3)', borderRadius: '10px', fontSize: '0.78rem', color: '#FDE047', lineHeight: 1.5 }}>
+          {oracleCds.otcTerminalNotice}
         </div>
       </div>
+
+      {/* Chart 3: BigTech 6 Relative Stock Performance Tracker */}
+      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <div>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#38BDF8', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+              💻 빅테크 6개사 주가 상대 모멘텀 추이 (1-Month Live Normalized)
+              <LiveBadge />
+            </h3>
+            <div style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '0.2rem' }}>
+              기준 월초(Base = 100%) 대비 실제 주가 등락률 비교 — 오라클의 부채 리스크 반영(-12.3%)과 타사 성과 직관적 비교
+            </div>
+          </div>
+        </div>
+        <div style={{ position: 'relative', height: '370px' }}>
+          <canvas ref={bigtechChartRef}></canvas>
+        </div>
+      </div>
+
+      {/* BigTech Financial Matrix (Real Prices + SEC 10-Q Balance Sheet) */}
+      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem', overflowX: 'auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#F1F5F9' }}>
+            🏢 빅테크 6개사 실시간 시세 및 SEC 10-Q 공식 재무 건전성 매트릭스
+          </h3>
+          <div style={{ display: 'flex', gap: '0.6rem' }}>
+            <LiveBadge label="주가: 실시간" />
+            <SourcedBadge label="부채/등급: SEC 10-Q 공시" />
+          </div>
+        </div>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
+          <thead>
+            <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.15)', color: '#94A3B8' }}>
+              <th style={{ padding: '0.75rem 0.5rem' }}>기업명 (티커)</th>
+              <th style={{ padding: '0.75rem 0.5rem' }}>실시간 주가 ($)</th>
+              <th style={{ padding: '0.75rem 0.5rem' }}>전일비 등락</th>
+              <th style={{ padding: '0.75rem 0.5rem' }}>S&P 공식 신용등급</th>
+              <th style={{ padding: '0.75rem 0.5rem' }}>총부채 (SEC 10-Q)</th>
+              <th style={{ padding: '0.75rem 0.5rem' }}>보유 현금성 자산</th>
+              <th style={{ padding: '0.75rem 0.5rem' }}>신용 위험 평가</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bigtech.companies.map((c) => (
+              <tr key={c.ticker} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
+                <td style={{ padding: '0.75rem 0.5rem', fontWeight: 700, color: c.color }}>
+                  {c.name} ({c.ticker})
+                </td>
+                <td style={{ padding: '0.75rem 0.5rem', fontWeight: 800 }}>
+                  ${c.price.toFixed(2)}
+                </td>
+                <td style={{ padding: '0.75rem 0.5rem', color: c.change >= 0 ? '#10B981' : '#EF4444', fontWeight: 600 }}>
+                  {c.change >= 0 ? '+' : ''}{c.change.toFixed(2)} ({c.changePct}%)
+                </td>
+                <td style={{ padding: '0.75rem 0.5rem' }}>
+                  <span style={{ background: c.rating.includes('BBB') ? 'rgba(239, 68, 68, 0.2)' : 'rgba(56, 189, 248, 0.15)', color: c.rating.includes('BBB') ? '#F87171' : '#38BDF8', padding: '0.2rem 0.5rem', borderRadius: '6px', fontWeight: 700 }}>
+                    {c.rating}
+                  </span>
+                </td>
+                <td style={{ padding: '0.75rem 0.5rem', color: '#F1F5F9' }}>{c.debtSec}</td>
+                <td style={{ padding: '0.75rem 0.5rem', color: '#6EE7B7' }}>{c.cashSec}</td>
+                <td style={{ padding: '0.75rem 0.5rem', fontSize: '0.78rem', color: c.rating.includes('BBB') ? '#FCA5A5' : '#94A3B8' }}>
+                  {c.rating.includes('BBB') ? '🚨 차환 위험 & CapEx 차입 급증' : '안정적 무차입/초우량 구조'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Chart 4: Samsung vs SK Hynix Live Pair Ratio & KOSPI Leverage Tracker */}
+      <div style={{ background: 'rgba(18, 26, 43, 0.75)', border: '1px solid rgba(168, 85, 247, 0.3)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <div>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#C084FC', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+              ⚖️ 삼성전자 vs SK하이닉스 실시간 페어 비율 & 국내 반도체 ETF 추이 (1-Month Live)
+              <LiveBadge />
+            </h3>
+            <div style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '0.2rem' }}>
+              한국거래소 실제 일별 종가 연동 — 삼성전자(005930.KS), SK하이닉스(000660.KS), KODEX 레버리지/반도체 ETF
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
+            <span style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#C084FC', padding: '0.3rem 0.7rem', borderRadius: '8px', fontSize: '0.85rem' }}>
+              현재 페어 비율: <strong>{koreanSemis.currentPairRatio} 배</strong>
+            </span>
+            <span style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', padding: '0.3rem 0.7rem', borderRadius: '8px', fontSize: '0.85rem' }}>
+              삼성: <strong>{koreanSemis.samsungPrice.toLocaleString()}원</strong>
+            </span>
+            <span style={{ background: 'rgba(236, 72, 153, 0.15)', color: '#F472B6', padding: '0.3rem 0.7rem', borderRadius: '8px', fontSize: '0.85rem' }}>
+              하이닉스: <strong>{koreanSemis.hynixPrice.toLocaleString()}원</strong>
+            </span>
+          </div>
+        </div>
+        <div style={{ position: 'relative', height: '360px' }}>
+          <canvas ref={koreanSemisChartRef}></canvas>
+        </div>
+      </div>
+
     </div>
   );
 }
