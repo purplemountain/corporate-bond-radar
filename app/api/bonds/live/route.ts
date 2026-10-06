@@ -174,12 +174,12 @@ export async function GET() {
       // BigTech 6 Equities & Performance
       bigtech: {
         companies: [
-          { name: 'NVIDIA', ticker: 'NVDA', price: nvda.price, change: nvda.change, changePct: nvda.changePct, rating: 'AA-', debtSec: '$11.2B', cashSec: '$34.8B', color: '#76B900' },
-          { name: 'Microsoft', ticker: 'MSFT', price: msft.price, change: msft.change, changePct: msft.changePct, rating: 'AAA', debtSec: '$106.3B', cashSec: '$80.2B', color: '#38BDF8' },
-          { name: 'Alphabet', ticker: 'GOOGL', price: googl.price, change: googl.change, changePct: googl.changePct, rating: 'AA+', debtSec: '$28.4B', cashSec: '$100.7B', color: '#4285F4' },
-          { name: 'Amazon', ticker: 'AMZN', price: amzn.price, change: amzn.change, changePct: amzn.changePct, rating: 'AA', debtSec: '$160.5B', cashSec: '$89.1B', color: '#F59E0B' },
-          { name: 'Meta', ticker: 'META', price: meta.price, change: meta.change, changePct: meta.changePct, rating: 'AA-', debtSec: '$37.6B', cashSec: '$58.1B', color: '#A855F7' },
-          { name: 'Oracle', ticker: 'ORCL', price: orcl.price, change: orcl.change, changePct: orcl.changePct, rating: 'BBB- (주의)', debtSec: '$87.1B', cashSec: '$10.5B', color: '#EF4444' }
+          { name: 'NVIDIA', ticker: 'NVDA', price: nvda.price, change: nvda.change, changePct: nvda.changePct, rating: 'AA-', debtSec: '$11.2B', cashSec: '$34.8B', fcfSec: '+$26.4B', color: '#76B900' },
+          { name: 'Microsoft', ticker: 'MSFT', price: msft.price, change: msft.change, changePct: msft.changePct, rating: 'AAA', debtSec: '$106.3B', cashSec: '$80.2B', fcfSec: '+$24.7B', color: '#38BDF8' },
+          { name: 'Alphabet', ticker: 'GOOGL', price: googl.price, change: googl.change, changePct: googl.changePct, rating: 'AA+', debtSec: '$28.4B', cashSec: '$100.7B', fcfSec: '-$5.9B (적자전환)', color: '#4285F4' },
+          { name: 'Amazon', ticker: 'AMZN', price: amzn.price, change: amzn.change, changePct: amzn.changePct, rating: 'AA', debtSec: '$160.5B', cashSec: '$89.1B', fcfSec: '+$19.1B', color: '#F59E0B' },
+          { name: 'Meta', ticker: 'META', price: meta.price, change: meta.change, changePct: meta.changePct, rating: 'AA-', debtSec: '$37.6B', cashSec: '$58.1B', fcfSec: '+$10.8B', color: '#A855F7' },
+          { name: 'Oracle', ticker: 'ORCL', price: orcl.price, change: orcl.change, changePct: orcl.changePct, rating: 'BBB- (주의)', debtSec: '$87.1B', cashSec: '$10.5B', fcfSec: '-$2.5B (적자지속)', color: '#EF4444' }
         ],
         chart: {
           labels: nvda.dates,

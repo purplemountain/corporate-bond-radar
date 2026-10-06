@@ -14,6 +14,7 @@ interface CompanyStock {
   rating: string;
   debtSec: string;
   cashSec: string;
+  fcfSec?: string;
   color: string;
 }
 
@@ -574,6 +575,11 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
             <SourcedBadge label="부채/등급: SEC 10-Q 공시" />
           </div>
         </div>
+        <div style={{ background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '10px', padding: '0.75rem 1rem', marginBottom: '1rem', fontSize: '0.8rem', color: '#CBD5E1', lineHeight: 1.6 }}>
+          <strong style={{ color: '#38BDF8' }}>💡 [핵심 금융 개념] 보유 현금성 자산(통장 잔고) vs 잉여현금흐름(FCF)의 차이:</strong><br />
+          • <strong>보유 현금성 자산 (B/S 저수지)</strong>: 특정 시점 통장 잔고(저량)로 수학적으로 음수가 될 수 없으며, 빚을 내서 조달해도 잔고는 유지됩니다 (오라클 $10.5B, 알파벳 $100.7B).<br />
+          • <strong>분기 잉여현금흐름 (FCF = 영업현금흐름 - AI CapEx)</strong>: 본업에서 번 돈보다 AI 데이터센터 투자가 많으면 <strong>마이너스(-) 적자</strong>가 발생합니다. <strong>알파벳(-$5.9B 적자전환)과 오라클(-$2.5B 적자지속)이 마이너스인 것은 바로 이 FCF입니다.</strong>
+        </div>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.15)', color: '#94A3B8' }}>
@@ -582,7 +588,8 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
               <th style={{ padding: '0.75rem 0.5rem' }}>전일비 등락</th>
               <th style={{ padding: '0.75rem 0.5rem' }}>S&P 공식 신용등급</th>
               <th style={{ padding: '0.75rem 0.5rem' }}>총부채 (SEC 10-Q)</th>
-              <th style={{ padding: '0.75rem 0.5rem' }}>보유 현금성 자산</th>
+              <th style={{ padding: '0.75rem 0.5rem' }}>보유 현금성 자산 (B/S)</th>
+              <th style={{ padding: '0.75rem 0.5rem' }}>분기 FCF (C/F 순현금)</th>
               <th style={{ padding: '0.75rem 0.5rem' }}>신용 위험 평가</th>
             </tr>
           </thead>
@@ -605,6 +612,9 @@ export default function BondSpreadDashboardClient({ userEmail }: { userEmail: st
                 </td>
                 <td style={{ padding: '0.75rem 0.5rem', color: '#F1F5F9' }}>{c.debtSec}</td>
                 <td style={{ padding: '0.75rem 0.5rem', color: '#6EE7B7' }}>{c.cashSec}</td>
+                <td style={{ padding: '0.75rem 0.5rem', fontWeight: 700, color: c.fcfSec?.includes('-') ? '#EF4444' : '#10B981' }}>
+                  {c.fcfSec || 'N/A'}
+                </td>
                 <td style={{ padding: '0.75rem 0.5rem', fontSize: '0.78rem', color: c.rating.includes('BBB') ? '#FCA5A5' : '#94A3B8' }}>
                   {c.rating.includes('BBB') ? '🚨 차환 위험 & CapEx 차입 급증' : '안정적 무차입/초우량 구조'}
                 </td>
